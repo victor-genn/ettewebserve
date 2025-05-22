@@ -1,11 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>【 E T T E 】</title>
+    <link rel="stylesheet" th:href="@{/css/default.css}" />
+    <link rel="stylesheet" th:href="@{/css/index.css}" />
 </head>
 <body>
-    
+    <!-- ヘッダー -->
+    <div th:replace="fragments/header :: header"></div>
+
+    <!-- メイン -->
+    <main>
+        <!-- バーナー -->
+        <div class="main-index-banner">
+            <img th:src="@{/images/photo/main-banner.png}" alt="バーナー" class="img-index-banner" />
+        </div>
+        <!-- 割引商品 -->
+        <div class="main-index-recommends">
+            <img th:src="@{/images/icon/seasonoff.png}" alt="サブタイトル" class="img-index-recommendtitle" />
+            <div class="div-index-seemore">
+                <a th:href="@{/products}" class="button-index-seemore">もっと見る</a>
+            </div>
+            <div>
+                <!-- サンプル -->
+                <img th:src="@{/images/photo/item-sample.png}" alt="割引商品リスト" style="width: 1090px;" /> 
+            </div>
+            <div class="div-index-pagination">
+                ◀ 1 2 3 4 5 ▶
+            </div>
+        </div>
+        <!-- 新商品 -->
+        <div class="main-index-recommends">
+            <img th:src="@{/images/icon/newarrival.png}" alt="サブタイトル" class="img-index-recommendtitle" />
+            <div class="div-index-seemore">
+                <a th:href="@{/products}" class="button-index-seemore">もっと見る</a>
+            </div>
+            <div>
+                <!-- サンプル -->
+                <img th:src="@{/images/photo/item-sample.png}"  alt="新新商品リスト" style="width: 1090px;" /> 
+            </div>
+            <div class="div-index-pagination">
+                ◀ 1 2 3 4 5 ▶
+            </div>
+        </div>
+    </main>
+    <!-- フッター -->
 </body>
 </html>

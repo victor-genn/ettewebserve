@@ -1,0 +1,90 @@
+/* default */
+
+/* ボディー */
+body{
+    margin: 0;
+    background-color: black;
+}
+
+/* ヘッダー */
+.header-base{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    height: 70px;
+    background-color: black;
+    align-items: center;
+}
+
+.header-div1{
+    display: flex;
+    justify-content: space-between;
+    margin-left: 20px;
+}
+
+.header-div2{
+    display: flex;
+    justify-content: center;
+}
+
+.header-div3{
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-right: 20px;
+    align-items: center;
+}
+
+.button-header-default{
+    text-decoration: none;
+    font-size: 18px;
+    background-color: black;
+    color: white;
+    border: 2px solid white;
+    border-radius: 5px;
+    padding: 3px 7px;
+    cursor: pointer;
+}
+
+/* ヘッダー（ログイン済） */
+.span-header-nowuser{
+    font-size: 18px;
+    color: white;
+}
+
+/* メイン */
+main{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    margin-bottom: 50px;
+}
+
+/* ユーザー画面 */
+.main-user-content{
+    width: 1100px;
+    height: 630px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.img-default-banner{
+    width: 53%;
+}
+
+.div-default-form {
+    width: 47%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image: url(../images/photo/background1.png);
+    flex-direction: column;
+}
+
+/* エラーメッセージ */
+.validate-error{
+    font-size: 13px;
+    color: gray;
+}

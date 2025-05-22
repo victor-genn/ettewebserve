@@ -1,0 +1,68 @@
+/* regist.html */
+
+.form-regist{
+    width: 380px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.form-regist-partion{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    justify-items: start;
+    align-items: center;
+}
+
+.form-regist-partion2{
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.form-regist-input{
+    width: 125px;
+    height: 20px;
+}
+
+.form-regist-input-s{
+    width: 90px;
+    height: 20px;
+}
+
+.button-regist-searchid{
+    color: white;
+    background: black;
+    border: 1px solid white;
+    border-radius: 3px;
+    margin-left: 20px;
+}
+
+.img-regist-profile{
+    width: 90px;
+}
+
+.div-regist-file{
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+}
+
+.text-regist-keyword{
+    font-size: 13px;
+    color: gray;
+}
+
+.form-regist-label{
+    font-size: 18px;
+}
+
+.partion{
+    margin-bottom: 7px;
+}
+
+.form-regist-select{
+    width: 100px;
+    height: 25px;
+    border-radius: 5px;
+}

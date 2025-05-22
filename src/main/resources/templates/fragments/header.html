@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>header</title>
+    <link rel="stylesheet" th:href="@{/css/default.css}" />
+</head>
+<body>
+    <div th:fragment="header">
+        <header class="header-base">
+            <div class="header-div1">
+                <img th:src="@{/images/icon/menuIcon.png}" class="img-header-menuicon" />
+            </div>
+            <div class="header-div2">
+                <img th:src="@{/images/icon/webTitle.png}" class="img-header-webtitle" />
+            </div>
+            <div class="header-div3">
+                <a th:href="@{/login}" class="button-header-default">ログイン</a>
+                <a th:href="@{/regist}" class="button-header-default">新規登録</a>
+            </div>
+        </header>
+    </div>
+</body>
+</html>
