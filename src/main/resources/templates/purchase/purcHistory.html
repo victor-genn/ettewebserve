@@ -1,11 +1,83 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>【 購入履歴 - E T T E 】</title>
+    <link rel="stylesheet" th:href="@{/css/default.css}" />
+    <link rel="stylesheet" th:href="@{/css/purchase.css}" />
 </head>
 <body>
-    
+    <!-- ヘッダー -->
+    <div th:replace="fragments/headerLogined :: header"></div>
+        
+    <!-- メイン -->
+    <main>
+
+        <!-- 現在ページ経路 -->
+        <div class="page-path" style="width: 1100px; margin-bottom: 20px;">
+            <a th:href="@{/index}">メイン＞</a>
+            <a th:href="@{/mypage}">マイページ＞</a>
+            <a th:href="@{/purchaseHistory}">購入履歴検索</a>
+        </div>
+
+        <div class="main-user-content">
+            <!-- バーナー（左側） -->
+            <img th:src="@{/images/photo/mypagebanner.png}" alt="バーナー" class="img-default-banner"  />
+
+            <!-- ログインフォーム（右側） -->
+            <div class="div-default-form">
+                
+                <!-- サブタイトル -->
+                <img th:src="@{/images/icon/history.png}" alt="サブタイトル" class="img-default-subtitle userPage-partion" style="margin-bottom: 20px;" />
+
+                <div class="purchase-searchbox">
+                    <select class="purchase-button">
+                        <option>--条件--</option>
+                        <option>条件1</option>
+                    </select>
+                    <input type="text" placeholder="検索語を入力してください" class="purchase-button" />
+                    <input type="button" value="検索" class="purchase-button"/>
+                    <select class="purchase-button">
+                        <option>--並び順--</option>
+                        <option>条件1</option>
+                    </select>
+                </div>
+                <form action="" class="purchase-form">
+                    <div>
+                        <table>
+                            <tr class="purchase-history">
+                                <th>順番</th>
+                                <th style="width: 140px;">日付</th>
+                                <th>数量</th>
+                                <th style="width: 140px;">価格</th>
+                                <th>選択</th>
+                            </tr>
+                            <tr class="purchase-history">
+                                <td>順番</td>
+                                <td>日付</td>
+                                <td>数量</td>
+                                <td>価格</td>
+                                <td>選択</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="purchase-flexbox">
+                        <div>
+                            <span>◀ 1 2 3 4 5 ▶</span>
+                        </div>
+                        <div>
+                            <input type="button" value="全体選択" class="purchase-actionbutton"/>
+                            <button class="purchase-actionbutton">選択削除</button>
+                            <button class="purchase-actionbutton">戻る</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- フッター -->
+    <div th:replace="fragments/footer :: footer"></div>
 </body>
 </html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>【 商品詳細 - E T T E 】</title>
+    <link rel="stylesheet" th:href="@{/css/default.css}" />
+    <link rel="stylesheet" th:href="@{/css/product.css}" />
+</head>
+<body>
+<!-- ヘッダー -->
+    <div th:replace="fragments/headerLogined :: header"></div>
+
+    <!-- メイン -->
+    <main>
+        <!-- 現在ページ経路 -->
+        <div class="page-path" style="margin-bottom: 20px;">
+            <a th:href="@{/index}">メイン＞</a>
+            <a th:href="@{/productList}">商品一覧＞</a>
+            <a th:href="@{/productDetail}">商品詳細</a>
+        </div>
+
+        <div class="probDetail-content">
+            <!-- 商品写真（左側） -->
+            <img th:src="@{/images/photo/productimages.png}" alt="商品写真" class="img-default-banner" />
+
+            <!-- 商品詳細フォーム（右側） -->
+            <div class="div-default-form">
+
+                <!-- サブタイトル -->
+                <img th:src="@{/images/icon/productdetail.png}" alt="サブタイトル" class="img-default-subtitle" />
+
+                <form action="" class="prodDetail-form">
+                    <div class="probDetail-grid2 probDetail-partion">
+                        <!-- カテゴリー -->
+                        <div class="probDetail-grid2">
+                            <label class="prodDetail-label">カテゴリー</label>
+                            <input type="hidden" />
+                            <span class="probDetail-span1">女性服</span>
+                        </div>
+
+                        <!--商品名  -->
+                        <div>
+                            <label class="prodDetail-label">商品名</label>
+                            <input type="hidden" />
+                            <span class="probDetail-span4">ザガードセーター</span>
+                        </div>
+                    </div>
+
+                    <div class="probDetail-partion">
+                        <!-- キーワード -->
+                        <label class="prodDetail-label">キーワード</label>
+                        <input type="hidden" />
+                        <span class="probDetail-span3">#シンプルな、#楽な、#柔らかい</span>
+                    </div>
+                    
+                    <div class="probDetail-grid2 probDetail-partion">
+                        <!-- 製造国 -->
+                        <div class="probDetail-grid2">
+                            <label class="prodDetail-label">製造国</label>
+                            <input type="hidden" />
+                            <span class="probDetail-span1">日本</span>
+                        </div>
+
+                        <!-- 製造年月 -->
+                        <div class="probDetail-grid2">
+                            <label class="prodDetail-label">製造年月</label>
+                            <input type="hidden" />
+                            <input type="date" value="2024-10-22" class="probDetail-span1" readonly>
+                        </div>
+                    </div>
+
+                    <div class="probDetail-partion">
+                        <!-- 商品説明 -->
+                        <input type="hidden" />
+                        <span class="probDetail-span2">商品説明</span>
+                    </div>
+
+                    <div class="probDetail-grid2 probDetail-partion">
+                        <!-- サイズ -->
+                        <div class="probDetail-grid2">
+                            <label class="prodDetail-label">サイズ</label>
+                            <select class="prodDetail-select">
+                                <option selected>--サイズ--</option>
+                                <option value="s">- S -</option>
+                                <option value="m">- M -</option>
+                                <option value="l">- L -</option>
+                                <option value="xl">- XL -</option>
+                            </select>
+                        </div>
+                        <!-- 数量 -->
+                        <div class="probDetail-grid2">
+                            <label class="prodDetail-label">数量</label>
+                            <input type="number" class="prodDetail-numbers" />
+                        </div>
+                    </div>
+
+                    <div class="probDetail-grid2 probDetail-partion">
+                        <!-- 定価 -->
+                        <div class="probDetail-grid2">
+                            <label class="prodDetail-label">定価</label>
+                            <input type="hidden" />
+                            <span class="probDetail-span1">￥4990</span>
+                        </div>
+                        <!-- 販売価格 -->
+                        <div class="probDetail-grid2">
+                            <label class="prodDetail-label">販売価格</label>
+                            <input type="hidden" />
+                            <span class="probDetail-span1">￥4990</span>
+                        </div>
+                    </div>
+                    <div class="probDetail-buttondiv">
+                        <!-- 提出ボタン -->
+                        <button class="probDetail-button">購入</button>
+                        <button class="probDetail-button">戻る</button>
+                        <!-- 管理者用ボタン -->
+                        <a th:href="@{/productUpdate}">
+                            <button type="button" class="probDetail-button">修正</button>
+                        </a>
+                        <button class="probDetail-button">削除</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- フッター -->
+    <div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

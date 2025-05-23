@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>【 新規登録 - E T T E 】</title>
     <link rel="stylesheet" th:href="@{/css/default.css}" />
-    <link rel="stylesheet" th:href="@{/css/regist.css}" />
+    <link rel="stylesheet" th:href="@{/css/user.css}" />
 </head>
 <body>
     <!-- ヘッダー -->
@@ -106,12 +106,15 @@
 
                     <!-- フォーム提出 -->
                     <div class="form-regist-partion2">
-                        <button class="button-header-default">ログイン</button>
-                        <button class="button-header-default">新規登録</button>
+                        <button class="button-header-default">登録</button>
+                        <button class="button-header-default">戻る</button>
                     </div>
                 </form>
             </div>
         </div>
     </main>
+
+    <!-- フッター -->
+    <div th:replace="fragments/footer :: footer"></div>
 </body>
 </html>

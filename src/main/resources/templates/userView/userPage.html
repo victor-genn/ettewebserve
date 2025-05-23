@@ -1,11 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>【 マイページ - E T T E 】</title>
+    <link rel="stylesheet" th:href="@{/css/default.css}" />
+    <link rel="stylesheet" th:href="@{/css/user.css}" />
 </head>
 <body>
-    
+    <!-- ヘッダー -->
+    <div th:replace="fragments/headerLogined :: header"></div>
+
+    <!-- メイン -->
+    <main>
+        <div class="main-user-content">
+            <!-- バーナー（左側） -->
+            <img th:src="@{/images/photo/mypagebanner.png}" alt="バーナー" class="img-default-banner" />
+
+            <!-- ログインフォーム（右側） -->
+            <div class="div-default-form">
+                
+                <!-- サブタイトル -->
+                <img th:src="@{/images/icon/mypage.png}" alt="サブタイトル" class="img-default-subtitle userPage-partion" />
+                <a th:href="@{/userUpdate}" class="button-userPage-menu">登録情報修正</a>
+                <a th:href="@{/purchaseHistory}" class="button-userPage-menu">購入履歴検索</a>
+                <a th:href="@{/index}" class="button-userPage-menu">戻る</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- フッター -->
+    <div th:replace="fragments/footer :: footer"></div>
 </body>
 </html>

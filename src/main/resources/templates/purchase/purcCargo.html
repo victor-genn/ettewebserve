@@ -1,1 +1,93 @@
-!
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>【 商品カート - E T T E 】</title>
+    <link rel="stylesheet" th:href="@{/css/default.css}" />
+    <link rel="stylesheet" th:href="@{/css/product.css}" />
+</head>
+<body>
+    <!-- ヘッダー -->
+    <div th:replace="fragments/headerLogined :: header"></div>
+
+    <!-- メイン -->
+    <main>
+        <!-- バーナー -->
+        <img th:src="@{/images/photo/shoppingcart.png}" alt="バーナー" class="prodView-banner" />    
+        
+        <!-- 現在ページ経路 -->
+        <div class="page-path">
+            <a th:href="@{/index}">メイン＞</a>
+            <a th:href="@{/productList}">商品一覧＞</a>
+            <a th:href="@{/purchaseList}">商品カート</a>
+        </div>
+        
+        <!-- サブタイトル -->
+        <img th:src="@{/images/icon/shoppingcartlist.png}" alt="サブタイトル" />
+
+        <!-- チェックボックス操作 -->
+        <div class="purcCargo-checkbox">
+            <div>
+                <input type="button" value="全体選択" class="purcCargo-button1" />
+                <input type="button" value="選択解除" class="purcCargo-button1" />
+            </div>
+            <input type="button" value="選択削除" class="purcCargo-button1" />
+        </div>
+        <!-- カートリスト -->
+        <div class="purcCargo-div">
+            <table>
+                <tr class="purcCargo-tabletr1">
+                    <th style="width: 60px;">順番</th>
+                    <th style="width: 165px;">商品画像</th>
+                    <th style="width: 280px;">商品名</th>
+                    <th style="width: 80px;">数量</th>
+                    <th style="width: 145px;">定価</th>
+                    <th style="width: 90px;">割引率</th>
+                    <th style="width: 145px;">販売価格</th>
+                    <th style="width: 60px;">選択</th>
+                </tr>
+                <tr class="purcCargo-tabletr1">
+                    <td>順番</td>
+                    <td><img th:src="@{/images/photo/itemsample.png}" style="width: 165px;" /></td>
+                    <td>商品名</td>
+                    <td>数量</td>
+                    <td>定価</td>
+                    <td>割引率</td>
+                    <td>販売価格</td>
+                    <td>選択</td>
+                </tr>
+            </table>
+        </div>
+        <!-- 検索結果 -->
+        <div class="purcCargo-div">
+            <img th:src="@{/images/icon/total.png}" alt="パートタイトル" class="prodView-parttitle" />
+            <form>
+                <table>
+                    <tr class="purcCargo-tabletr2">
+                        <th style="width: 135px;">総数量</th>
+                        <th style="width: 200px;">総価格</th>
+                        <th style="width: 200px;">税込み</th>
+                        <th style="width: 200px;">ポイント</th>
+                        <th style="width: 300px;">クーポン</th>
+                    </tr>
+                    <tr class="purcCargo-tabletr2">
+                        <td>総数量</td>
+                        <td>総価格</td>
+                        <td>税込み</td>
+                        <td>ポイント</td>
+                        <td><input type="button" value="クーポン" class="purcCargo-button1" /></td>
+                    </tr>
+                </table>
+                <div class="purcCargo-buttonbox">
+                    <button class="purcCargo-button2">決済</button>
+                    <input type="reset" value="取り消し" class="purcCargo-button2" />
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- フッター -->
+    <div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

@@ -13,7 +13,9 @@
                 <img th:src="@{/images/icon/menuIcon.png}" class="img-header-menuicon" />
             </div>
             <div class="header-div2">
-                <img th:src="@{/images/icon/webTitle.png}" class="img-header-webtitle" />
+                <a th:href="@{/index}">
+                    <img th:src="@{/images/icon/webTitle.png}" class="img-header-webtitle" />
+                </a>
             </div>
             <div class="header-div3">
                 <a th:href="@{/login}" class="button-header-default">ログイン</a>

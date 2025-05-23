@@ -13,15 +13,17 @@
                 <img th:src="@{/images/icon/menuIcon.png}" class="img-header-menuicon" />
             </div>
             <div class="header-div2">
-                <img th:src="@{/images/icon/webTitle.png}" class="img-header-webtitle" />
+                <a th:href="@{/index}">
+                    <img th:src="@{/images/icon/webTitle.png}" class="img-header-webtitle" />
+                </a>
             </div>
-            <div class="header-div3">
+            <div class="header-div3" style="gap: 45px;">
                 <span class="span-header-nowuser">ようこそ、user様</span>
                 <img th:src="@{/images/icon/nowuser.png}" class="img-header-nowuser" />
-                <a href="">
+                <a th:href="@{/mypage}">
                     <img th:src="@{/images/icon/chat-icon.png}" class="img-header-chaticon" />
                 </a>
-                <a th:href="@{/purchase/purcCargo}">
+                <a th:href="@{/purchaseList}">
                     <img th:src="@{/images/icon/cart-icon.png}" class="img-header-carticon" />
                 </a>
             </div>

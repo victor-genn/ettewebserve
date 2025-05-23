@@ -1,11 +1,133 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>【 登録情報修正 - E T T E 】</title>
+    <link rel="stylesheet" th:href="@{/css/default.css}" />
+    <link rel="stylesheet" th:href="@{/css/user.css}" />
 </head>
 <body>
-    
+    <!-- ヘッダー -->
+    <div th:replace="fragments/headerLogined :: header"></div>
+
+    <!-- メイン -->
+    <main>
+        <!-- 現在ページ経路 -->
+        <div class="page-path" style="width: 1100px; margin-bottom: 20px;">
+            <a th:href="@{/index}">メイン＞</a>
+            <a th:href="@{/mypage}">マイページ＞</a>
+            <a th:href="@{/purchaseHistory}">購入履歴検索</a>
+        </div>
+
+        <div class="main-user-content">
+            <!-- バーナー（左側） -->
+            <img th:src="@{/images/photo/mypagebanner.png}" alt="バーナー" class="img-default-banner" />
+
+            <!-- 登録情報更新フォーム（右側） -->
+            <div class="div-default-form">
+
+                <!-- サブタイトル -->
+                <img th:src="@{/images/icon/userupdate.png}" alt="サブタイトル" class="img-default-subtitle" />
+                <!-- 処理エラーメッセージ -->
+                <div class="validate-error partion">エラーメッセージ</div>
+
+                <form action="" class="form-regist">
+                    <!-- ID入力 -->
+                    <div class="form-regist-partion">
+                        <label for="loginId" class="form-regist-label">ID</label>
+                        <input type="hidden" id="loginId" class="form-regist-input" />
+                        <span>logined ID</span> 
+                    </div>
+
+                    <!-- もともとのパスワード入力 -->
+                    <div class="form-regist-partion">
+                        <label for="password" class="form-regist-label" style="font-size: 16px;">現在パスワード</label>
+                        <input type="password" id="password" class="form-regist-input" /> 
+                    </div>
+                    <!-- 新しいパスワード入力 -->
+                    <div class="form-regist-partion">
+                        <label for="newpassword" class="form-regist-label" style="font-size: 16px;">更新パスワード</label>
+                        <input type="password" id="newpassword" class="form-regist-input" /> 
+                    </div>
+                    <!-- 新しいパスワードチェック入力 -->
+                    <div class="form-regist-partion">
+                        <label for="newpassCheck" class="form-regist-label">チェック</label>
+                        <input type="password" id="newpassCheck" class="form-regist-input" /> 
+                    </div>
+                    <!-- パスワード不一致・桁数不適合エラーメッセージ -->
+                    <div class="validate-error partion">エラーメッセージ</div>
+
+                    <!-- 氏名入力 -->
+                    <div class="form-regist-partion partion">
+                        <label for="userName" class="form-regist-label">氏名</label>
+                        <input type="hidden" id="userName" class="form-regist-input-s" placeholder="氏"/> 
+                        <span>木村</span>
+                        <input type="hidden" class="form-regist-input-s" placeholder="名"/> 
+                        <span>拓哉</span>
+                    </div>
+
+                    <!-- 性別入力 -->
+                    <div class="form-regist-partion partion">
+                        <label class="form-regist-label">性別</label>
+                        <label id="male">
+                            <input type="radio" id="male" name="gender" value="male" checked readonly> 男性
+                        </label>
+                        <label id="female">
+                            <input type="radio" id="female" name="gender" value="female" readonly> 女性
+                        </label>
+                    </div>
+
+                    <!-- メール入力 -->
+                    <div class="form-regist-partion partion">
+                        <label for="email" class="form-regist-label">メール</label>
+                        <input type="hidden" class="form-regist-input-s" /> 
+                        <input type="text" id="email" class="form-regist-input-s" />
+                        <select id="email-domain" class="form-regist-select">
+                            <option value="" selected>--選択--</option>
+                            <option value="@gmail.com">gmail.com</option>
+                            <option value="@yahoo.co.jp">yahoo.co.jp</option>
+                            <option value="@outlook.com">outlook.com</option>
+                            <option value="custom">その他</option>
+                        </select>
+                    </div>
+
+                    <!-- 写真登録 -->
+                    <div class="form-regist-partion">
+                        <label class="form-regist-label">写真</label>
+                        <img th:src="@{/images/photo/default-profile.png}" class="img-regist-profile" alt="プロフィール画像"  />
+                    </div>
+                    <div class="div-regist-file partion"><input type="file" name="photo" accept="images/*" class="file-regist" /></div>
+
+                    <!-- キーワード入力 -->
+                    <label class="form-regist-label">キーワード</label>
+                    <div class="form-regist-partion">
+                        <select id="keyword1" class="form-regist-select">
+                            <option value="" selected>--選択--</option>
+                            <option value="">キーワード</option>
+                        </select>
+                        <select id="keyword2" class="form-regist-select">
+                            <option value="" selected>--選択--</option>
+                            <option value="">キーワード</option>
+                        </select>
+                        <select id="keyword3" class="form-regist-select">
+                            <option value="" selected>--選択--</option>
+                            <option value="">キーワード</option>
+                        </select>
+                    </div>
+                    <div class="text-regist-keyword partion">関心キーワードを3つ選択してください</div>
+
+                    <!-- フォーム提出 -->
+                    <div class="form-regist-partion2">
+                        <button class="button-header-default">更新</button>
+                        <button class="button-header-default">戻る</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- フッター -->
+    <div th:replace="fragments/footer :: footer"></div>
 </body>
 </html>

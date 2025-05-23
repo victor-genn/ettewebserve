@@ -1,11 +1,77 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>【 商品一覧 - E T T E 】</title>
+    <link rel="stylesheet" th:href="@{/css/default.css}" />
+    <link rel="stylesheet" th:href="@{/css/product.css}" />
 </head>
 <body>
-    
+    <!-- ヘッダー -->
+    <div th:replace="fragments/headerLogined :: header"></div>
+
+    <!-- メイン -->
+    <main>
+        <!-- バーナー -->
+        <img th:src="@{/images/photo/productbanner.png}" alt="バーナー" class="prodView-banner" />    
+        
+        <!-- 現在ページ経路 -->
+        <div class="page-path">
+            <a th:href="@{/index}">メイン＞</a>
+            <a th:href="@{/productList}">商品一覧</a>
+        </div>
+        
+        <!-- サブタイトル -->
+        <img th:src="@{/images/icon/productview.png}" alt="サブタイトル" />
+
+        <!-- 検索 -->
+        <form action="" class="prodView-searchform">
+            <select class="prodView-select">
+                <option>--カテゴリー--</option>
+                <option>カテゴリー１</option>
+            </select>
+            <select class="prodView-select">
+                <option>--キーワード--</option>
+                <option>キーワード１</option>
+            </select>
+            <input type="text" class="prodView-searchbar" placeholder="検索語を入力してください" />
+            <button class="prodView-searchbutton">検索</button>
+            <select class="prodView-select">
+                <option>--並び順--</option>
+                <option>並び順１</option>
+            </select>
+        </form>
+        <!-- 推薦商品 -->
+        <div class="prodView-recommenditem">
+            <img th:src="@{/images/icon/recommends.png}" alt="パートタイトル" class="prodView-parttitle" />
+            <div>
+                <!-- サンプル -->
+                <a th:href="@{/productDetail}">
+                    <img th:src="@{/images/photo/item-sample.png}" alt="割引商品リスト" style="width: 1090px;" /> 
+                </a>
+            </div>
+            <div class="prodView-pagination">
+                ◀ 1 2 3 4 5 ▶
+            </div>
+        </div>
+        <!-- 検索結果 -->
+        <div class="prodView-searchitem">
+            <img th:src="@{/images/icon/searchresult.png}" alt="パートタイトル" class="prodView-parttitle" />
+            <div class="prodView-productlist">
+                <!-- サンプル -->
+                <img th:src="@{/images/photo/item-sample.png}" alt="割引商品リスト" style="width: 1090px;" /> 
+                <img th:src="@{/images/photo/item-sample.png}" alt="割引商品リスト" style="width: 1090px;" /> 
+                <img th:src="@{/images/photo/item-sample.png}" alt="割引商品リスト" style="width: 1090px;" /> 
+                <img th:src="@{/images/photo/item-sample.png}" alt="割引商品リスト" style="width: 1090px;" /> 
+            </div>
+            <div class="prodView-pagination">
+                ◀ 1 2 3 4 5 ▶
+            </div>
+        </div>
+    </main>
+
+    <!-- フッター -->
+    <div th:replace="fragments/footer :: footer"></div>
 </body>
 </html>

@@ -1,0 +1,130 @@
+/* login.html */
+
+.form-login{
+    display: flex;
+    margin-top: 40px;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.form-login-partion{
+    width: 190px;
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+}
+
+.form-login-input {
+    width: 125px;
+    height: 25px;
+    border-radius: 5px;
+}
+
+.form-login-label{
+    font-size: 20px;
+}
+
+.link-login-findPw{
+    text-decoration: none;
+    color: gray;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+/* regist.html, userUpdate.html */
+
+.form-regist{
+    width: 380px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.form-regist-partion{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    justify-items: start;
+    align-items: center;
+}
+
+.form-regist-partion2{
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.form-regist-input{
+    width: 125px;
+    height: 20px;
+    border-radius: 5px;
+}
+
+.form-regist-input-s{
+    width: 90px;
+    height: 20px;
+    border-radius: 5px;
+}
+
+.button-regist-searchid{
+    color: white;
+    background: black;
+    border: 1px solid white;
+    border-radius: 3px;
+    margin-left: 20px;
+    cursor: pointer;
+}
+
+.img-regist-profile{
+    width: 90px;
+}
+
+.div-regist-file{
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+}
+
+.text-regist-keyword{
+    font-size: 13px;
+    color: gray;
+}
+
+.form-regist-label{
+    font-size: 18px;
+}
+
+.partion{
+    margin-bottom: 7px;
+}
+
+.form-regist-select{
+    width: 100px;
+    height: 25px;
+    border-radius: 5px;
+}
+
+.select-footer-companys{
+    width: 90px;
+    height: 25px;
+    border-radius: 5px;
+}
+
+/* userPage.html */
+
+.userPage-partion{
+    margin-bottom: 30px;
+}
+
+.button-userPage-menu{
+    text-align: center;
+    width: 110px;
+    border: 2px solid white;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 18px;
+    margin-block: 10px;
+    padding: 4px 8px;
+    color: white;
+    cursor: pointer;
+}

@@ -1,11 +1,140 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>【 商品修正 - E T T E 】</title>
+    <link rel="stylesheet" th:href="@{/css/default.css}" />
+    <link rel="stylesheet" th:href="@{/css/product.css}" />
 </head>
 <body>
-    
+<!-- ヘッダー -->
+    <div th:replace="fragments/headerLogined :: header"></div>
+
+    <!-- メイン -->
+    <main>
+        <!-- 現在ページ経路 -->
+        <div class="page-path" style="margin-bottom: 20px;">
+            <a th:href="@{/index}">メイン＞</a>
+            <a th:href="@{/productList}">商品一覧＞</a>
+            <a th:href="@{/productUpdate}">商品修正</a>
+        </div>
+
+        <div class="probDetail-content">
+            <!-- 商品写真（左側） -->
+            <img th:src="@{/images/photo/productimages.png}" alt="商品写真" class="img-default-banner" />
+            <input type="file" class="probDetail-file"/>
+
+            <!-- 商品詳細フォーム（右側） -->
+            <div class="div-default-form">
+
+                <!-- サブタイトル -->
+                <img th:src="@{/images/icon/updateproduct.png}" alt="サブタイトル" class="img-default-subtitle" />
+
+                <form action="" class="prodDetail-form">
+                    <div class="probDetail-grid2 prodUpdate-partion">
+                        <!-- カテゴリー -->
+                        <div class="probDetail-grid2">
+                            <label class="prodDetail-label" style="margin-right: 4px;">カテゴリー</label>
+                            <input type="hidden" />
+                            <span class="prodDetail-select" style="color: lightgray;">女性服</span>
+                        </div>
+
+                        <!--商品名  -->
+                        <div class="probUpdate-grid2">
+                            <label class="prodDetail-label">商品名</label>
+                            <input type="hidden" />
+                            <span class="prodUpdate-input1" style="color: lightgray;">ザガードセーター</span>
+                        </div>
+                    </div>
+
+                    <div class="prodUpdate-grid4 probDetail-partion">
+                        <!-- キーワード -->
+                        <label class="prodDetail-label">キーワード</label>
+                        <input type="hidden" />
+                        <select class="prodDetail-select">
+                            <option selected>--キーワード--</option>
+                            <option value="s">キーワード</option>
+                        </select>
+                        <input type="hidden" />
+                        <select class="prodDetail-select">
+                            <option selected>--キーワード--</option>
+                            <option value="s">キーワード</option>
+                        </select>
+                        <input type="hidden" />
+                        <select class="prodDetail-select">
+                            <option selected>--キーワード--</option>
+                            <option value="s">キーワード</option>
+                        </select>
+                    </div>
+                    
+                    <div class="probDetail-grid2 probDetail-partion">
+                        <!-- 製造国 -->
+                        <div class="probDetail-grid2">
+                            <label class="prodDetail-label">製造国</label>
+                            <input type="hidden" />
+                            <select class="prodDetail-select">
+                                <option selected>--製造国--</option>
+                                <option value="s">製造国</option>
+                            </select>
+                        </div>
+
+                        <!-- 製造年月 -->
+                        <div class="probDetail-grid2">
+                            <label class="prodDetail-label">製造年月</label>
+                            <input type="hidden" />
+                            <input type="date" class="probUpdate-date">
+                        </div>
+                    </div>
+
+                    <div class="probDetail-partion">
+                        <!-- 商品説明 -->
+                        <input type="hidden" />
+                        <input type="text" class="probDetail-span2" placeholder="商品説明"/>
+                    </div>
+
+                    <div class="prodUpdate-grid5 probDetail-partion">
+                        <!-- 数量 -->
+                        <label class="prodDetail-label">数量</label>
+                        <input type="hidden" />
+                        <input type="number" min="0" placeholder="S" class="prodUpdate-numbers" />
+                        <input type="hidden" />
+                        <input type="number" min="0" placeholder="M" class="prodUpdate-numbers" />
+                        <input type="hidden" />
+                        <input type="number" min="0" placeholder="L" class="prodUpdate-numbers" />
+                        <input type="hidden" />
+                        <input type="number" min="0" placeholder="XL" class="prodUpdate-numbers" />
+                    </div>
+
+                    <div class="prodUpdate-grid31 probDetail-partion">
+                        <!-- 定価 -->
+                        <div class="prodUpdate-grid22">
+                            <label class="prodDetail-label">定価</label>
+                            <input type="number" class="prodUpdate-price" placeholder="価格"/>
+                        </div>
+                        <!-- 割引率 -->
+                        <div class="prodUpdate-percentdiv">
+                            <label class="prodDetail-label">割引</label>
+                            <input type="number" class="prodUpdate-percent" placeholder="%" />
+                            <span>%</span>
+                        </div>
+                        <!-- 販売価格 -->
+                        <div class="prodUpdate-grid21">
+                            <label class="prodDetail-label">販売価格</label>
+                            <input type="number" class="prodUpdate-price" placeholder="割引した価格" readonly/>
+                        </div>
+                    </div>
+                    <div class="probDetail-buttondiv" style="margin-top: 30px;">
+                        <!-- 提出ボタン -->
+                        <button class="probDetail-button">更新</button>
+                        <button class="probDetail-button">戻る</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- フッター -->
+    <div th:replace="fragments/footer :: footer"></div>
 </body>
 </html>

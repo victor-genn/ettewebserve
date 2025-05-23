@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>footer</title>
+    <link rel="stylesheet" th:href="@{/css/default.css}" />
+</head>
+<body>
+    <div th:fragment="footer">
+        <footer>
+            <div class="footer-div1">
+                <a th:href="@{/index}">
+                    <img th:src="@{/images/icon/webTitle.png}" alt="Web Title" class="img-footer-webtitle" />
+                </a>
+            </div>
+            <div class="footer-div2">
+                <img th:src="@{/images/icon/intersect.png}" alt="Web Intro" class="img-footer-webintro" />
+                <div>
+                    <pre class="footer-pre">
+    株式会社 ティーピーエス（TPS）
+    東京都千代田区神田三崎町3-6-12 神田三崎町ビル7階 TEL : 03-6261-5625 / FAX : 03-6261-5626
+
+    Copyright 2020 Clother Co.,Ltd. All Right Reserved.
+                    </pre>
+                </div>
+            </div>
+            <div class="footer-div3">
+                <select class="select-footer-companys">
+                    <option>--提携会社--</option>
+                    <option>株式会社SKI</option>
+                    <option>株式会社CSE</option>
+                    <option>株式会社ATG</option>
+                </select>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

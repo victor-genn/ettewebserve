@@ -95,3 +95,19 @@ CREATE TABLE purchase_detail (
     FOREIGN KEY (purchase_id) REFERENCES purchase(purchase_id),
     FOREIGN KEY (product_id) REFERENCES product(product_id)
 );
+
+-- 10. サイズ
+CREATE TABLE size (
+    size_id INT AUTO_INCREMENT PRIMARY KEY,
+    size_name VARCHAR(20) NOT NULL
+);
+
+-- 11. サイズ別数量
+CREATE TABLE product_size_stock (
+    product_id INT NOT NULL,
+    size_id INT NOT NULL,
+    stock INT NOT NULL,
+    PRIMARY KEY (product_id, size_id),
+    FOREIGN KEY (product_id) REFERENCES product(product_id),
+    FOREIGN KEY (size_id) REFERENCES size(size_id)
+);
