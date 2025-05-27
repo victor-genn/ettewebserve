@@ -385,7 +385,7 @@ main{
 
 .purcCargo-buttonbox{
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
     gap: 15px;
     margin-top: 25px;

@@ -22,7 +22,7 @@
 
         <div class="probDetail-content">
             <!-- 商品写真（左側） -->
-            <img th:src="@{${product.imagePath}}" alt="商品写真" class="img-default-banner" />
+            <img th:src="${product.imagePath}" alt="商品写真" class="img-default-banner" />
 
             <!-- 商品詳細フォーム（右側） -->
             <div class="div-default-form">
@@ -30,9 +30,9 @@
                 <!-- サブタイトル -->
                 <img th:src="@{/images/icon/productdetail.png}" alt="サブタイトル" class="img-default-subtitle" />
 
-                <form th:action="@{/purchace}" method="post" th:object="${purchaceForm}" class="prodDetail-form">
+                <form th:action="@{/cartIn}" method="post" th:object="${cartForm}" class="prodDetail-form">
                     <!-- 商品ID -->
-                    <input type="hidden" th:field="*{productId}" th:value="${product.productId}" />
+                    <input type="hidden" th:field="*{productId}" />
 
                     <div class="probDetail-grid2 probDetail-partion">
                         <!-- カテゴリー -->
@@ -78,12 +78,12 @@
                         <!-- サイズ -->
                         <div class="probDetail-grid2">
                             <label class="prodDetail-label">サイズ</label>
-                            <select class="prodDetail-select" th:field="*{size}">
-                                <option selected>--サイズ--</option>
-                                <option value="s">- S -</option>
-                                <option value="m">- M -</option>
-                                <option value="l">- L -</option>
-                                <option value="xl">- XL -</option>
+                            <select class="prodDetail-select" th:field="*{sizeId}">
+                                <option value="" selected>--サイズ--</option>
+                                <option value="1">- S -</option>
+                                <option value="2">- M -</option>
+                                <option value="3">- L -</option>
+                                <option value="4">- XL -</option>
                             </select>
                         </div>
                         <!-- 数量 -->
@@ -102,8 +102,7 @@
                         <!-- 販売価格 -->
                         <div class="probDetail-grid2">
                             <label class="prodDetail-label">販売価格</label>
-                            <input type="hidden" th:field="*{salePrice}" th:value="${product.salePrice}" />
-                            <span class="probDetail-span1" th:text="￥${product.salePrice}">販売価格</span>
+                            <span class="probDetail-span1" th:text="|￥${product.salePrice}|">販売価格</span>
                         </div>
                     </div>
                     <div class="probDetail-buttondiv">

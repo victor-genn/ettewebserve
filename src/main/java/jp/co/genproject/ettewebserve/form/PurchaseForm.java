@@ -1,40 +1,51 @@
 package jp.co.genproject.ettewebserve.form;
 
+import java.util.List;
+
 public class PurchaseForm {
-    private Integer productId;
-    private Integer sizeId;
-    private Integer quantity;
-    private Integer salePrice;
+    private List<Integer> cartIds;
+    private Integer totalQuantity;
+    private Integer totalPrice;
+    private Integer taxIncludedPrice;
+    private Integer point;
 
-    public Integer getProductId() {
-        return productId;
+    public List<Integer> getCartIds() {
+        return cartIds;
     }
 
-    public void setProductId(Integer productId) {
-        this.productId = productId;
+    public void setCartIds(List<Integer> cartIds) {
+        this.cartIds = cartIds;
     }
 
-    public Integer getQuantity() {
-        return quantity;
+    public Integer getTotalQuantity() {
+        return totalQuantity;
     }
 
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
+    public void setTotalQuantity(Integer totalQuantity) {
+        this.totalQuantity = totalQuantity;
     }
 
-    public Integer getSizeId() {
-        return sizeId;
+    public Integer getTotalPrice() {
+        return totalPrice;
     }
 
-    public void setSizeId(Integer sizeId) {
-        this.sizeId = sizeId;
+    public void setTotalPrice(Integer totalPrice) {
+        this.totalPrice = totalPrice;
     }
 
-    public Integer getSalePrice() {
-        return salePrice;
+    public Integer getTaxIncludedPrice() {
+        return taxIncludedPrice;
     }
 
-    public void setSalePrice(Integer salePrice) {
-        this.salePrice = salePrice;
+    public void setTaxIncludedPrice(Integer taxIncludedPrice) {
+        this.taxIncludedPrice = taxIncludedPrice;
+    }
+
+    public Integer getPoint() {
+        return point;
+    }
+
+    public void setPoint(Integer point) {
+        this.point = point;
     }
 }

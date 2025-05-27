@@ -20,7 +20,7 @@
         <div class="page-path">
             <a th:href="@{/index}">メイン＞</a>
             <a th:href="@{/productList}">商品一覧＞</a>
-            <a th:href="@{/purchaseList}">商品カート</a>
+            <a th:href="@{/cartList}">商品カート</a>
         </div>
         
         <!-- サブタイトル -->
@@ -35,34 +35,39 @@
             <input type="button" value="選択削除" class="purcCargo-button1" />
         </div>
         <!-- カートリスト -->
-        <div class="purcCargo-div">
-            <table>
-                <tr class="purcCargo-tabletr1">
-                    <th style="width: 60px;">順番</th>
-                    <th style="width: 165px;">商品画像</th>
-                    <th style="width: 280px;">商品名</th>
-                    <th style="width: 80px;">数量</th>
-                    <th style="width: 145px;">定価</th>
-                    <th style="width: 90px;">割引率</th>
-                    <th style="width: 145px;">販売価格</th>
-                    <th style="width: 60px;">選択</th>
-                </tr>
-                <tr th:each="item, stat : ${purchaseList}" class="purcCargo-tabletr1">
-                    <td th:text="${stat.count}">1</td>
-                    <td><img th:src="@{${item.imagePath}}" style="width: 165px;" /></td>
-                    <td th:text="${item.productName}">商品名</td>
-                    <td th:text="${item.quantity}">数量</td>
-                    <td th:text="|￥${item.regularPrice}|">定価</td>
-                    <td th:text="|${item.discountRate}%|">割引率</td>
-                    <td th:text="|￥${item.salePrice}|">販売価格</td>
-                    <td><input type="checkbox" name="selectItem" th:value="${item.productId}" /></td>
-                </tr>
-            </table>
+        <div class="purcCargo-div" style="margin-bottom: 30px;">
+            <form th:action="@{/choiceItem}" method="post" th:object="${choiceForm}" >
+                <table>
+                    <tr class="purcCargo-tabletr1">
+                        <th style="width: 60px;">順番</th>
+                        <th style="width: 165px;">商品画像</th>
+                        <th style="width: 280px;">商品名</th>
+                        <th style="width: 80px;">サイズ</th>
+                        <th style="width: 90px;">数量</th>
+                        <th style="width: 145px;">購入価格</th>
+                        <th style="width: 145px;">追加日時</th>
+                        <th style="width: 60px;">選択</th>
+                    </tr>
+                    <tr th:each="item, stat : ${cartList}" class="purcCargo-tabletr1">
+                        <td th:text="${stat.count}">1</td>
+                        <td><img th:src="@{${item.imagePath}}" style="width: 165px;" /></td>
+                        <td th:text="${item.productName}">商品名</td>
+                        <td th:text="${item.sizeName}">サイズ</td>  
+                        <td th:text="${item.quantity}">数量</td>
+                        <td th:text="'￥'+${item.salePrice}*${item.quantity}">購入価格</td>
+                        <td th:text="${item.addedAtFormatted}">追加日時</td>
+                        <td><input type="checkbox" th:field="*{cartIds}" th:value="${item.cartId}" /></td>
+                    </tr>
+                </table>
+                <div class="purcCargo-buttonbox">
+                    <button type="submit" class="purcCargo-button2">確定</button>
+                </div>
+            </form>
         </div>
         <!-- 検索結果 -->
         <div class="purcCargo-div">
             <img th:src="@{/images/icon/total.png}" alt="パートタイトル" class="prodView-parttitle" />
-            <form>
+            <form th:action="@{/purchase}" method="post" th:object="${purchaseForm}">
                 <table>
                     <tr class="purcCargo-tabletr2">
                         <th style="width: 135px;">総数量</th>
@@ -72,16 +77,23 @@
                         <th style="width: 300px;">クーポン</th>
                     </tr>
                     <tr class="purcCargo-tabletr2">
-                        <td th:text="${totalQuantity}">総数量</td>
-                        <td th:text="|￥${totalPrice}|">総価格</td>
-                        <td th:text="|￥${taxIncludedPrice}|">税込み</td>
-                        <td th:text="|${point} pt|">ポイント</td>
-                        <td><input type="button" value="クーポン" class="purcCargo-button1" /></td>
+                        <td th:if="${totalQuantity}" th:text="${totalQuantity}">総数量</td>
+                        <td th:if="${totalPrice}" th:text="|￥${totalPrice}|">総価格</td>
+                        <td th:if="${taxIncludedPrice}" th:text="|￥${#numbers.formatDecimal(taxIncludedPrice, 0, 0)}|">税込み</td>
+                        <td th:if="${point}" th:text="|${#numbers.formatDecimal(point, 0, 0)}pt|">ポイント</td>
+                        <td th:if="${point}"><input type="button" value="クーポン" class="purcCargo-button1" /></td>
                     </tr>
                 </table>
+
+                <!-- <input type="hidden" th:field="*{cartId}" /> -->
+                <input type="hidden" th:field="*{totalQuantity}" />
+                <input type="hidden" th:field="*{totalPrice}" />
+                <input type="hidden" th:field="*{taxIncludedPrice}" />
+                <input type="hidden" th:field="*{point}" />
+
                 <div class="purcCargo-buttonbox">
                     <button class="purcCargo-button2">決済</button>
-                    <input type="reset" value="取り消し" class="purcCargo-button2" />
+                    <button type="button" class="purcCargo-button2" onclick="history.back()">戻る</button>
                 </div>
             </form>
         </div>

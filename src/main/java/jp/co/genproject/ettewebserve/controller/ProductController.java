@@ -12,10 +12,31 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import jp.co.genproject.ettewebserve.entity.Product;
+import jp.co.genproject.ettewebserve.form.CartForm;
 import jp.co.genproject.ettewebserve.form.ProductForm;
 import jp.co.genproject.ettewebserve.service.ProductService;
 
-
+/**
+ * 商品関連機能のコントローラークラス。
+ * 商品一覧表示、商品検索、商品詳細表示、商品登録・更新画面への遷移処理を担当する。
+ *
+ * 主な機能：
+ * <ul>
+ *   <li>商品一覧ページの初期表示</li>
+ *   <li>検索フォームによる商品検索</li>
+ *   <li>商品詳細の表示</li>
+ *   <li>商品登録・更新ページへの遷移</li>
+ * </ul>
+ *
+ * 使用技術：
+ * <ul>
+ *   <li>Spring MVC</li>
+ *   <li>Thymeleaf テンプレートエンジン</li>
+ * </ul>
+ *
+ * @author 張勝現
+ * @version 1.0
+ */
 @Controller
 public class ProductController {
     private final ProductService productService;
@@ -121,11 +142,23 @@ public class ProductController {
         return "productView/prodView";
     }
 
+    /**
+     * 商品詳細ページを表示する処理。
+     * 画面遷移前に、指定された商品IDに基づいて商品情報および関連情報（カテゴリ名、キーワード名、製造国名）を取得し、モデルに追加する。
+     *
+     * @param cartForm カート追加用フォームオブジェクト（バインディング用）
+     * @param productId 表示対象の商品ID
+     * @param model ビューへデータを渡すためのモデル
+     * @return 商品詳細ページのテンプレート名
+     */
     @PostMapping("/productDetail")
-    public String productDetail(@RequestParam("productId") int productId, Model model) {
+    public String productDetail(@ModelAttribute("cartForm") CartForm cartForm, @RequestParam("productId") int productId, Model model) {
+        
+        // 商品IDをもとに商品情報を取得
         Product product = productService.findByProductId(productId);
         model.addAttribute("product", product);
 
+        // 商品に関連する各名称を取得してモデルに追加
         String categoryName = productService.findCategoryNameByCategoryId(product.getCategoryId());
         String keywordName = productService.findKeywordNameByKeywordId(product.getKeywordId());
         String countryName = productService.findCountryNameByCountryId(product.getCountryId());
@@ -133,6 +166,8 @@ public class ProductController {
         model.addAttribute("categoryName", categoryName);
         model.addAttribute("keywordName", keywordName);
         model.addAttribute("countryName", countryName);
+
+        // 商品詳細画面に遷移
         return "productView/prodDetail";
     }
 

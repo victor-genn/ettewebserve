@@ -9,15 +9,12 @@ CREATE TABLE role (
     role_name VARCHAR(50) NOT NULL
 );
 
-ALTER TABLE product
-ADD COLUMN description VARCHAR(1000);
-
 -- 2. キーワード
 CREATE TABLE keyword (
     keyword_id INT PRIMARY KEY,
     keyword_name VARCHAR(50) NOT NULL
 );
-DELETE FROM category;
+
 -- 3. カテゴリー
 CREATE TABLE category (
     category_id INT PRIMARY KEY,
@@ -65,7 +62,7 @@ CREATE TABLE product (
     sale_price INT NOT NULL,
     stock INT NOT NULL,
     imagePath VARCHAR(100) NOT NULL,
-    \description VARCHAR(1000),
+    description VARCHAR(1000),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NULL,
     FOREIGN KEY (category_id) REFERENCES category(category_id),
@@ -80,24 +77,13 @@ CREATE TABLE recommends (
 );
 
 -- 8. 購入履歴
-CREATE TABLE purchase (
-    purchase_id INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE purchase_history (
+    purchase_id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES user_account(user_id)
-);
-
--- 9. 購入詳細
-CREATE TABLE purchase_detail (
-    purchase_detail_id INT AUTO_INCREMENT PRIMARY KEY,
-    purchase_id INT NOT NULL,
     product_id INT NOT NULL,
-    size_id INT NOT NULL,
     quantity INT NOT NULL,
-    price INT NOT NULL,
-    FOREIGN KEY (purchase_id) REFERENCES purchase(purchase_id),
-    FOREIGN KEY (product_id) REFERENCES product(product_id),
-    FOREIGN KEY (size_id) REFERENCES size(size_id)
+    total_price INT NOT NULL,
+    purchased_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
 -- 10. サイズ
@@ -106,12 +92,14 @@ CREATE TABLE size (
     size_name VARCHAR(20) NOT NULL
 );
 
--- 11. サイズ別数量
-CREATE TABLE product_size_stock (
+CREATE TABLE cart (
+    cart_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
     product_id INT NOT NULL,
     size_id INT NOT NULL,
-    stock INT NOT NULL,
-    PRIMARY KEY (product_id, size_id),
+    quantity INT NOT NULL,
+    added_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES user_account(user_id),
     FOREIGN KEY (product_id) REFERENCES product(product_id),
     FOREIGN KEY (size_id) REFERENCES size(size_id)
 );

@@ -48,17 +48,17 @@
                         <table>
                             <tr class="purchase-history">
                                 <th>順番</th>
-                                <th style="width: 140px;">日付</th>
                                 <th>数量</th>
                                 <th style="width: 140px;">価格</th>
+                                <th style="width: 140px;">日付</th>                                
                                 <th>選択</th>
                             </tr>
-                            <tr class="purchase-history">
-                                <td>順番</td>
-                                <td>日付</td>
-                                <td>数量</td>
-                                <td>価格</td>
-                                <td>選択</td>
+                            <tr class="purchase-history" th:each="history, stat : ${purchaseList}">
+                                <td th:text="${stat.count}"></td>
+                                <td th:text="${history.quantity}"></td>
+                                <td th:text="|￥${history.totalPrice}|"></td>
+                                <td th:text="${#dates.format(history.purchasedAt, 'yyyy/MM/dd')}"></td>
+                                <td><input type="checkbox" th:value="${history.purchaseId}" name="selectedIds" /></td>
                             </tr>
                         </table>
                     </div>
