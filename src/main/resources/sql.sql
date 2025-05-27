@@ -92,6 +92,7 @@ CREATE TABLE size (
     size_name VARCHAR(20) NOT NULL
 );
 
+-- 11. カート
 CREATE TABLE cart (
     cart_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,

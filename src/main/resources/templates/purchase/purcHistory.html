@@ -31,18 +31,31 @@
                 <!-- サブタイトル -->
                 <img th:src="@{/images/icon/history.png}" alt="サブタイトル" class="img-default-subtitle userPage-partion" style="margin-bottom: 20px;" />
 
-                <div class="purchase-searchbox">
-                    <select class="purchase-button">
-                        <option>--条件--</option>
-                        <option>条件1</option>
-                    </select>
-                    <input type="text" placeholder="検索語を入力してください" class="purchase-button" />
-                    <input type="button" value="検索" class="purchase-button purchase-researchbutton"/>
-                    <select class="purchase-button">
-                        <option>--並び順--</option>
-                        <option>条件1</option>
-                    </select>
-                </div>
+                <form th:action="@{/purchaseHistory}" method="post" th:object="${searchForm}" class="purchase-form">
+                    <div class="purchase-searchbox">
+
+                        <!-- 検索条件 -->
+                        <select th:field="*{searchCondition}" class="purchase-button">
+                            <option value="">--条件--</option>
+                            <option value="productName">商品名</option>
+                            <option value="price">価格</option>
+                        </select>
+
+                        <!-- 検索語 -->
+                        <input type="text" th:field="*{searchKeyword}" placeholder="検索語を入力してください" class="purchase-button" />
+
+                        <!-- 並び順 -->
+                        <select th:field="*{sortBy}" class="purchase-button">
+                            <option value="">--並び順--</option>
+                            <option value="date">日付順</option>
+                            <option value="quantity">数量順</option>
+                            <option value="price">金額順</option>
+                        </select>
+
+                        <!-- 検索ボタン -->
+                        <input type="submit" value="検索" class="purchase-button purchase-researchbutton"/>
+                    </div>
+                </form>
                 <form action="" class="purchase-form">
                     <div>
                         <table>

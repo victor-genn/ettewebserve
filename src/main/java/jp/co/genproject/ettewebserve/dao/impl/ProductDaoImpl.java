@@ -13,6 +13,26 @@ import jp.co.genproject.ettewebserve.entity.Country;
 import jp.co.genproject.ettewebserve.entity.Keyword;
 import jp.co.genproject.ettewebserve.entity.Product;
 
+/**
+ * 商品関連機能のDAO実装クラス。
+ * 商品一覧取得、検索、詳細表示、推薦商品の取得など、
+ * 商品に関するデータベース操作を実装する。
+ *
+ * 主な機能：
+ * ・商品一覧の取得  
+ * ・商品名、カテゴリ、キーワードによる検索  
+ * ・推薦商品の取得  
+ * ・商品詳細および付随情報（カテゴリ名、キーワード名、国名）の取得  
+ * ・並び順のバリデーションチェック（SQLインジェクション対策含む）
+ *
+ * 使用技術：
+ * ・Spring JDBC  
+ * ・NamedParameterJdbcTemplate  
+ * ・BeanPropertyRowMapper
+ *
+ * @author 張勝現
+ * @version 1.0
+ */
 @Repository
 public class ProductDaoImpl implements ProductDao{
     private final NamedParameterJdbcTemplate template;

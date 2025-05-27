@@ -19,16 +19,24 @@ public interface PurchaseDao {
     // 購入履歴登録
     public void registerPurchase(Integer userId, List<Integer> cartId, Integer totalQuantity, Integer totalPrice);
 
-    // 購入履歴検索および出力
+    // 全件取得
     public List<PurchaseHistory> findPurchaseByAll();
 
-    public List<PurchaseHistory> findPurchaseByProductId(Integer productId);
+    // 商品IDで検索
+    public List<PurchaseHistory> findPurchaseByProducName(String productName);
 
-    public List<PurchaseHistory> findPurchaseByPrice(Integer Price);
+    // 金額で検索
+    public List<PurchaseHistory> findPurchaseByPrice(Integer price);
 
+    // 日付順に並び替え
     public List<PurchaseHistory> sortPurchaseByDate();
 
+    // 数量順に並び替え
     public List<PurchaseHistory> sortPurchaseByQuantity();
 
+    // 金額順に並び替え
     public List<PurchaseHistory> sortPurchaseByPrice();
+
+    // ユーザーIDで購入履歴を取得（フィルター用）
+    public List<PurchaseHistory> findPurchaseByUserId(Integer userId);
 }

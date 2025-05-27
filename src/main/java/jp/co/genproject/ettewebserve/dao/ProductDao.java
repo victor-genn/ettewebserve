@@ -4,6 +4,23 @@ import java.util.List;
 
 import jp.co.genproject.ettewebserve.entity.Product;
 
+/**
+ * 商品関連機能のDAOインターフェースクラス。
+ * 商品一覧表示、検索、詳細表示などの商品に関する
+ * データアクセス処理を定義する。
+ *
+ * 主な機能：
+ * ・商品一覧取得  
+ * ・商品検索（名前・キーワード・カテゴリ）  
+ * ・推薦商品取得  
+ * ・商品詳細情報の取得
+ *
+ * 使用技術：
+ * ・Spring JDBC
+ *
+ * @author 張勝現
+ * @version 1.0
+ */
 public interface ProductDao {
 
     // 商品検索用    

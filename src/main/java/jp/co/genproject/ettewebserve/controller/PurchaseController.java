@@ -13,12 +13,28 @@ import org.springframework.web.bind.annotation.PostMapping;
 import jakarta.servlet.http.HttpSession;
 import jp.co.genproject.ettewebserve.dto.CartViewDto;
 import jp.co.genproject.ettewebserve.entity.Product;
+import jp.co.genproject.ettewebserve.entity.PurchaseHistory;
 import jp.co.genproject.ettewebserve.form.CartForm;
 import jp.co.genproject.ettewebserve.form.ChoiceForm;
 import jp.co.genproject.ettewebserve.form.PurchaseForm;
+import jp.co.genproject.ettewebserve.form.PurchaseSearchForm;
 import jp.co.genproject.ettewebserve.service.ProductService;
 import jp.co.genproject.ettewebserve.service.PurchaseService;
 
+/**
+ * 購入関連機能のコントローラークラス。
+ * カートへの商品追加、カート一覧の表示、購入確認および購入処理、購入履歴の表示を担当する。
+ *
+ * 主な機能：
+ * 商品詳細ページからカートへの追加、カート内容の表示と選択商品の購入確認、
+ * 購入処理の実行、購入履歴画面の初期表示などを行う。
+ *
+ * 使用技術：
+ * Spring MVC と Thymeleaf テンプレートエンジンを使用。
+ *
+ * @author 張勝現
+ * @version 1.0
+ */
 @Controller
 public class PurchaseController {
     private final ProductService productService;
@@ -66,7 +82,15 @@ public class PurchaseController {
         return "productView/prodDetail";
     }
 
-    // カートリスト
+    /**
+     * カートリスト画面を表示する処理です。
+     *
+     * @param cartForm カート情報を保持するフォームオブジェクト
+     * @param choiceForm ユーザーが選択した商品の情報を保持するフォームオブジェクト
+     * @param purchaseForm 購入処理に使用するフォームオブジェクト
+     * @param model 画面にデータを渡すためのModelオブジェクト
+     * @return カートリスト画面のテンプレート名（purchase/purcCargo）
+     */
     @GetMapping("/cartList")
     public String cartList(@ModelAttribute("cartForm") CartForm cartForm, 
             @ModelAttribute("choiceForm") ChoiceForm choiceForm,
@@ -86,6 +110,15 @@ public class PurchaseController {
         return "purchase/purcCargo";
     }
 
+    /**
+     * カート内でユーザーが選択した商品の購入確認情報を表示します。
+     *
+     * @param choiceForm 選択されたカートIDのリストを含むフォームオブジェクト
+     * @param purchaseForm 購入処理に使用するフォームオブジェクト
+     * @param model 画面にデータを渡すためのModelオブジェクト
+     * @param session ユーザーセッション情報
+     * @return 購入確認画面のテンプレート名（purchase/purcCargo）
+     */
     @PostMapping("/choiceItem")
     public String choiceItem(@ModelAttribute("choiceForm") ChoiceForm choiceForm,
             @ModelAttribute PurchaseForm purchaseForm, Model model, HttpSession session) {
@@ -129,13 +162,85 @@ public class PurchaseController {
         return "purchase/purcCargo";
     }
 
+    /**
+     * 購入履歴検索画面を表示する処理です。
+     *
+     * @param purchaseForm 購入履歴検索に使用するフォームオブジェクト
+     * @param model 画面にデータを渡すためのModelオブジェクト
+     * @return 購入履歴画面のテンプレート名（purchase/purcHistory）
+     */
     @GetMapping("/purchaseHistory")
-    public String showPurchaseForm(@ModelAttribute PurchaseForm purchaseForm, Model model) {
+    public String purchaseHistory(@ModelAttribute PurchaseForm purchaseForm, Model model) {
         model.addAttribute("purchaseForm", purchaseForm);
         return "purchase/purcHistory";
     }
-    
-    // 購入登録
+
+    /**
+     * 購入履歴検索フォームの送信処理。
+     * 検索条件または並び順に応じて購入履歴をフィルターまたはソートし、結果をビューに表示する。
+     *
+     * 主な機能：
+     * ・検索条件（商品名／金額）による履歴フィルター処理  
+     * ・並び順（日付／数量／金額）による履歴ソート処理  
+     * ・セッションからユーザーIDを取得し、ユーザー別の購入履歴を取得  
+     * ・検索フォームの入力値と検索結果をモデルに追加し、画面へ返却
+     *
+     * @param searchForm 検索条件・並び順などのフォーム情報  
+     * @param session ログインユーザー情報の取得に使用  
+     * @param model 検索結果とフォーム情報をビューに渡すためのモデル  
+     * @return 購入履歴画面のパス（purchase/purcHistory）
+     */
+    @PostMapping("/purchaseHistory")
+    public String postPurchaseHistory(@ModelAttribute("searchForm") PurchaseSearchForm searchForm, HttpSession session, Model model) {
+
+        Integer userId = (Integer) session.getAttribute("userId");
+        if (userId == null) userId = 4;
+
+        List<PurchaseHistory> purchaseList;
+
+        boolean hasKeyword = searchForm.getSearchKeyword() != null && !searchForm.getSearchKeyword().isEmpty();
+        boolean hasCondition = searchForm.getSearchCondition() != null && !searchForm.getSearchCondition().isEmpty();
+        boolean hasSort = searchForm.getSortBy() != null && !searchForm.getSortBy().isEmpty();
+
+        if (hasCondition && hasKeyword) {
+            if ("productName".equals(searchForm.getSearchCondition()) && hasKeyword) {
+                purchaseList = purchaseService.findPurchaseByProducName(searchForm.getSearchKeyword());
+            } else if ("price".equals(searchForm.getSearchCondition())) {
+                purchaseList = purchaseService.findPurchaseByPrice(Integer.parseInt(searchForm.getSearchKeyword()));
+            } else {
+                purchaseList = purchaseService.findPurchaseByUserId(userId);
+            }
+        } else if (hasSort) {
+            switch (searchForm.getSortBy()) {
+                case "date":
+                    purchaseList = purchaseService.sortPurchaseByDate();
+                    break;
+                case "quantity":
+                    purchaseList = purchaseService.sortPurchaseByQuantity();
+                    break;
+                case "price":
+                    purchaseList = purchaseService.sortPurchaseByPrice();
+                    break;
+                default:
+                    purchaseList = purchaseService.findPurchaseByUserId(userId);
+            }
+        } else {
+            purchaseList = purchaseService.findPurchaseByUserId(userId);
+        }
+
+        model.addAttribute("purchaseList", purchaseList);
+        model.addAttribute("searchForm", searchForm);
+        return "purchase/purcHistory";
+    }
+
+    /**
+     * 選択されたカート商品の購入処理を実行し、購入履歴画面を表示します。
+     *
+     * @param purchaseForm 購入情報（カートIDリスト、数量、価格）を含むフォームオブジェクト
+     * @param model 画面にデータを渡すためのModelオブジェクト
+     * @param session ユーザーセッション情報
+     * @return 購入履歴画面のテンプレート名（purchase/purcHistory）
+     */
     @PostMapping("/purchase")
     public String registerPurchase(@ModelAttribute PurchaseForm purchaseForm, Model model, HttpSession session) {
 
@@ -148,6 +253,7 @@ public class PurchaseController {
 
         purchaseService.registerPurchase(userId, cartIds, totalQuantity, totalPrice);
 
+        List<PurchaseHistory> purchaseList = purchaseService.findPurchaseByUserId(userId);
         model.addAttribute("purchaseList", purchaseList);
         return "purchase/purcHistory"; 
     }

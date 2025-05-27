@@ -21,18 +21,11 @@ import jp.co.genproject.ettewebserve.service.ProductService;
  * 商品一覧表示、商品検索、商品詳細表示、商品登録・更新画面への遷移処理を担当する。
  *
  * 主な機能：
- * <ul>
- *   <li>商品一覧ページの初期表示</li>
- *   <li>検索フォームによる商品検索</li>
- *   <li>商品詳細の表示</li>
- *   <li>商品登録・更新ページへの遷移</li>
- * </ul>
+ * 商品一覧ページの初期表示、検索フォームによる商品検索、商品詳細の表示、
+ * 商品登録・更新ページへの遷移などを行う。
  *
  * 使用技術：
- * <ul>
- *   <li>Spring MVC</li>
- *   <li>Thymeleaf テンプレートエンジン</li>
- * </ul>
+ * Spring MVC と Thymeleaf テンプレートエンジンを使用。
  *
  * @author 張勝現
  * @version 1.0
