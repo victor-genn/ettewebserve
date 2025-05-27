@@ -18,20 +18,26 @@ import jp.co.genproject.ettewebserve.service.ProductService;
 
 /**
  * 商品関連機能のコントローラークラス。
- * 商品一覧表示、商品検索、商品詳細表示、商品登録・更新画面への遷移処理を担当する。
+ * 商品一覧表示、検索、詳細表示、登録・更新画面遷移など、
+ * 商品に関する画面制御を担当する。
  *
  * 主な機能：
- * 商品一覧ページの初期表示、検索フォームによる商品検索、商品詳細の表示、
- * 商品登録・更新ページへの遷移などを行う。
+ * ・商品一覧の初期表示  
+ * ・カテゴリー、商品名、キーワードによる検索  
+ * ・商品詳細画面の表示  
+ * ・商品登録・更新画面への遷移
  *
  * 使用技術：
- * Spring MVC と Thymeleaf テンプレートエンジンを使用。
+ * ・Spring MVC  
+ * ・Thymeleaf テンプレートエンジン  
+ * ・フォームオブジェクトによる入力値バインディング
  *
  * @author 張勝現
  * @version 1.0
  */
 @Controller
 public class ProductController {
+
     private final ProductService productService;
 
     public ProductController(ProductService productService){
@@ -39,52 +45,42 @@ public class ProductController {
     }
 
     /**
-     * 商品一覧画面を初期表示する。
-     * 検索フォームにデフォルトの値（商品名・新着順）を設定し、
-     * 全商品リストおよび推薦商品リストを取得して画面に渡す。
+     * 商品一覧画面の初期表示処理。
      *
-     * @param productForm 検索条件を保持するフォームオブジェクト
-     * @param model       ビューに渡すデータを格納するモデル
-     * @return 商品一覧画面のパス（productView/prodView）
+     * @param productForm 検索条件フォーム
+     * @param model ビューに渡すモデル
+     * @return 商品一覧画面テンプレート
      */
     @GetMapping("/productList")
     public String productList(@ModelAttribute("productForm") ProductForm productForm, Model model) {
-        // 自動選択
         productForm.setSearchType("productName");
         productForm.setSortOrder("created_at");
 
-        // 画面遷移後、全体リスト出力
         List<Product> productList = productService.findByAll();
         model.addAttribute("productList", productList);
 
-        // 画面遷移後、推薦商品リスト出力
         List<Product> recommendList = productService.findByRecommends();
         model.addAttribute("recommendList", recommendList);
 
-        // フォームバインディング
         model.addAttribute("productForm", productForm);
         return "productView/prodView";
     }
 
     /**
-     * 商品検索を実行し、検索結果を一覧画面に表示する。
-     * 検索条件（カテゴリー・商品名・キーワードなど）に基づき、
-     * 条件に応じた商品リストを取得して画面に渡す。
+     * 商品検索処理。
      *
-     * @param productForm ユーザーが入力した検索条件を保持するフォームオブジェクト
-     * @param result      バリデーション結果を保持するオブジェクト
-     * @param model       ビューに渡すデータを格納するモデル
-     * @return 商品一覧画面のパス（productView/prodView）
+     * @param productForm 入力された検索条件フォーム
+     * @param result バリデーション結果
+     * @param model ビューに渡すモデル
+     * @return 商品一覧画面テンプレート
      */
     @PostMapping("/productSearch")
     public String productSearch(@Validated @ModelAttribute("productForm") ProductForm productForm, BindingResult result, Model model) {
 
-        // validate処理
-        if(result.hasErrors()){
+        if (result.hasErrors()) {
             return "productView/prodView";
         }
 
-        // 入力値を持ってくる
         Integer categoryId = productForm.getCategoryId();
         String searchType = productForm.getSearchType();
         String searchWord = productForm.getSearchWord();
@@ -92,21 +88,15 @@ public class ProductController {
 
         List<Product> productList;
 
-        // 条件変数
-        boolean categoryIdBoolean = categoryId == null;
-        boolean searchTypeBoolean = (searchType == null || searchType.trim().isEmpty());
-        boolean searchWordBoolean = (searchWord == null || searchWord.trim().isEmpty());
+        boolean categoryIdNull = categoryId == null;
+        boolean searchTypeEmpty = (searchType == null || searchType.trim().isEmpty());
+        boolean searchWordEmpty = (searchWord == null || searchWord.trim().isEmpty());
 
-        // default
-        if (categoryIdBoolean && searchTypeBoolean && searchWordBoolean) {
+        if (categoryIdNull && searchTypeEmpty && searchWordEmpty) {
             productList = productService.findByAll();
-
-        // カテゴリーだけで検索
-        } else if (!categoryIdBoolean && searchTypeBoolean && searchWordBoolean) {
+        } else if (!categoryIdNull && searchTypeEmpty && searchWordEmpty) {
             productList = productService.findByCategory(categoryId, sortOrder);
-
-        // 検索条件および検索語で検索
-        } else if (categoryIdBoolean && !searchTypeBoolean && !searchWordBoolean){
+        } else if (categoryIdNull && !searchTypeEmpty && !searchWordEmpty) {
             if ("productName".equals(searchType)) {
                 productList = productService.findByProductName(searchWord, sortOrder);
             } else if ("keyword".equals(searchType)) {
@@ -114,9 +104,7 @@ public class ProductController {
             } else {
                 productList = productService.findByAll();
             }
-
-        // カテゴリーおよび検索語で検索
-        } else if(!categoryIdBoolean && !searchTypeBoolean && !searchWordBoolean) {
+        } else if (!categoryIdNull && !searchTypeEmpty && !searchWordEmpty) {
             if ("productName".equals(searchType)) {
                 productList = productService.findByCategoryAndProductName(categoryId, searchWord, sortOrder);
             } else if ("keyword".equals(searchType)) {
@@ -124,54 +112,55 @@ public class ProductController {
             } else {
                 productList = productService.findByAll();
             }
-        } else{
+        } else {
             productList = productService.findByAll();
         }
 
-        // 画面に商品リスト出力
         model.addAttribute("productList", productList);
         model.addAttribute("productForm", productForm);
-        model.addAttribute("totalPages", 5);
+        model.addAttribute("totalPages", 5); // ページネーション対応を想定した固定値
         return "productView/prodView";
     }
 
     /**
-     * 商品詳細ページを表示する処理。
-     * 画面遷移前に、指定された商品IDに基づいて商品情報および関連情報（カテゴリ名、キーワード名、製造国名）を取得し、モデルに追加する。
+     * 商品詳細画面の表示処理。
      *
-     * @param cartForm カート追加用フォームオブジェクト（バインディング用）
+     * @param cartForm カート追加用フォーム
      * @param productId 表示対象の商品ID
-     * @param model ビューへデータを渡すためのモデル
-     * @return 商品詳細ページのテンプレート名
+     * @param model ビューに渡すモデル
+     * @return 商品詳細画面テンプレート
      */
     @PostMapping("/productDetail")
-    public String productDetail(@ModelAttribute("cartForm") CartForm cartForm, @RequestParam("productId") int productId, Model model) {
-        
-        // 商品IDをもとに商品情報を取得
+    public String productDetail(@ModelAttribute("cartForm") CartForm cartForm,
+                                @RequestParam("productId") int productId, Model model) {
+
         Product product = productService.findByProductId(productId);
         model.addAttribute("product", product);
 
-        // 商品に関連する各名称を取得してモデルに追加
-        String categoryName = productService.findCategoryNameByCategoryId(product.getCategoryId());
-        String keywordName = productService.findKeywordNameByKeywordId(product.getKeywordId());
-        String countryName = productService.findCountryNameByCountryId(product.getCountryId());
+        model.addAttribute("categoryName", productService.findCategoryNameByCategoryId(product.getCategoryId()));
+        model.addAttribute("keywordName", productService.findKeywordNameByKeywordId(product.getKeywordId()));
+        model.addAttribute("countryName", productService.findCountryNameByCountryId(product.getCountryId()));
 
-        model.addAttribute("categoryName", categoryName);
-        model.addAttribute("keywordName", keywordName);
-        model.addAttribute("countryName", countryName);
-
-        // 商品詳細画面に遷移
         return "productView/prodDetail";
     }
 
+    /**
+     * 商品登録画面への遷移処理。
+     *
+     * @return 登録画面テンプレート
+     */
     @GetMapping("/productRegist")
     public String productRegist() {
         return "productView/prodRegist";
     }
 
+    /**
+     * 商品更新画面への遷移処理。
+     *
+     * @return 更新画面テンプレート
+     */
     @GetMapping("/productUpdate")
     public String productUpdate() {
         return "productView/prodUpdate";
     }
-    
 }

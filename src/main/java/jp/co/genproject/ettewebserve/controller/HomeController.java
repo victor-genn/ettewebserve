@@ -4,13 +4,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 /**
- * ホーム画面の表示を担当するコントローラークラス。
+ * ホーム画面のコントローラークラス。
+ * トップページ（index）の初期表示を担当する。
  *
  * 主な機能：
- * トップページ（index）の初期表示を行う。
+ * ・トップページの表示
  *
  * 使用技術：
- * Spring MVC を使用。
+ * ・Spring MVC
  *
  * @author 張勝現
  * @version 1.0
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class HomeController {
 
-    @GetMapping({"/","/index"})
+    @GetMapping({"/", "/index"})
     public String index() {
         return "index";
     }

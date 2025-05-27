@@ -19,6 +19,8 @@ public interface PurchaseDao {
     // 購入履歴登録
     public void registerPurchase(Integer userId, List<Integer> cartId, Integer totalQuantity, Integer totalPrice);
 
+    public void deletePurchaseHistories(List<Integer> purchaseIds);
+
     // 全件取得
     public List<PurchaseHistory> findPurchaseByAll();
 

@@ -68,6 +68,9 @@
         <div class="purcCargo-div">
             <img th:src="@{/images/icon/total.png}" alt="パートタイトル" class="prodView-parttitle" />
             <form th:action="@{/purchase}" method="post" th:object="${purchaseForm}">
+                <th:block th:each="id : ${purchaseForm.cartIds}">
+                    <input type="hidden" name="cartIds" th:value="${id}" />
+                </th:block>
                 <table>
                     <tr class="purcCargo-tabletr2">
                         <th style="width: 135px;">総数量</th>

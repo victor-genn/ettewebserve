@@ -57,6 +57,10 @@ public class PurchaseServiceImpl implements PurchaseService {
         purchaseDao.registerPurchase(userId, cartId, totalQuantity, totalPrice);
     }
 
+    public void deletePurchaseHistories(List<Integer> purchaseIds){
+        purchaseDao.deletePurchaseHistories(purchaseIds);
+    }
+
         // 全件取得
     public List<PurchaseHistory> findPurchaseByAll(){
         return purchaseDao.findPurchaseByAll();

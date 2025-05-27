@@ -31,7 +31,7 @@
                 <!-- サブタイトル -->
                 <img th:src="@{/images/icon/history.png}" alt="サブタイトル" class="img-default-subtitle userPage-partion" style="margin-bottom: 20px;" />
 
-                <form th:action="@{/purchaseHistory}" method="post" th:object="${searchForm}" class="purchase-form">
+                <form th:action="@{/purchaseHistory}" method="post" th:object="${searchForm}">
                     <div class="purchase-searchbox">
 
                         <!-- 検索条件 -->
@@ -56,22 +56,24 @@
                         <input type="submit" value="検索" class="purchase-button purchase-researchbutton"/>
                     </div>
                 </form>
-                <form action="" class="purchase-form">
+                <form th:action="@{/purchaseHistory/delete}" method="post" class="purchase-form">
                     <div>
                         <table>
                             <tr class="purchase-history">
                                 <th>順番</th>
                                 <th>数量</th>
                                 <th style="width: 140px;">価格</th>
-                                <th style="width: 140px;">日付</th>                                
+                                <th style="width: 140px;">日付</th>
                                 <th>選択</th>
                             </tr>
                             <tr class="purchase-history" th:each="history, stat : ${purchaseList}">
                                 <td th:text="${stat.count}"></td>
                                 <td th:text="${history.quantity}"></td>
                                 <td th:text="|￥${history.totalPrice}|"></td>
-                                <td th:text="${#dates.format(history.purchasedAt, 'yyyy/MM/dd')}"></td>
-                                <td><input type="checkbox" th:value="${history.purchaseId}" name="selectedIds" /></td>
+                                <td th:text="${#temporals.format(history.purchasedAt, 'yyyy/MM/dd')}"></td>
+                                <td>
+                                    <input type="checkbox" th:value="${history.purchaseId}" name="selectedIds" />
+                                </td>
                             </tr>
                         </table>
                     </div>
@@ -80,9 +82,8 @@
                             <span>◀ 1 2 3 4 5 ▶</span>
                         </div>
                         <div style="display: flex; gap: 15px;">
-                            <input type="button" value="全体選択" class="purchase-actionbutton"/>
-                            <button class="purchase-actionbutton">選択削除</button>
-                            <button class="purchase-actionbutton">戻る</button>
+                            <input type="submit" value="選択削除" class="purchase-actionbutton" />
+                            <a th:href="@{/mypage}" class="purchase-actionbutton" style="text-decoration: none; display: inline-block; text-align: center;">戻る</a>
                         </div>
                     </div>
                 </form>

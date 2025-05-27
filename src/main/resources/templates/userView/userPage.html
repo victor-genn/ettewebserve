@@ -13,6 +13,12 @@
 
     <!-- メイン -->
     <main>
+        <!-- 現在ページ経路 -->
+        <div class="page-path" style="width: 1100px; margin-bottom: 20px;">
+            <a th:href="@{/index}">メイン＞</a>
+            <a th:href="@{/mypage}">マイページ</a>
+        </div>
+
         <div class="main-user-content">
             <!-- バーナー（左側） -->
             <img th:src="@{/images/photo/mypagebanner.png}" alt="バーナー" class="img-default-banner" />

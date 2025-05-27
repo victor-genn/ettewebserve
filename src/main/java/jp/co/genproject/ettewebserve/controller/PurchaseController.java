@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.servlet.http.HttpSession;
 import jp.co.genproject.ettewebserve.dto.CartViewDto;
@@ -23,14 +24,20 @@ import jp.co.genproject.ettewebserve.service.PurchaseService;
 
 /**
  * 購入関連機能のコントローラークラス。
- * カートへの商品追加、カート一覧の表示、購入確認および購入処理、購入履歴の表示を担当する。
+ * カート操作、購入処理、購入履歴の表示・検索・削除など、
+ * 購入に関する画面制御を担当する。
  *
  * 主な機能：
- * 商品詳細ページからカートへの追加、カート内容の表示と選択商品の購入確認、
- * 購入処理の実行、購入履歴画面の初期表示などを行う。
+ * ・商品詳細ページからのカート追加  
+ * ・カート一覧表示および購入確認情報の表示  
+ * ・選択商品の購入処理および購入履歴登録  
+ * ・購入履歴の表示、検索、並び替え、削除
  *
  * 使用技術：
- * Spring MVC と Thymeleaf テンプレートエンジンを使用。
+ * ・Spring MVC  
+ * ・Thymeleaf テンプレートエンジン  
+ * ・フォームオブジェクトを用いたデータ受け渡し  
+ * ・セッション管理
  *
  * @author 張勝現
  * @version 1.0
@@ -47,14 +54,13 @@ public class PurchaseController {
         this.purchaseService = purchaseService;
         this.session = session;
     }
-    
+
     /**
-     * 商品詳細画面で「カートに入れる」ボタンが押下された際の処理。
-     * 対象商品をカートに登録し、再度商品詳細画面を表示する。
+     * 商品詳細画面からカートに商品を追加する処理。
      *
-     * @param cartForm カート登録用フォーム（商品ID、サイズ、数量などを保持）
-     * @param model    ビューへデータを渡すためのモデル
-     * @return 商品詳細画面のテンプレート名（productView/prodDetail）
+     * @param cartForm カート登録用フォーム
+     * @param model ビューに渡すモデル
+     * @return 商品詳細画面テンプレート
      */
     @PostMapping("/cartIn")
     public String purchase(@ModelAttribute("cartForm") CartForm cartForm, Model model) {
@@ -64,37 +70,30 @@ public class PurchaseController {
         Integer userId = (Integer) session.getAttribute("userId");
         if (userId == null) userId = 4;
 
-        Integer productId = cartForm.getProductId();
-        Integer sizeId = cartForm.getSizeId();
-        Integer quantity = cartForm.getQuantity();
+        purchaseService.addToCart(userId, cartForm.getProductId(), cartForm.getSizeId(), cartForm.getQuantity());
 
-        purchaseService.addToCart(userId, productId, sizeId, quantity);
-
-        String categoryName = productService.findCategoryNameByCategoryId(product.getCategoryId());
-        String keywordName = productService.findKeywordNameByKeywordId(product.getKeywordId());
-        String countryName = productService.findCountryNameByCountryId(product.getCountryId());
-
-        model.addAttribute("categoryName", categoryName);
-        model.addAttribute("keywordName", keywordName);
-        model.addAttribute("countryName", countryName);
-
+        model.addAttribute("categoryName", productService.findCategoryNameByCategoryId(product.getCategoryId()));
+        model.addAttribute("keywordName", productService.findKeywordNameByKeywordId(product.getKeywordId()));
+        model.addAttribute("countryName", productService.findCountryNameByCountryId(product.getCountryId()));
         model.addAttribute("cartForm", cartForm);
+
         return "productView/prodDetail";
     }
 
     /**
-     * カートリスト画面を表示する処理です。
+     * カート一覧画面を表示する処理。
      *
-     * @param cartForm カート情報を保持するフォームオブジェクト
-     * @param choiceForm ユーザーが選択した商品の情報を保持するフォームオブジェクト
-     * @param purchaseForm 購入処理に使用するフォームオブジェクト
-     * @param model 画面にデータを渡すためのModelオブジェクト
-     * @return カートリスト画面のテンプレート名（purchase/purcCargo）
+     * @param cartForm カートフォーム
+     * @param choiceForm 選択情報フォーム
+     * @param purchaseForm 購入フォーム
+     * @param model ビューに渡すモデル
+     * @return カート画面テンプレート
      */
     @GetMapping("/cartList")
-    public String cartList(@ModelAttribute("cartForm") CartForm cartForm, 
-            @ModelAttribute("choiceForm") ChoiceForm choiceForm,
-            @ModelAttribute PurchaseForm purchaseForm, Model model) {
+    public String cartList(@ModelAttribute("cartForm") CartForm cartForm,
+                           @ModelAttribute("choiceForm") ChoiceForm choiceForm,
+                           @ModelAttribute PurchaseForm purchaseForm,
+                           Model model) {
 
         Integer userId = (Integer) session.getAttribute("userId");
         if (userId == null) userId = 4;
@@ -111,17 +110,18 @@ public class PurchaseController {
     }
 
     /**
-     * カート内でユーザーが選択した商品の購入確認情報を表示します。
+     * 選択したカート商品を購入確認画面に表示する処理。
      *
-     * @param choiceForm 選択されたカートIDのリストを含むフォームオブジェクト
-     * @param purchaseForm 購入処理に使用するフォームオブジェクト
-     * @param model 画面にデータを渡すためのModelオブジェクト
-     * @param session ユーザーセッション情報
-     * @return 購入確認画面のテンプレート名（purchase/purcCargo）
+     * @param choiceForm 選択されたカートIDのリスト
+     * @param purchaseForm 購入フォーム
+     * @param model ビューに渡すモデル
+     * @param session ユーザーセッション
+     * @return 確認画面テンプレート
      */
     @PostMapping("/choiceItem")
     public String choiceItem(@ModelAttribute("choiceForm") ChoiceForm choiceForm,
-            @ModelAttribute PurchaseForm purchaseForm, Model model, HttpSession session) {
+                             @ModelAttribute PurchaseForm purchaseForm,
+                             Model model, HttpSession session) {
 
         Integer userId = (Integer) session.getAttribute("userId");
         if (userId == null) userId = 4;
@@ -130,68 +130,68 @@ public class PurchaseController {
         for (CartViewDto item : cartList) {
             item.setAddedAtFormatted(item.getAddedAt().format(formatter));
         }
-
         model.addAttribute("cartList", cartList);
 
         List<Integer> selectedCartIds = choiceForm.getCartIds();
-
         List<CartViewDto> totalCartList = new ArrayList<>();
         Integer totalQuantity = 0;
         Integer totalPrice = 0;
-        double taxIncludedPrice = 0;
-        double point = 0;
 
         if (selectedCartIds != null && !selectedCartIds.isEmpty()) {
             totalCartList = purchaseService.purchaseFromCart(userId, selectedCartIds);
+            purchaseForm.setCartIds(selectedCartIds);
         }
 
-        for(CartViewDto cart : totalCartList){
+        for (CartViewDto cart : totalCartList) {
             totalQuantity += cart.getQuantity();
-            totalPrice += cart.getQuantity()*cart.getSalePrice();
+            totalPrice += cart.getQuantity() * cart.getSalePrice();
         }
-
-        taxIncludedPrice = totalPrice*1.1;
-        point = totalPrice*0.05;
 
         model.addAttribute("totalQuantity", totalQuantity);
         model.addAttribute("totalPrice", totalPrice);
-        model.addAttribute("taxIncludedPrice", taxIncludedPrice);
-        model.addAttribute("point", point);
-
+        model.addAttribute("taxIncludedPrice", totalPrice * 1.1);
+        model.addAttribute("point", totalPrice * 0.05);
         model.addAttribute("purchaseForm", purchaseForm);
+
         return "purchase/purcCargo";
     }
 
     /**
-     * 購入履歴検索画面を表示する処理です。
+     * 購入履歴画面の初期表示処理。
      *
-     * @param purchaseForm 購入履歴検索に使用するフォームオブジェクト
-     * @param model 画面にデータを渡すためのModelオブジェクト
-     * @return 購入履歴画面のテンプレート名（purchase/purcHistory）
+     * @param purchaseForm 購入フォーム
+     * @param searchForm 検索フォーム
+     * @param model ビューに渡すモデル
+     * @param session セッション情報
+     * @return 履歴画面テンプレート
      */
     @GetMapping("/purchaseHistory")
-    public String purchaseHistory(@ModelAttribute PurchaseForm purchaseForm, Model model) {
+    public String purchaseHistory(@ModelAttribute PurchaseForm purchaseForm,
+                                  @ModelAttribute("searchForm") PurchaseSearchForm searchForm,
+                                  Model model, HttpSession session) {
+
+        Integer userId = (Integer) session.getAttribute("userId");
+        if (userId == null) userId = 4;
+
+        List<PurchaseHistory> purchaseList = purchaseService.findPurchaseByUserId(userId);
+
+        model.addAttribute("searchForm", searchForm);
         model.addAttribute("purchaseForm", purchaseForm);
+        model.addAttribute("purchaseList", purchaseList);
         return "purchase/purcHistory";
     }
 
     /**
-     * 購入履歴検索フォームの送信処理。
-     * 検索条件または並び順に応じて購入履歴をフィルターまたはソートし、結果をビューに表示する。
+     * 購入履歴の検索および並び替え処理。
      *
-     * 主な機能：
-     * ・検索条件（商品名／金額）による履歴フィルター処理  
-     * ・並び順（日付／数量／金額）による履歴ソート処理  
-     * ・セッションからユーザーIDを取得し、ユーザー別の購入履歴を取得  
-     * ・検索フォームの入力値と検索結果をモデルに追加し、画面へ返却
-     *
-     * @param searchForm 検索条件・並び順などのフォーム情報  
-     * @param session ログインユーザー情報の取得に使用  
-     * @param model 検索結果とフォーム情報をビューに渡すためのモデル  
-     * @return 購入履歴画面のパス（purchase/purcHistory）
+     * @param searchForm 検索条件フォーム
+     * @param session セッション情報
+     * @param model ビューに渡すモデル
+     * @return 履歴画面テンプレート
      */
     @PostMapping("/purchaseHistory")
-    public String postPurchaseHistory(@ModelAttribute("searchForm") PurchaseSearchForm searchForm, HttpSession session, Model model) {
+    public String postPurchaseHistory(@ModelAttribute("searchForm") PurchaseSearchForm searchForm,
+                                      HttpSession session, Model model) {
 
         Integer userId = (Integer) session.getAttribute("userId");
         if (userId == null) userId = 4;
@@ -203,7 +203,7 @@ public class PurchaseController {
         boolean hasSort = searchForm.getSortBy() != null && !searchForm.getSortBy().isEmpty();
 
         if (hasCondition && hasKeyword) {
-            if ("productName".equals(searchForm.getSearchCondition()) && hasKeyword) {
+            if ("productName".equals(searchForm.getSearchCondition())) {
                 purchaseList = purchaseService.findPurchaseByProducName(searchForm.getSearchKeyword());
             } else if ("price".equals(searchForm.getSearchCondition())) {
                 purchaseList = purchaseService.findPurchaseByPrice(Integer.parseInt(searchForm.getSearchKeyword()));
@@ -229,32 +229,48 @@ public class PurchaseController {
         }
 
         model.addAttribute("purchaseList", purchaseList);
-        model.addAttribute("searchForm", searchForm);
         return "purchase/purcHistory";
     }
 
     /**
-     * 選択されたカート商品の購入処理を実行し、購入履歴画面を表示します。
+     * カート選択商品の購入処理。
      *
-     * @param purchaseForm 購入情報（カートIDリスト、数量、価格）を含むフォームオブジェクト
-     * @param model 画面にデータを渡すためのModelオブジェクト
-     * @param session ユーザーセッション情報
-     * @return 購入履歴画面のテンプレート名（purchase/purcHistory）
+     * @param purchaseForm 購入情報を含むフォーム
+     * @param model ビューに渡すモデル
+     * @param session セッション情報
+     * @return 購入履歴画面へリダイレクト
      */
     @PostMapping("/purchase")
     public String registerPurchase(@ModelAttribute PurchaseForm purchaseForm, Model model, HttpSession session) {
-
         Integer userId = (Integer) session.getAttribute("userId");
         if (userId == null) userId = 4;
 
-        List<Integer> cartIds = purchaseForm.getCartIds();
+        List<Integer> cartIdList = purchaseForm.getCartIds();
         Integer totalQuantity = purchaseForm.getTotalQuantity();
         Integer totalPrice = purchaseForm.getTotalPrice();
 
-        purchaseService.registerPurchase(userId, cartIds, totalQuantity, totalPrice);
+        if (cartIdList == null || cartIdList.isEmpty()) {
+            model.addAttribute("error", "購入する商品が選択されていません。");
+            return "purchase/purcCargo";
+        }
 
-        List<PurchaseHistory> purchaseList = purchaseService.findPurchaseByUserId(userId);
-        model.addAttribute("purchaseList", purchaseList);
-        return "purchase/purcHistory"; 
+        purchaseService.registerPurchase(userId, cartIdList, totalQuantity, totalPrice);
+        return "redirect:/purchaseHistory";
+    }
+
+    /**
+     * 選択された購入履歴の削除処理。
+     *
+     * @param selectedIds 削除対象の購入履歴IDリスト
+     * @param session セッション情報
+     * @return 購入履歴画面へリダイレクト
+     */
+    @PostMapping("/purchaseHistory/delete")
+    public String deletePurchaseHistory(@RequestParam(value = "selectedIds", required = false) List<Integer> selectedIds,
+                                        HttpSession session) {
+        if (selectedIds != null && !selectedIds.isEmpty()) {
+            purchaseService.deletePurchaseHistories(selectedIds);
+        }
+        return "redirect:/purchaseHistory";
     }
 }
