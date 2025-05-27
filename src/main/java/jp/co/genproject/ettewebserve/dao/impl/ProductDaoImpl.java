@@ -49,7 +49,7 @@ public class ProductDaoImpl implements ProductDao{
     private final String SQL_SELECT_BY_CATEGORY_PRODUCTNAME = "SELECT * FROM product WHERE category_id = :categoryId and product_name = :productName ORDER BY ";
     private final String SQL_SELECT_BY_CATEGORY_KEYWORDID = "SELECT * FROM product WHERE category_id = :categoryId and keyword_id = :keywordId ORDER BY ";
     private final String SQL_SELECT_BY_KEYWORD = "SELECT * FROM keyword WHERE keyword_name = :keywordName";
-    private final String SQL_SELECT_BY_RECOMMENDS = "SELECT p.product_id, p.product_name, p.regular_price, p.sale_price, p.imagePath FROM recommends r JOIN product p ON r.product_id = p.product_id";
+    private final String SQL_SELECT_BY_RECOMMENDS = "SELECT p.product_id, p.product_name, p.regular_price, p.sale_price, p.image_path FROM recommends r JOIN product p ON r.product_id = p.product_id";
     private final String SQL_SELECT_BY_PRODUCTID = "SELECT * FROM product WHERE product_id = :productId ORDER BY product_id";
     private final String SQL_SELECT_CATEGORY_NAME_BY_ID = "SELECT category_name FROM category WHERE category_id = :categoryId";
     private final String SQL_SELECT_KEYWORD_NAME_BY_ID = "SELECT keyword_name FROM keyword WHERE keyword_id = :keywordId";

@@ -61,7 +61,7 @@ CREATE TABLE product (
     discount_rate INT NOT NULL CHECK (discount_rate BETWEEN 0 AND 100),
     sale_price INT NOT NULL,
     stock INT NOT NULL,
-    imagePath VARCHAR(100) NOT NULL,
+    image_path VARCHAR(100) NOT NULL,
     description VARCHAR(1000),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NULL,
@@ -70,20 +70,23 @@ CREATE TABLE product (
     FOREIGN KEY (country_id) REFERENCES country(country_id)
 );
 
+-- 8. RECOMMENDS
 CREATE TABLE recommends (
-    recomend_id INT AUTO_INCREMENT PRIMARY KEY,
+    recommend_id INT AUTO_INCREMENT PRIMARY KEY,
     product_id INT NOT NULL,
     FOREIGN KEY (product_id) REFERENCES product(product_id)
 );
 
--- 8. 購入履歴
+-- 9. 購入履歴
 CREATE TABLE purchase_history (
     purchase_id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
     product_id INT NOT NULL,
     quantity INT NOT NULL,
     total_price INT NOT NULL,
-    purchased_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    purchased_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES user_account(user_id),
+    FOREIGN KEY (product_id) REFERENCES product(product_id)
 );
 
 -- 10. サイズ

@@ -73,7 +73,7 @@ INSERT INTO user_account (
 -- 商品（20件）
 INSERT INTO product (
     product_name, category_id, keyword_id, country_id, manufacture_date,
-    regular_price, discount_rate, sale_price, stock, imagePath
+    regular_price, discount_rate, sale_price, stock, image_path
 ) VALUES
 ('カジュアルTシャツ', 1, 1, 2, '2024-04-01', 3000, 10, 2700, 50, '/images/products/01.jpg'),
 ('フォーマルジャケット', 2, 2, 1, '2024-01-15', 12000, 25, 9000, 30, '/images/products/02.jpg'),
