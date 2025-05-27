@@ -132,3 +132,8 @@ footer{
     color: lightgray;
     font-size: 15px;
 }
+
+.errorMessage {
+    font-size: 15px;
+    color: red;
+}

@@ -9,12 +9,15 @@ CREATE TABLE role (
     role_name VARCHAR(50) NOT NULL
 );
 
+ALTER TABLE product
+ADD COLUMN description VARCHAR(1000);
+
 -- 2. キーワード
 CREATE TABLE keyword (
     keyword_id INT PRIMARY KEY,
     keyword_name VARCHAR(50) NOT NULL
 );
-
+DELETE FROM category;
 -- 3. カテゴリー
 CREATE TABLE category (
     category_id INT PRIMARY KEY,
@@ -36,7 +39,7 @@ CREATE TABLE user_account (
     first_name VARCHAR(50) NOT NULL,
     gender VARCHAR(10) NOT NULL,
     email VARCHAR(100),
-    image_path VARCHAR(255), -- ユーザー画像のパス
+    image_path VARCHAR(255),
     keyword_1 INT,
     keyword_2 INT,
     keyword_3 INT,
@@ -61,6 +64,8 @@ CREATE TABLE product (
     discount_rate INT NOT NULL CHECK (discount_rate BETWEEN 0 AND 100),
     sale_price INT NOT NULL,
     stock INT NOT NULL,
+    imagePath VARCHAR(100) NOT NULL,
+    \description VARCHAR(1000),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NULL,
     FOREIGN KEY (category_id) REFERENCES category(category_id),
@@ -68,12 +73,9 @@ CREATE TABLE product (
     FOREIGN KEY (country_id) REFERENCES country(country_id)
 );
 
--- 7. 商品画像（1対多構造に変更）
-CREATE TABLE product_image (
-    image_id INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE recommends (
+    recomend_id INT AUTO_INCREMENT PRIMARY KEY,
     product_id INT NOT NULL,
-    image_path VARCHAR(255) NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (product_id) REFERENCES product(product_id)
 );
 
@@ -90,10 +92,12 @@ CREATE TABLE purchase_detail (
     purchase_detail_id INT AUTO_INCREMENT PRIMARY KEY,
     purchase_id INT NOT NULL,
     product_id INT NOT NULL,
+    size_id INT NOT NULL,
     quantity INT NOT NULL,
     price INT NOT NULL,
     FOREIGN KEY (purchase_id) REFERENCES purchase(purchase_id),
-    FOREIGN KEY (product_id) REFERENCES product(product_id)
+    FOREIGN KEY (product_id) REFERENCES product(product_id),
+    FOREIGN KEY (size_id) REFERENCES size(size_id)
 );
 
 -- 10. サイズ

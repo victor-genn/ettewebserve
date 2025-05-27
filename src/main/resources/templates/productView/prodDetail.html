@@ -22,7 +22,7 @@
 
         <div class="probDetail-content">
             <!-- 商品写真（左側） -->
-            <img th:src="@{/images/photo/productimages.png}" alt="商品写真" class="img-default-banner" />
+            <img th:src="@{${product.imagePath}}" alt="商品写真" class="img-default-banner" />
 
             <!-- 商品詳細フォーム（右側） -->
             <div class="div-default-form">
@@ -30,57 +30,55 @@
                 <!-- サブタイトル -->
                 <img th:src="@{/images/icon/productdetail.png}" alt="サブタイトル" class="img-default-subtitle" />
 
-                <form action="" class="prodDetail-form">
+                <form th:action="@{/purchace}" method="post" th:object="${purchaceForm}" class="prodDetail-form">
+                    <!-- 商品ID -->
+                    <input type="hidden" th:field="*{productId}" th:value="${product.productId}" />
+
                     <div class="probDetail-grid2 probDetail-partion">
                         <!-- カテゴリー -->
                         <div class="probDetail-grid2">
                             <label class="prodDetail-label">カテゴリー</label>
-                            <input type="hidden" />
-                            <span class="probDetail-span1">女性服</span>
+                            <span class="probDetail-span1" th:text="${categoryName}" style="overflow: hidden;">カテゴリー</span>
                         </div>
 
                         <!--商品名  -->
                         <div>
                             <label class="prodDetail-label">商品名</label>
-                            <input type="hidden" />
-                            <span class="probDetail-span4">ザガードセーター</span>
+                            <span class="probDetail-span4" th:text="${product.productName}">商品名</span>
                         </div>
                     </div>
 
                     <div class="probDetail-partion">
                         <!-- キーワード -->
                         <label class="prodDetail-label">キーワード</label>
-                        <input type="hidden" />
-                        <span class="probDetail-span3">#シンプルな、#楽な、#柔らかい</span>
+                        <span class="probDetail-span3" th:text="|＃${keywordName}|">#キーワード</span>
                     </div>
                     
                     <div class="probDetail-grid2 probDetail-partion">
                         <!-- 製造国 -->
                         <div class="probDetail-grid2">
                             <label class="prodDetail-label">製造国</label>
-                            <input type="hidden" />
-                            <span class="probDetail-span1">日本</span>
+                            <span class="probDetail-span1" th:text="${countryName}">製造国</span>
                         </div>
 
                         <!-- 製造年月 -->
                         <div class="probDetail-grid2">
                             <label class="prodDetail-label">製造年月</label>
-                            <input type="hidden" />
-                            <input type="date" value="2024-10-22" class="probDetail-span1" readonly>
+                            <input type="date" th:value="${product.manufactureDate}" class="probDetail-span1" readonly />
                         </div>
                     </div>
 
                     <div class="probDetail-partion">
                         <!-- 商品説明 -->
                         <input type="hidden" />
-                        <span class="probDetail-span2">商品説明</span>
+                        <span class="probDetail-span2" th:text="${product.description}">商品説明</span>
                     </div>
 
                     <div class="probDetail-grid2 probDetail-partion">
                         <!-- サイズ -->
                         <div class="probDetail-grid2">
                             <label class="prodDetail-label">サイズ</label>
-                            <select class="prodDetail-select">
+                            <select class="prodDetail-select" th:field="*{size}">
                                 <option selected>--サイズ--</option>
                                 <option value="s">- S -</option>
                                 <option value="m">- M -</option>
@@ -91,7 +89,7 @@
                         <!-- 数量 -->
                         <div class="probDetail-grid2">
                             <label class="prodDetail-label">数量</label>
-                            <input type="number" class="prodDetail-numbers" />
+                            <input type="number" th:field="*{quantity}" class="prodDetail-numbers" />
                         </div>
                     </div>
 
@@ -99,27 +97,26 @@
                         <!-- 定価 -->
                         <div class="probDetail-grid2">
                             <label class="prodDetail-label">定価</label>
-                            <input type="hidden" />
-                            <span class="probDetail-span1">￥4990</span>
+                            <span class="probDetail-span1" th:text="|￥${product.regularPrice}|">定価</span>
                         </div>
                         <!-- 販売価格 -->
                         <div class="probDetail-grid2">
                             <label class="prodDetail-label">販売価格</label>
-                            <input type="hidden" />
-                            <span class="probDetail-span1">￥4990</span>
+                            <input type="hidden" th:field="*{salePrice}" th:value="${product.salePrice}" />
+                            <span class="probDetail-span1" th:text="￥${product.salePrice}">販売価格</span>
                         </div>
                     </div>
                     <div class="probDetail-buttondiv">
                         <!-- 提出ボタン -->
                         <button class="probDetail-button">購入</button>
-                        <button class="probDetail-button">戻る</button>
-                        <!-- 管理者用ボタン -->
-                        <a th:href="@{/productUpdate}">
-                            <button type="button" class="probDetail-button">修正</button>
-                        </a>
-                        <button class="probDetail-button">削除</button>
+                        <button class="probDetail-button" onclick="history.back()">戻る</button>
                     </div>
                 </form>
+                <!-- 管理者用ボタン -->
+                <!-- <a th:href="@{/productUpdate}">
+                    <button type="button" class="probDetail-button">修正</button>
+                </a>
+                <button class="probDetail-button">削除</button> -->
             </div>
         </div>
     </main>

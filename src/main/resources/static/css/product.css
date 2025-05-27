@@ -20,7 +20,7 @@ main{
 }
 
 .prodView-select{
-    width: 135px;
+    width: 170px;
     height: 37px;
     border-radius: 5px;
     font-size: 15px;
@@ -77,6 +77,55 @@ main{
     margin: 10px 0 20px 0;
 }
 
+.prodView-productList{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    gap: 15px;
+}
+
+.prodView-itemDiv{
+    width: 217px;
+    height: 293px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #292929;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.prodView-itemImg{
+    width: 187px;
+    margin-bottom: 10px;
+}
+
+.prodView-itemPrice,
+.prodView-itemDiscountPrice{
+    font-size: 14px;
+    text-align: right;
+}
+
+.prodView-itemPrice{
+    color: lightgray;
+    text-decoration: line-through;
+}
+
+.prodView-itemDiscountPrice{
+    color: red;
+}
+
+.prodView-nameDiv{
+    overflow: hidden;
+    font-size: 17px;
+}
+
+.prodView-priceDiv{
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+    align-items: center;
+}
 
 /* probDetail.html */
 

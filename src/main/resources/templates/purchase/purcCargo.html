@@ -47,15 +47,15 @@
                     <th style="width: 145px;">販売価格</th>
                     <th style="width: 60px;">選択</th>
                 </tr>
-                <tr class="purcCargo-tabletr1">
-                    <td>順番</td>
-                    <td><img th:src="@{/images/photo/itemsample.png}" style="width: 165px;" /></td>
-                    <td>商品名</td>
-                    <td>数量</td>
-                    <td>定価</td>
-                    <td>割引率</td>
-                    <td>販売価格</td>
-                    <td>選択</td>
+                <tr th:each="item, stat : ${purchaseList}" class="purcCargo-tabletr1">
+                    <td th:text="${stat.count}">1</td>
+                    <td><img th:src="@{${item.imagePath}}" style="width: 165px;" /></td>
+                    <td th:text="${item.productName}">商品名</td>
+                    <td th:text="${item.quantity}">数量</td>
+                    <td th:text="|￥${item.regularPrice}|">定価</td>
+                    <td th:text="|${item.discountRate}%|">割引率</td>
+                    <td th:text="|￥${item.salePrice}|">販売価格</td>
+                    <td><input type="checkbox" name="selectItem" th:value="${item.productId}" /></td>
                 </tr>
             </table>
         </div>
@@ -72,10 +72,10 @@
                         <th style="width: 300px;">クーポン</th>
                     </tr>
                     <tr class="purcCargo-tabletr2">
-                        <td>総数量</td>
-                        <td>総価格</td>
-                        <td>税込み</td>
-                        <td>ポイント</td>
+                        <td th:text="${totalQuantity}">総数量</td>
+                        <td th:text="|￥${totalPrice}|">総価格</td>
+                        <td th:text="|￥${taxIncludedPrice}|">税込み</td>
+                        <td th:text="|${point} pt|">ポイント</td>
                         <td><input type="button" value="クーポン" class="purcCargo-button1" /></td>
                     </tr>
                 </table>
