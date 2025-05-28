@@ -10,4 +10,7 @@ public interface UserDao {
 
     // ログインIDとしてユーザー情報取得
     User findByloginId(String loginId);
+
+    /** ログインIDおよびパスワードとしてユーザーデータと比較 */
+    boolean signIn(String loginId, String password);
 }

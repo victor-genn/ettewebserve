@@ -46,6 +46,7 @@
     grid-template-columns: 1fr 1fr 1fr;
     justify-items: start;
     align-items: center;
+    position: relative;
 }
 
 .form-regist-partion2{
@@ -77,6 +78,8 @@
 
 .img-regist-profile{
     width: 90px;
+    height: 90px;
+    margin-left: 3px;
 }
 
 .div-regist-file{
@@ -87,7 +90,7 @@
 
 .text-regist-keyword{
     font-size: 13px;
-    color: gray;
+    color: rgb(255, 88, 88);
 }
 
 .form-regist-label{
@@ -127,4 +130,9 @@
     padding: 4px 8px;
     color: white;
     cursor: pointer;
+}
+
+.validate-div{
+    overflow: hidden;
+    height: 23px;
 }

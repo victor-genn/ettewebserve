@@ -1,10 +1,13 @@
 package jp.co.genproject.ettewebserve.service.impl;
 
+import org.springframework.stereotype.Service;
+
 import jp.co.genproject.ettewebserve.dao.UserDao;
 import jp.co.genproject.ettewebserve.dto.UserDto;
 import jp.co.genproject.ettewebserve.entity.User;
 import jp.co.genproject.ettewebserve.service.UserService;
 
+@Service
 public class UserServiceImpl implements UserService{
     private final UserDao userDao;
 
@@ -18,5 +21,9 @@ public class UserServiceImpl implements UserService{
 
     public User findByloginId(String loginId){
         return userDao.findByloginId(loginId);
+    }
+
+    public boolean signIn(String loginId, String password){
+        return userDao.signIn(loginId, password);
     }
 }

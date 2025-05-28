@@ -5,11 +5,13 @@ import java.util.List;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import jp.co.genproject.ettewebserve.dao.UserDao;
 import jp.co.genproject.ettewebserve.dto.UserDto;
 import jp.co.genproject.ettewebserve.entity.User;
 
+@Repository
 public class UserDaoImpl implements UserDao {
     // JDBC
     private final NamedParameterJdbcTemplate template;
@@ -18,8 +20,9 @@ public class UserDaoImpl implements UserDao {
     private final BeanPropertyRowMapper<User> userRowMapper = new BeanPropertyRowMapper<>(User.class);
 
     // SQL文
-    private static final String SQL_INSERT_USER = "INSERT INTO user_account (login_id, password, last_name, first_name, gender, email, image_path, keyword1, keyword2, keyword3, role_id) VALUES (:loginId, :password, :lastName, :firstName, :gender, :email, :imagePath, :keyword1, :keyword2, :keyword3, :roleId)";
-    private static final String SQL_SELECT_USER_BY_USERID = "SELECT * FROM user_account WHERE user_id = :userId ORDER BY user_id";
+    private static final String SQL_INSERT_USER = "INSERT INTO user_account (login_id, password, last_name, first_name, gender, email, image_path, keyword_1, keyword_2, keyword_3, role_id) VALUES (:loginId, :password, :lastName, :firstName, :gender, :email, :imagePath, :keyword1, :keyword2, :keyword3, :roleId)";
+    private static final String SQL_SELECT_USER_BY_USERID = "SELECT * FROM user_account WHERE login_id = :loginId ORDER BY user_id";
+    private static final String SQL_SELECT_USER_BY_USERID_AND_PASSWORD = "SELECT * FROM user_account WHERE login_id = :loginId and password = :password";;
 
     // コンストラクター
     public UserDaoImpl (NamedParameterJdbcTemplate template) {
@@ -49,5 +52,14 @@ public class UserDaoImpl implements UserDao {
         param.addValue("loginId", loginId);
         List<User> userList = template.query(SQL_SELECT_USER_BY_USERID, param, userRowMapper);
         return userList.isEmpty() ? null : userList.get(0);
+    }
+
+    /** ログインIDおよびパスワードとしてユーザーデータと比較 */
+    public boolean signIn(String loginId, String password){
+        MapSqlParameterSource param = new MapSqlParameterSource();
+        param.addValue("loginId", loginId);
+        param.addValue("password", password);
+        List<User> userList = template.query(SQL_SELECT_USER_BY_USERID_AND_PASSWORD, param, userRowMapper);
+        return !userList.isEmpty();
     }
 }

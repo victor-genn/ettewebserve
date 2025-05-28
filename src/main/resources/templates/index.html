@@ -9,13 +9,13 @@
 </head>
 <body>
     <!-- ヘッダー -->
-    <div th:replace="fragments/header :: header"></div>
+    <div th:if="${session.loginId}" th:replace="fragments/header :: header"></div>
 
     <!-- メイン -->
     <main>
         <!-- バーナー -->
         <div class="main-index-banner">
-            <a th:href="@{/productList}">
+            <a th:href="${session.loginId} ? @{/productList} : @{/login}">
                 <img th:src="@{/images/photo/main-banner.png}" alt="バーナー" class="img-index-banner" />
             </a>
         </div>

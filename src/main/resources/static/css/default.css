@@ -86,7 +86,7 @@ main{
 /* エラーメッセージ */
 .validate-error{
     font-size: 13px;
-    color: gray;
+    color: rgb(255, 104, 104);
 }
 
 /* フッター */

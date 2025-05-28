@@ -20,6 +20,20 @@ import jp.co.genproject.ettewebserve.form.UserRegistForm;
 import jp.co.genproject.ettewebserve.service.ProductService;
 import jp.co.genproject.ettewebserve.service.UserService;
 
+/**
+ * ユーザー登録画面の表示および登録処理を行うコントローラー。
+ *
+ * 主な処理：
+ * - ユーザー登録画面の表示（GET）
+ * - 入力バリデーションと登録実行（POST）
+ * - プロフィール画像の保存処理
+ *
+ * 使用技術：Spring MVC、Thymeleaf、MultipartFile
+ *
+ *
+ * @author 張勝現
+ * @version 1.0
+ */
 @Controller
 public class RegistController {
 
@@ -31,14 +45,29 @@ public class RegistController {
         this.productService = productService;
     }
 
+    /**
+     * ユーザー登録画面を表示する。
+     *
+     * @param userRegist フォームバインディング用の空のUserRegistFormオブジェクト
+     * @param model Viewへデータを渡すためのModelオブジェクト
+     * @return 登録画面(regist.html)のテンプレート名
+     */
     @GetMapping("/regist")
-    public String registView(Model model) {
+    public String registView(@ModelAttribute("userRegistForm") UserRegistForm userRegist,Model model) {
         model.addAttribute("categoryList", productService.findAllCategory());
         model.addAttribute("keywordList", productService.findAllKeyword());
         return "regist";
     }
 
-    @PostMapping("/userRegist")
+    /**
+     * ユーザー登録処理を行う。
+     *
+     * @param userRegist 入力されたユーザー登録情報（バリデーション対象）
+     * @param result バリデーション結果
+     * @param model エラーメッセージや画面表示データを格納するModelオブジェクト
+     * @return バリデーションエラー時は登録画面、それ以外はトップページへ遷移
+     */
+    @PostMapping("/registUser")
     public String postMethodName(@Validated @ModelAttribute("userRegistForm") UserRegistForm userRegist,
             BindingResult result, Model model) {
 
