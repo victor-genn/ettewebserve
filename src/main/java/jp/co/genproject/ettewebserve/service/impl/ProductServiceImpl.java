@@ -12,96 +12,114 @@ import jp.co.genproject.ettewebserve.entity.Keyword;
 import jp.co.genproject.ettewebserve.entity.Product;
 import jp.co.genproject.ettewebserve.service.ProductService;
 
+/**
+ * 商品関連サービスの実装クラス。
+ * DAO層を通じて商品情報の取得・検索・更新・登録などの処理を提供する。
+ *
+ * @author 張勝現
+ * @version 1.0
+ */
 @Service
 public class ProductServiceImpl implements ProductService {
+
     private final ProductDao productDao;
 
     public ProductServiceImpl(ProductDao productDao) {
         this.productDao = productDao;
     }
 
-    // 「全体」検索
-    public List<Product> findByAll() {
-        return productDao.findByAll();
-    }
-
-    public Integer findProductIdByProductName(String productName){
-        return productDao.findProductIdByProductName(productName);
-    }
-
-    public List<Category> findAllCategory(){
-        return productDao.findAllCategory();
-    }
-
-    public List<Keyword> findAllKeyword(){
-        return productDao.findAllKeyword();
-    }
-
-    public List<Country> findAllCountry(){
-        return productDao.findAllCountry();
-    }
-
-    // 「並び順」で検索
+    @Override
     public List<Product> findBySort(String sort) {
         return productDao.findBySort(sort);
     }
 
-    // 「商品名 + 並び順」で検索
-    public List<Product> findByProductName(String productName, String sort) {
-        return productDao.findByProductName(productName, sort);
+    @Override
+    public List<Product> findByAll() {
+        return productDao.findByAll();
     }
 
-    // 「キーワード + 並び順」で検索
-    public List<Product> findByKeywordName(String keywordName, String sort) {
-        return productDao.findByKeywordName(keywordName, sort);
+    @Override
+    public List<Category> findAllCategory() {
+        return productDao.findAllCategory();
     }
 
-    // 「カテゴリー + 並び順」で検索
-    public List<Product> findByCategory(int categoryId, String sort) {
-        return productDao.findByCategory(categoryId, sort);
+    @Override
+    public List<Keyword> findAllKeyword() {
+        return productDao.findAllKeyword();
     }
 
-    // 「カテゴリー + 商品名 + 並び順」で検索
-    public List<Product> findByCategoryAndProductName(int categoryId, String sort, String productName) {
-        return productDao.findByCategoryAndProductName(categoryId, sort, productName);
+    @Override
+    public List<Country> findAllCountry() {
+        return productDao.findAllCountry();
     }
 
-    // 「カテゴリー + キーワード + 並び順」で検索
-    public List<Product> findByCategoryAndKeyword(int categoryId, String sort, String keywordName) {
-        return productDao.findByCategoryAndProductName(categoryId, sort, keywordName);
-    }
-
-    // 推薦商品リスト
+    @Override
     public List<Product> findByRecommends() {
         return productDao.findByRecommends();
     }
 
-    // 「商品ID」で探す
-    public Product findByProductId(Integer productId) {
-        return productDao.findByProductId(productId);
+    @Override
+    public Integer findProductIdByProductName(String productName) {
+        return productDao.findProductIdByProductName(productName);
     }
 
-    // 「カテゴリーID」で、カテゴリー名探す
+    @Override
     public String findCategoryNameByCategoryId(Integer categoryId) {
         return productDao.findCategoryNameByCategoryId(categoryId);
     }
 
-    // 「キーワードID」で、キーワード名探す
+    @Override
     public String findKeywordNameByKeywordId(Integer keywordId) {
-        return productDao.findCategoryNameByCategoryId(keywordId);
+        return productDao.findKeywordNameByKeywordId(keywordId);
     }
 
-    // 「製造国ID」で、製造国名探す
+    @Override
     public String findCountryNameByCountryId(Integer countryId) {
         return productDao.findCountryNameByCountryId(countryId);
     }
 
-    // 新規商品登録
-    public void insertProduct(ProductDto productDto) {
-        productDao.insertProduct(productDto);
+    @Override
+    public Product findByProductId(Integer productId) {
+        return productDao.findByProductId(productId);
     }
 
-    public void updateProduct(ProductDto productDto){
+    @Override
+    public List<Product> findByProductName(String productName, String sort) {
+        return productDao.findByProductName(productName, sort);
+    }
+
+    @Override
+    public List<Product> findByKeywordName(String keywordName, String sort) {
+        return productDao.findByKeywordName(keywordName, sort);
+    }
+
+    @Override
+    public List<Product> findByCategory(int categoryId, String sort) {
+        return productDao.findByCategory(categoryId, sort);
+    }
+
+    @Override
+    public List<Product> findByCategoryAndProductName(int categoryId, String sort, String productName) {
+        return productDao.findByCategoryAndProductName(categoryId, sort, productName);
+    }
+
+    @Override
+    public List<Product> findByCategoryAndKeyword(int categoryId, String sort, String keywordName) {
+        return productDao.findByCategoryAndKeyword(categoryId, sort, keywordName);
+    }
+
+    @Override
+    public void insertProduct(ProductDto dto) {
+        productDao.insertProduct(dto);
+    }
+
+    @Override
+    public void updateProduct(ProductDto productDto) {
         productDao.updateProduct(productDto);
+    }
+
+    @Override
+    public void deleteProductById(Integer productId){
+        productDao.deleteProductById(productId);
     }
 }

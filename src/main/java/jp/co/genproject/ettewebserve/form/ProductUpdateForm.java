@@ -3,8 +3,6 @@ package jp.co.genproject.ettewebserve.form;
 import org.springframework.web.multipart.MultipartFile;
 import jakarta.validation.constraints.*;
 
-import java.time.LocalDate;
-
 public class ProductUpdateForm {
 
     private Integer productId;

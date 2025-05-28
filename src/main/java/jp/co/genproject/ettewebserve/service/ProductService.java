@@ -10,52 +10,60 @@ import jp.co.genproject.ettewebserve.entity.Product;
 
 public interface ProductService {
 
-    // 「全体」検索
-    public List<Product> findByAll();
+    /** 整列基準に基づく商品情報の取得 */
+    List<Product> findBySort(String sort);
 
-    public Integer findProductIdByProductName(String productName);
+    /** 全体商品情報の取得 */
+    List<Product> findByAll();
 
-    public List<Category> findAllCategory();
+    /** 全体カテゴリー情報の取得 */
+    List<Category> findAllCategory();
 
-    public List<Keyword> findAllKeyword();
+    /** 全体キーワード情報の取得 */
+    List<Keyword> findAllKeyword();
 
-    public List<Country> findAllCountry();
+    /** 全体製造国情報の取得 */
+    List<Country> findAllCountry();
 
-    // 「並び順」で検索
-    public List<Product> findBySort(String sort);
+    /** 推薦商品情報の取得 */
+    List<Product> findByRecommends();
 
-    // 「商品名 + 並び順」で検索
-    public List<Product> findByProductName(String productName, String sort);
+    /** 商品名から商品IDを取得 */
+    Integer findProductIdByProductName(String productName);
 
-    // 「キーワード + 並び順」で検索
-    public List<Product> findByKeywordName(String keywordName, String sort);
+    /** カテゴリーIDからカテゴリー名を取得 */
+    String findCategoryNameByCategoryId(Integer categoryId);
 
-    // 「カテゴリー + 並び順」で検索
-    public List<Product> findByCategory(int categoryId, String sort);
+    /** キーワードIDからキーワード名を取得 */
+    String findKeywordNameByKeywordId(Integer keywordId);
 
-    // 「カテゴリー + 商品名 + 並び順」で検索
-    public List<Product> findByCategoryAndProductName(int categoryId, String sort, String productName);
+    /** 製造国IDから国名を取得 */
+    String findCountryNameByCountryId(Integer countryId);
 
-    // 「カテゴリー + キーワード + 並び順」で検索
-    public List<Product> findByCategoryAndKeyword(int categoryId, String sort, String keywordName);
+    /** 商品IDによる商品情報の取得 */
+    Product findByProductId(Integer productId);
 
-    // 推薦商品リスト
-    public List<Product> findByRecommends();
+    /** 商品名による商品検索（整列基準付き） */
+    List<Product> findByProductName(String productName, String sort);
 
-    // 「商品ID」で探す
-    public Product findByProductId(Integer productId);
+    /** キーワード名による商品検索（整列基準付き） */
+    List<Product> findByKeywordName(String keywordName, String sort);
 
-    // 「カテゴリーID」で、カテゴリー名探す
-    public String findCategoryNameByCategoryId(Integer categoryId);
+    /** カテゴリーIDによる商品検索（整列基準付き） */
+    List<Product> findByCategory(int categoryId, String sort);
 
-    // 「キーワードID」で、キーワード名探す
-    public String findKeywordNameByKeywordId(Integer keywordId);
+    /** カテゴリーIDおよび商品名による商品検索（整列基準付き） */
+    List<Product> findByCategoryAndProductName(int categoryId, String sort, String productName);
 
-    // 「製造国ID」で、製造国名探す
-    public String findCountryNameByCountryId(Integer countryId);
+    /** カテゴリーIDおよびキーワード名による商品検索（整列基準付き） */
+    List<Product> findByCategoryAndKeyword(int categoryId, String sort, String keywordName);
 
-    // 新規商品登録
-    public void insertProduct(ProductDto productDto);
+    /** 新規商品登録 */
+    void insertProduct(ProductDto dto);
 
-    public void updateProduct(ProductDto productDto);
+    /** 商品情報の更新 */
+    void updateProduct(ProductDto productDto);
+
+    /** 商品IDによる削除処理 */
+    void deleteProductById(Integer productId);
 }

@@ -125,7 +125,7 @@ public class ProductController {
         } else {
             productList = productService.findByAll();
         }
-        
+
         List<Product> recommendList = productService.findByRecommends();
         model.addAttribute("recommendList", recommendList);
         model.addAttribute("productList", productList);
@@ -157,7 +157,6 @@ public class ProductController {
 
     /**
      * 商品登録画面の初期表示処理。
-     * 入力フォームおよびマスターデータ（カテゴリー、キーワード、製造国）を初期化してビューに渡す。
      *
      * @param productRegist 商品登録フォームオブジェクト
      * @param model         ビューに渡すモデル
@@ -173,34 +172,26 @@ public class ProductController {
 
     /**
      * 商品登録処理。
-     *
      * 入力された商品情報をバリデーション検証後、画像ファイルを保存し、
      * DTOに変換してデータベースへ登録する。
-     * 入力エラーがある場合は登録画面に戻り、エラーメッセージを表示する。
-     *
-     * 主な処理内容：
-     * ・フォーム入力値のバリデーションチェック
-     * ・画像ファイルの保存（/static/images/products に保存）
-     * ・フォームデータを ProductDto に変換
-     * ・ProductService を通じて DBに登録
-     * ・登録完了後、商品一覧画面に遷移
      *
      * @param productRegist 商品登録フォーム（バリデーション対象）
-     * @param result        バリデーション結果
-     * @param model         ビューに渡すモデル
-     * @return 商品一覧画面テンプレート（またはバリデーションエラー時は登録画面）
+     * @param productForm 商品検索フォーム（画面に再表示するための補助用）
+     * @param result バリデーション結果
+     * @param model モデルオブジェクト（画面表示用）
+     * @return 商品一覧画面テンプレート、またはエラー時は登録画面
      */
     @PostMapping("/productRegist")
     public String productIncert(@Validated @ModelAttribute("productRegistForm") ProductRegistForm productRegist,
-            @ModelAttribute("productForm") ProductForm productForm, BindingResult result, Model model) {
+                                 @ModelAttribute("productForm") ProductForm productForm,
+                                 BindingResult result, Model model) {
+
         if (result.hasErrors()) {
             model.addAttribute("categoryList", productService.findAllCategory());
             model.addAttribute("keywordList", productService.findAllKeyword());
             model.addAttribute("countryList", productService.findAllCountry());
             return "productView/prodRegist";
         }
-
-        model.addAttribute("productRegistForm", productRegist);
 
         model.addAttribute("categoryList", productService.findAllCategory());
         model.addAttribute("keywordList", productService.findAllKeyword());
@@ -223,8 +214,7 @@ public class ProductController {
         MultipartFile image = productRegist.getProductImage();
         String imagePath = saveImage(image);
 
-        ProductDto productDto = new ProductDto(
-                productName, categoryId, keywordId, countryId,
+        ProductDto productDto = new ProductDto(productName, categoryId, keywordId, countryId,
                 manufactureDate, regularPrice, discountRate, salesPrice,
                 stockS, stockM, stockL, stockXL, imagePath, description);
 
@@ -236,39 +226,35 @@ public class ProductController {
         return "productView/prodView";
     }
 
+    /**
+     * 商品更新画面の初期表示。
+     *
+     * @param productId 対象商品のID
+     * @param model モデルオブジェクト（画面表示用）
+     * @return 商品更新画面テンプレート
+     */
     @GetMapping("/productUpdate")
     public String productDirection(@RequestParam("productId") Integer productId, Model model) {
         Product product = productService.findByProductId(productId);
 
-        ProductUpdateForm updateFormform = new ProductUpdateForm();
+        ProductUpdateForm updateForm = new ProductUpdateForm();
+        updateForm.setProductId(product.getProductId());
+        updateForm.setProductName(product.getProductName());
+        updateForm.setCategoryId(product.getCategoryId());
+        updateForm.setKeywordId(product.getKeywordId());
+        updateForm.setCountryId(product.getCountryId());
+        updateForm.setManufactureDate(product.getManufactureDate());
+        updateForm.setDescription(product.getDescription());
+        updateForm.setStockS(product.getStockS() != null ? product.getStockS() : 0);
+        updateForm.setStockM(product.getStockM() != null ? product.getStockM() : 0);
+        updateForm.setStockL(product.getStockL() != null ? product.getStockL() : 0);
+        updateForm.setStockXL(product.getStockXL() != null ? product.getStockXL() : 0);
+        updateForm.setRegularPrice(product.getRegularPrice());
+        updateForm.setDiscountRate(product.getDiscountRate());
+        updateForm.setSalePrice(product.getSalePrice());
+        updateForm.setImagePath(product.getImagePath());
 
-        updateFormform.setProductId(product.getProductId());
-        updateFormform.setProductName(product.getProductName());
-        updateFormform.setCategoryId(product.getCategoryId());
-        updateFormform.setKeywordId(product.getKeywordId());
-        updateFormform.setCountryId(product.getCountryId());
-        updateFormform.setManufactureDate(product.getManufactureDate());
-        updateFormform.setDescription(product.getDescription());
-        updateFormform.setStockS(product.getStockS());
-        updateFormform.setStockM(product.getStockM());
-        updateFormform.setStockL(product.getStockL());
-        updateFormform.setStockXL(product.getStockXL());
-        updateFormform.setRegularPrice(product.getRegularPrice());
-        updateFormform.setDiscountRate(product.getDiscountRate());
-        updateFormform.setSalePrice(product.getSalePrice());
-        updateFormform.setImagePath(product.getImagePath());
-
-        updateFormform.setStockS(product.getStockS() == null ? 0 : product.getStockS());
-        updateFormform.setStockM(product.getStockM() == null ? 0 : product.getStockM());
-        updateFormform.setStockL(product.getStockL() == null ? 0 : product.getStockL());
-        updateFormform.setStockXL(product.getStockXL() == null ? 0 : product.getStockXL());
-
-        updateFormform.setRegularPrice(product.getRegularPrice());
-        updateFormform.setDiscountRate(product.getDiscountRate());
-        updateFormform.setSalePrice(product.getSalePrice());
-        updateFormform.setImagePath(product.getImagePath());
-
-        model.addAttribute("productUpdateForm", updateFormform);
+        model.addAttribute("productUpdateForm", updateForm);
         model.addAttribute("categoryList", productService.findAllCategory());
         model.addAttribute("keywordList", productService.findAllKeyword());
         model.addAttribute("countryList", productService.findAllCountry());
@@ -277,23 +263,24 @@ public class ProductController {
     }
 
     /**
-     * 商品更新画面への遷移処理。
+     * 商品情報更新処理。
+     * 入力チェック後、データベースを更新。
      *
-     * @return 更新画面テンプレート
+     * @param productUpdateForm 更新対象のフォームオブジェクト
+     * @param productForm 商品検索フォーム（画面に再表示するための補助用）
+     * @param result バリデーション結果
+     * @param model モデルオブジェクト
+     * @return 商品一覧画面テンプレート、またはエラー時は更新画面
      */
     @PostMapping("/productUpdate")
-    public String productUpdate(
-            @Validated @ModelAttribute("productUpdateForm") ProductUpdateForm productUpdateForm,
-            @ModelAttribute("productForm") ProductForm productForm, BindingResult result, Model model) {
+    public String productUpdate(@Validated @ModelAttribute("productUpdateForm") ProductUpdateForm productUpdateForm,
+                                @ModelAttribute("productForm") ProductForm productForm,
+                                BindingResult result, Model model) {
 
-        if (productUpdateForm.getStockS() == null)
-            productUpdateForm.setStockS(0);
-        if (productUpdateForm.getStockM() == null)
-            productUpdateForm.setStockM(0);
-        if (productUpdateForm.getStockL() == null)
-            productUpdateForm.setStockL(0);
-        if (productUpdateForm.getStockXL() == null)
-            productUpdateForm.setStockXL(0);
+        if (productUpdateForm.getStockS() == null) productUpdateForm.setStockS(0);
+        if (productUpdateForm.getStockM() == null) productUpdateForm.setStockM(0);
+        if (productUpdateForm.getStockL() == null) productUpdateForm.setStockL(0);
+        if (productUpdateForm.getStockXL() == null) productUpdateForm.setStockXL(0);
 
         if (result.hasErrors()) {
             model.addAttribute("categoryList", productService.findAllCategory());
@@ -301,10 +288,6 @@ public class ProductController {
             model.addAttribute("countryList", productService.findAllCountry());
             return "productView/prodUpdate";
         }
-
-        model.addAttribute("categoryList", productService.findAllCategory());
-        model.addAttribute("keywordList", productService.findAllKeyword());
-        model.addAttribute("countryList", productService.findAllCountry());
 
         Integer productId = productUpdateForm.getProductId();
         String productName = productUpdateForm.getProductName();
@@ -318,25 +301,18 @@ public class ProductController {
         Integer stockL = productUpdateForm.getStockL();
         Integer stockXL = productUpdateForm.getStockXL();
         Integer regularPrice = productUpdateForm.getRegularPrice();
-        Integer discountRate = productUpdateForm.getDiscountRate();
-        if (discountRate == null)
-            discountRate = 0;
+        Integer discountRate = productUpdateForm.getDiscountRate() != null ? productUpdateForm.getDiscountRate() : 0;
         Integer salesPrice = (int) (regularPrice * (1 - discountRate * 0.01));
 
-        String imagePath = productUpdateForm.getImagePath();
         MultipartFile image = productUpdateForm.getProductImage();
-
-        if (image != null && !image.isEmpty()) {
-            imagePath = saveImage(image);
-        }
+        String imagePath = (image != null && !image.isEmpty()) ? saveImage(image) : productUpdateForm.getImagePath();
 
         if (imagePath == null || imagePath.isEmpty()) {
-            Product existing = productService.findByProductId(productUpdateForm.getProductId());
+            Product existing = productService.findByProductId(productId);
             imagePath = existing.getImagePath();
         }
 
-        ProductDto productDto = new ProductDto(
-                productId, productName, categoryId, keywordId, countryId,
+        ProductDto productDto = new ProductDto(productId, productName, categoryId, keywordId, countryId,
                 manufactureDate, regularPrice, discountRate, salesPrice,
                 stockS, stockM, stockL, stockXL, imagePath, description);
 
@@ -348,6 +324,34 @@ public class ProductController {
         return "productView/prodView";
     }
 
+    /**
+     * 指定された商品を削除する処理。
+     *
+     * @param productId 削除対象の商品ID
+     * @param model     ビューに渡すモデル
+     * @return 商品一覧画面テンプレート
+     */
+    @GetMapping("/productDelete")
+    public String productDelete(@RequestParam("productId") Integer productId, Model model) {
+        productService.deleteProductById(productId);
+        
+        ProductForm productForm = new ProductForm();
+        productForm.setSearchType("productName");
+        productForm.setSortOrder("created_at");
+
+        model.addAttribute("productForm", productForm);
+        model.addAttribute("productList", productService.findByAll());
+        model.addAttribute("recommendList", productService.findByRecommends());
+
+        return "productView/prodView";
+    }
+    
+    /**
+     * アップロードされた画像ファイルを保存し、保存先パスを返却する。
+     *
+     * @param image MultipartFile形式の画像ファイル
+     * @return 保存された画像の相対パス。保存失敗時はnull。
+     */
     private String saveImage(MultipartFile image) {
         if (image != null && !image.isEmpty()) {
             try {
@@ -362,4 +366,4 @@ public class ProductController {
         }
         return null;
     }
-}
+} 

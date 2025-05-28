@@ -7,38 +7,39 @@ import jp.co.genproject.ettewebserve.entity.PurchaseHistory;
 
 public interface PurchaseDao {
 
-    // カート登録
-    public void addToCart(Integer userId, Integer productId, Integer sizeId, Integer quantity);
+    /** カートに商品を追加する */
+    void addToCart(Integer userId, Integer productId, Integer sizeId, Integer quantity);
 
-    // ユーザーIDでカートリスト取得
-    public List<CartViewDto> findCartViewByUserId(Integer userId);
+    /** ユーザーIDからカート一覧を取得する */
+    List<CartViewDto> findCartViewByUserId(Integer userId);
 
-    // カートリストの中で、購入する商品を選ぶ
-    public List<CartViewDto> purchaseFromCart(Integer userId, List<Integer> cartIds);
+    /** カート内から購入対象の商品を選択して取得する */
+    List<CartViewDto> purchaseFromCart(Integer userId, List<Integer> cartIds);
 
-    // 購入履歴登録
-    public void registerPurchase(Integer userId, List<Integer> cartId, Integer totalQuantity, Integer totalPrice);
+    /** カート情報を元に購入履歴を登録する（在庫更新とカート削除含む） */
+    void registerPurchase(Integer userId, List<Integer> cartId, Integer totalQuantity, Integer totalPrice);
 
-    public void deletePurchaseHistories(List<Integer> purchaseIds);
+    /** 購入履歴をIDリストで削除する */
+    void deletePurchaseHistories(List<Integer> purchaseIds);
 
-    // 全件取得
-    public List<PurchaseHistory> findPurchaseByAll();
+    /** 全購入履歴を取得する（降順ソート） */
+    List<PurchaseHistory> findPurchaseByAll();
 
-    // 商品IDで検索
-    public List<PurchaseHistory> findPurchaseByProducName(String productName);
+    /** 商品名で購入履歴を検索する */
+    List<PurchaseHistory> findPurchaseByProducName(String productName);
 
-    // 金額で検索
-    public List<PurchaseHistory> findPurchaseByPrice(Integer price);
+    /** 金額で購入履歴を検索する */
+    List<PurchaseHistory> findPurchaseByPrice(Integer price);
 
-    // 日付順に並び替え
-    public List<PurchaseHistory> sortPurchaseByDate();
+    /** 購入履歴を日付順で並び替える（新→旧） */
+    List<PurchaseHistory> sortPurchaseByDate();
 
-    // 数量順に並び替え
-    public List<PurchaseHistory> sortPurchaseByQuantity();
+    /** 購入履歴を数量順で並び替える（多→少） */
+    List<PurchaseHistory> sortPurchaseByQuantity();
 
-    // 金額順に並び替え
-    public List<PurchaseHistory> sortPurchaseByPrice();
+    /** 購入履歴を金額順で並び替える（高→低） */
+    List<PurchaseHistory> sortPurchaseByPrice();
 
-    // ユーザーIDで購入履歴を取得（フィルター用）
-    public List<PurchaseHistory> findPurchaseByUserId(Integer userId);
+    /** ユーザーIDから購入履歴を取得する（フィルター用） */
+    List<PurchaseHistory> findPurchaseByUserId(Integer userId);
 }

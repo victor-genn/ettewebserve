@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,71 +8,68 @@
     <link rel="stylesheet" th:href="@{/css/default.css}" />
     <link rel="stylesheet" th:href="@{/css/user.css}" />
 </head>
+
 <body>
-    <!-- ヘッダー -->
     <div th:replace="fragments/header :: header"></div>
 
-    <!-- メイン -->
     <main>
         <div class="main-user-content">
-            <!-- バーナー（左側） -->
             <img th:src="@{/images/photo/default-banner.png}" alt="バーナー" class="img-default-banner" />
 
-            <!-- 新規登録フォーム（右側） -->
             <div class="div-default-form">
-
-                <!-- サブタイトル -->
                 <img th:src="@{/images/icon/regist.png}" alt="サブタイトル" class="img-default-subtitle" />
-                <!-- 処理エラーメッセージ -->
                 <div class="validate-error">エラーメッセージ</div>
 
-                <form action="" class="form-regist">
-                    <!-- ID入力 -->
+                <form th:action="@{/registUser}" method="post" th:object="${userRegistForm}" class="form-regist"
+                    enctype="multipart/form-data">
                     <div class="form-regist-partion">
                         <label for="loginId" class="form-regist-label">ID</label>
-                        <input type="text" id="loginId" class="form-regist-input"/> 
-                        <button class="button-regist-searchid">重複検査</button>
+                        <input type="text" th:field="*{loginId}" id="loginId" class="form-regist-input" />
                     </div>
-                    <!-- ID重複・桁数不適合エラーメッセージ -->
-                    <div class="validate-error partion">エラーメッセージ</div>
+                    <div th:if="${#fields.hasErrors('loginId')}" th:errors="*{loginId}" class="validate-error partion">
+                    </div>
 
-                    <!-- パスワード入力 -->
                     <div class="form-regist-partion">
                         <label for="password" class="form-regist-label">パスワード</label>
-                        <input type="password" id="password" class="form-regist-input" /> 
+                        <input type="password" th:field="*{password}" id="password" class="form-regist-input" />
                     </div>
-                    <!-- パスワードチェック入力 -->
                     <div class="form-regist-partion">
                         <label for="passCheck" class="form-regist-label">チェック</label>
-                        <input type="password" id="passCheck" class="form-regist-input" /> 
+                        <input type="password" th:field="*{passCheck}" id="passCheck" class="form-regist-input" />
                     </div>
-                    <!-- パスワード不一致・桁数不適合エラーメッセージ -->
-                    <div class="validate-error partion">エラーメッセージ</div>
+                    <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}"
+                        class="validate-error partion"></div>
+                    <div th:if="${#fields.hasErrors('passCheck')}" th:errors="*{passCheck}"
+                        class="validate-error partion"></div>
 
-                    <!-- 氏名入力 -->
-                    <div class="form-regist-partion partion">
+                    <div class="form-regist-partion">
                         <label for="userName" class="form-regist-label">氏名</label>
-                        <input type="text" id="userName" class="form-regist-input-s" placeholder="氏"/> 
-                        <input type="text" class="form-regist-input-s" placeholder="名"/> 
+                        <input type="text" th:field="*{lastName}" id="userName" class="form-regist-input-s"
+                            placeholder="氏" />
+                        <input type="text" th:field="*{firstName}" class="form-regist-input-s" placeholder="名" />
                     </div>
+                    <div th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"
+                        class="validate-error partion"></div>
+                    <div th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"
+                        class="validate-error partion"></div>
 
-                    <!-- 性別入力 -->
-                    <div class="form-regist-partion partion">
+                    <div class="form-regist-partion">
                         <label class="form-regist-label">性別</label>
-                        <label id="male">
-                            <input type="radio" id="male" name="gender" value="male" checked> 男性
+                        <label for="gender-male">
+                            <input type="radio" th:field="*{gender}" id="gender-male" value="male"> 男性
                         </label>
-                        <label id="female">
-                            <input type="radio" id="female" name="gender" value="female"> 女性
+                        <label for="gender-female">
+                            <input type="radio" th:field="*{gender}" id="gender-female" value="female"> 女性
                         </label>
                     </div>
+                    <div th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}" class="validate-error partion">
+                    </div>
 
-                    <!-- メール入力 -->
-                    <div class="form-regist-partion partion">
+                    <div class="form-regist-partion">
                         <label for="email" class="form-regist-label">メール</label>
-                        <input type="text" id="email" class="form-regist-input-s" /> 
-                        <select id="email-domain" class="form-regist-select">
-                            <option value="" selected>--選択--</option>
+                        <input type="text" th:field="*{email}" id="email" class="form-regist-input-s" />
+                        <select th:field="*{domain}" id="email-domain" class="form-regist-select">
+                            <option value="" disabled selected>--選択--</option>
                             <option value="@gmail.com">gmail.com</option>
                             <option value="@yahoo.co.jp">yahoo.co.jp</option>
                             <option value="@outlook.com">outlook.com</option>
@@ -79,42 +77,68 @@
                         </select>
                     </div>
 
-                    <!-- 写真登録 -->
                     <div class="form-regist-partion">
                         <label class="form-regist-label">写真</label>
-                        <img th:src="@{/images/photo/default-profile.png}" class="img-regist-profile" alt="プロフィール画像"  />
+                        <img id="previewImage"
+                            th:src="${userRegistForm.imagePath != null} ? @{/images/photo/{file}(file=${userRegistForm.imagePath})} : @{/images/photo/default-profile.png}"
+                            alt="プロフィール画像" class="img-regist-profile" />
                     </div>
-                    <div class="div-regist-file partion"><input type="file" name="photo" accept="images/*" class="file-regist" /></div>
+                    <div class="div-regist-file partion">
+                        <input type="file" id="imageInput" name="userImage" class="probDetail-file" />
+                    </div>
 
-                    <!-- キーワード入力 -->
                     <label class="form-regist-label">キーワード</label>
                     <div class="form-regist-partion">
-                        <select id="keyword1" class="form-regist-select">
-                            <option value="" selected>--選択--</option>
-                            <option value="">キーワード</option>
+                        <select th:field="*{keyword1}" id="keyword1" class="form-regist-select">
+                            <option value="" disabled selected>--選択--</option>
+                            <option th:each="${k : keywordList}" th:value="${k.keywordId}" th:text="${k.keywordName}">
+                                キーワード</option>
                         </select>
-                        <select id="keyword2" class="form-regist-select">
-                            <option value="" selected>--選択--</option>
-                            <option value="">キーワード</option>
+                        <select th:field="*{keyword2}" id="keyword2" class="form-regist-select">
+                            <option value="" disabled selected>--選択--</option>
+                            <option th:each="${k : keywordList}" th:value="${k.keywordId}" th:text="${k.keywordName}">
+                                キーワード</option>
                         </select>
-                        <select id="keyword3" class="form-regist-select">
-                            <option value="" selected>--選択--</option>
-                            <option value="">キーワード</option>
+                        <select th:field="*{keyword3}" id="keyword3" class="form-regist-select">
+                            <option value="" disabled selected>--選択--</option>
+                            <option th:each="${k : keywordList}" th:value="${k.keywordId}" th:text="${k.keywordName}">
+                                キーワード</option>
                         </select>
                     </div>
-                    <div class="text-regist-keyword partion">関心キーワードを3つ選択してください</div>
+                    <div th:if="${#fields.hasErrors('keyword1')}" th:errors="*{keyword1}"
+                        class="validate-error partion"></div>
+                    <div th:if="${#fields.hasErrors('keyword2')}" th:errors="*{keyword2}"
+                        class="validate-error partion"></div>
+                    <div th:if="${#fields.hasErrors('keyword3')}" th:errors="*{keyword3}"
+                        class="validate-error partion"></div>
 
-                    <!-- フォーム提出 -->
                     <div class="form-regist-partion2">
-                        <button class="button-header-default">登録</button>
-                        <button class="button-header-default">戻る</button>
+                        <button type="submit" class="button-header-default">登録</button>
+                        <button type="button" onclick="location.href='/index'" class="button-header-default">戻る</button>
                     </div>
                 </form>
             </div>
         </div>
     </main>
 
-    <!-- フッター -->
     <div th:replace="fragments/footer :: footer"></div>
 </body>
+
 </html>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const imageInput = document.getElementById("imageInput");
+        const previewImage = document.getElementById("previewImage");
+
+        imageInput.addEventListener("change", function () {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    previewImage.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    });
+</script>

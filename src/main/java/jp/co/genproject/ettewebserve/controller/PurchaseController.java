@@ -68,8 +68,7 @@ public class PurchaseController {
         model.addAttribute("product", product);
 
         Integer userId = (Integer) session.getAttribute("userId");
-        if (userId == null)
-            userId = 4;
+        if (userId == null) userId = 4;
 
         purchaseService.addToCart(userId, cartForm.getProductId(), cartForm.getSizeId(), cartForm.getQuantity());
 
@@ -92,13 +91,12 @@ public class PurchaseController {
      */
     @GetMapping("/cartList")
     public String cartList(@ModelAttribute("cartForm") CartForm cartForm,
-            @ModelAttribute("choiceForm") ChoiceForm choiceForm,
-            @ModelAttribute PurchaseForm purchaseForm,
-            Model model) {
+                           @ModelAttribute("choiceForm") ChoiceForm choiceForm,
+                           @ModelAttribute PurchaseForm purchaseForm,
+                           Model model) {
 
         Integer userId = (Integer) session.getAttribute("userId");
-        if (userId == null)
-            userId = 4;
+        if (userId == null) userId = 4;
 
         List<CartViewDto> cartList = purchaseService.findCartViewByUserId(userId);
         for (CartViewDto item : cartList) {
@@ -122,12 +120,11 @@ public class PurchaseController {
      */
     @PostMapping("/choiceItem")
     public String choiceItem(@ModelAttribute("choiceForm") ChoiceForm choiceForm,
-            @ModelAttribute PurchaseForm purchaseForm,
-            Model model, HttpSession session) {
+                             @ModelAttribute PurchaseForm purchaseForm,
+                             Model model, HttpSession session) {
 
         Integer userId = (Integer) session.getAttribute("userId");
-        if (userId == null)
-            userId = 4;
+        if (userId == null) userId = 4;
 
         List<CartViewDto> cartList = purchaseService.findCartViewByUserId(userId);
         for (CartViewDto item : cartList) {
@@ -170,12 +167,11 @@ public class PurchaseController {
      */
     @GetMapping("/purchaseHistory")
     public String purchaseHistory(@ModelAttribute PurchaseForm purchaseForm,
-            @ModelAttribute("searchForm") PurchaseSearchForm searchForm,
-            Model model, HttpSession session) {
+                                  @ModelAttribute("searchForm") PurchaseSearchForm searchForm,
+                                  Model model, HttpSession session) {
 
         Integer userId = (Integer) session.getAttribute("userId");
-        if (userId == null)
-            userId = 4;
+        if (userId == null) userId = 4;
 
         List<PurchaseHistory> purchaseList = purchaseService.findPurchaseByUserId(userId);
 
@@ -195,11 +191,10 @@ public class PurchaseController {
      */
     @PostMapping("/purchaseHistory")
     public String postPurchaseHistory(@ModelAttribute("searchForm") PurchaseSearchForm searchForm,
-            HttpSession session, Model model) {
+                                      HttpSession session, Model model) {
 
         Integer userId = (Integer) session.getAttribute("userId");
-        if (userId == null)
-            userId = 4;
+        if (userId == null) userId = 4;
 
         List<PurchaseHistory> purchaseList;
 
@@ -248,8 +243,7 @@ public class PurchaseController {
     @PostMapping("/purchase")
     public String registerPurchase(@ModelAttribute PurchaseForm purchaseForm, Model model, HttpSession session) {
         Integer userId = (Integer) session.getAttribute("userId");
-        if (userId == null)
-            userId = 4;
+        if (userId == null) userId = 4;
 
         List<Integer> cartIdList = purchaseForm.getCartIds();
         Integer totalQuantity = purchaseForm.getTotalQuantity();
@@ -272,9 +266,8 @@ public class PurchaseController {
      * @return 購入履歴画面へリダイレクト
      */
     @PostMapping("/purchaseHistory/delete")
-    public String deletePurchaseHistory(
-            @RequestParam(value = "selectedIds", required = false) List<Integer> selectedIds,
-            HttpSession session) {
+    public String deletePurchaseHistory(@RequestParam(value = "selectedIds", required = false) List<Integer> selectedIds,
+                                        HttpSession session) {
         if (selectedIds != null && !selectedIds.isEmpty()) {
             purchaseService.deletePurchaseHistories(selectedIds);
         }
