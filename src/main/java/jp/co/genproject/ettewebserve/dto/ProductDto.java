@@ -1,6 +1,6 @@
-package jp.co.genproject.ettewebserve.entity;
+package jp.co.genproject.ettewebserve.dto;
 
-public class Product {
+public class ProductDto {
     private Integer productId;
     private String productName;
     private Integer categoryId;
@@ -19,13 +19,33 @@ public class Product {
     private String createdAt;
     private String updateAt;
 
-    public Product() {
+    public ProductDto() {
     }
 
-    public Product(Integer productId, String productName, Integer categoryId, Integer keywordId,
-            Integer countryId, String manufactureDate, Integer regularPrice, Integer discountRate,
-            Integer salePrice, Integer stockS, Integer stockM, Integer stockL, Integer stockXL,
-            String imagePath, String description, String createdAt, String updateAt) {
+    public ProductDto(String productName, Integer categoryId, Integer keywordId, Integer countryId,
+            String manufactureDate, Integer regularPrice, Integer discountRate, Integer salePrice,
+            Integer stockS, Integer stockM, Integer stockL, Integer stockXL,
+            String imagePath, String description) {
+        this.productName = productName;
+        this.categoryId = categoryId;
+        this.keywordId = keywordId;
+        this.countryId = countryId;
+        this.manufactureDate = manufactureDate;
+        this.regularPrice = regularPrice;
+        this.discountRate = discountRate;
+        this.salePrice = salePrice;
+        this.stockS = stockS;
+        this.stockM = stockM;
+        this.stockL = stockL;
+        this.stockXL = stockXL;
+        this.imagePath = imagePath;
+        this.description = description;
+    }
+
+    public ProductDto(Integer productId, String productName, Integer categoryId, Integer keywordId, Integer countryId,
+            String manufactureDate, Integer regularPrice, Integer discountRate, Integer salePrice,
+            Integer stockS, Integer stockM, Integer stockL, Integer stockXL,
+            String imagePath, String description) {
         this.productId = productId;
         this.productName = productName;
         this.categoryId = categoryId;
@@ -41,8 +61,6 @@ public class Product {
         this.stockXL = stockXL;
         this.imagePath = imagePath;
         this.description = description;
-        this.createdAt = createdAt;
-        this.updateAt = updateAt;
     }
 
     public Integer getProductId() {

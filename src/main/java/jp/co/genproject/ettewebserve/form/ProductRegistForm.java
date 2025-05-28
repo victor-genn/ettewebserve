@@ -1,56 +1,72 @@
-package jp.co.genproject.ettewebserve.entity;
+package jp.co.genproject.ettewebserve.form;
 
-public class Product {
-    private Integer productId;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.multipart.MultipartFile;
+
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
+@Validated
+public class ProductRegistForm {
+
+    @NotEmpty(message = "商品名は必須です。")
     private String productName;
+    
+    @NotNull(message = "カテゴリーは必須です。")
     private Integer categoryId;
+
+    @NotNull(message = "キーワードは必須です。")
     private Integer keywordId;
+
+    @NotNull(message = "製造国は必須です。")
     private Integer countryId;
+
+    @NotEmpty(message = "製造年月は必須です。")
     private String manufactureDate;
+
+    @NotNull(message = "定価は必須です。")
+    @Min(value = 0, message = "定価は0以上で入力してください。")
     private Integer regularPrice;
+
+    @NotNull(message = "割引率は必須です。")
+    @Min(value = 0, message = "割引率は0〜100の範囲で入力してください。")
+    @Max(value = 100, message = "割引率は100以下で入力してください。")
     private Integer discountRate;
+
     private Integer salePrice;
+
+    @NotNull(message = "Sサイズの在庫を入力してください。")
+    @Min(value = 0, message = "在庫は0以上で入力してください。")
     private Integer stockS;
+
+    @NotNull(message = "Mサイズの在庫を入力してください。")
+    @Min(value = 0, message = "在庫は0以上で入力してください。")
     private Integer stockM;
+
+    @NotNull(message = "Lサイズの在庫を入力してください。")
+    @Min(value = 0, message = "在庫は0以上で入力してください。")
     private Integer stockL;
+
+    @NotNull(message = "XLサイズの在庫を入力してください。")
+    @Min(value = 0, message = "在庫は0以上で入力してください。")
     private Integer stockXL;
+
     private String imagePath;
+
+    @Size(max = 1000, message = "説明は1000文字以内で入力してください。")
     private String description;
-    private String createdAt;
-    private String updateAt;
 
-    public Product() {
+    private MultipartFile productImage;
+
+    public MultipartFile getProductImage() {
+        return productImage;
     }
 
-    public Product(Integer productId, String productName, Integer categoryId, Integer keywordId,
-            Integer countryId, String manufactureDate, Integer regularPrice, Integer discountRate,
-            Integer salePrice, Integer stockS, Integer stockM, Integer stockL, Integer stockXL,
-            String imagePath, String description, String createdAt, String updateAt) {
-        this.productId = productId;
-        this.productName = productName;
-        this.categoryId = categoryId;
-        this.keywordId = keywordId;
-        this.countryId = countryId;
-        this.manufactureDate = manufactureDate;
-        this.regularPrice = regularPrice;
-        this.discountRate = discountRate;
-        this.salePrice = salePrice;
-        this.stockS = stockS;
-        this.stockM = stockM;
-        this.stockL = stockL;
-        this.stockXL = stockXL;
-        this.imagePath = imagePath;
-        this.description = description;
-        this.createdAt = createdAt;
-        this.updateAt = updateAt;
-    }
-
-    public Integer getProductId() {
-        return productId;
-    }
-
-    public void setProductId(Integer productId) {
-        this.productId = productId;
+    public void setProductImage(MultipartFile productImage) {
+        this.productImage = productImage;
     }
 
     public String getProductName() {
@@ -165,19 +181,4 @@ public class Product {
         this.description = description;
     }
 
-    public String getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public String getUpdateAt() {
-        return updateAt;
-    }
-
-    public void setUpdateAt(String updateAt) {
-        this.updateAt = updateAt;
-    }
 }

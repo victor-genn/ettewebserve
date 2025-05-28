@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,8 +8,9 @@
     <link rel="stylesheet" th:href="@{/css/default.css}" />
     <link rel="stylesheet" th:href="@{/css/product.css}" />
 </head>
+
 <body>
-<!-- ヘッダー -->
+    <!-- ヘッダー -->
     <div th:replace="fragments/headerLogined :: header"></div>
 
     <!-- メイン -->
@@ -21,112 +23,148 @@
         </div>
 
         <div class="probDetail-content">
-            <!-- 商品写真（左側） -->
-            <img th:src="@{/images/photo/samplefiles.png}" alt="商品写真" class="img-default-banner" />
+            <form th:action="@{/productRegist}" th:object="${productRegistForm}" method="post" enctype="multipart/form-data" class="product-imgRegister">
+                <!-- 商品写真（左側） -->
+                <div style="margin: 20px 0;">
+                    <img id="previewImage" th:src="@{${productRegistForm.imagePath}}" alt="商品画像" class="img-default-banner" style="width: 150px;" />
+                    <input type="file" id="imageInput" name="productImage" class="probDetail-file" />
+                </div>
 
-            <!-- 商品詳細フォーム（右側） -->
-            <div class="div-default-form">
+                <!-- 商品詳細フォーム（右側） -->
+                <div class="div-default-form">
 
-                <!-- サブタイトル -->
-                <img th:src="@{/images/icon/registproduct.png}" alt="サブタイトル" class="img-default-subtitle" />
+                    <!-- サブタイトル -->
+                    <img th:src="@{/images/icon/registproduct.png}" alt="サブタイトル" class="img-default-subtitle" />
+                    <div class="prodDetail-form">
+                        <div class="probDetail-grid2 prodUpdate-partion">
+                            <!-- カテゴリー -->
+                            <div class="probDetail-grid2">
+                                <label class="prodDetail-label" style="margin-right: 4px;">カテゴリー</label>
+                                <select th:field="*{categoryId}" class="prodDetail-select">
+                                    <option value="">--カテゴリー--</option>
+                                    <option th:each="c : ${categoryList}" th:value="${c.categoryId}"
+                                        th:text="${c.categoryName}">カテゴリー１</option>
+                                </select>
+                            </div>
 
-                <form action="" class="prodDetail-form">
-                    <div class="probDetail-grid2 prodUpdate-partion">
-                        <!-- カテゴリー -->
-                        <div class="probDetail-grid2">
-                            <label class="prodDetail-label" style="margin-right: 4px;">カテゴリー</label>
-                            <select class="prodDetail-select">
-                                <option selected>--カテゴリー--</option>
-                                <option value="s">カテゴリー１</option>
+                            <!--商品名  -->
+                            <div class="probUpdate-grid2">
+                                <label class="prodDetail-label">商品名</label>
+                                <input type="text" th:field="*{productName}" placeholder="商品名"
+                                    class="prodUpdate-input1" />
+                            </div>
+                        </div>
+
+                        <div class="prodUpdate-grid4 probDetail-partion">
+                            <!-- キーワード -->
+                            <label class="prodDetail-label">キーワード</label>
+                            <select th:field="*{keywordId}" class="prodDetail-select">
+                                <option value="">--キーワード--</option>
+                                <option th:each="k : ${keywordList}" th:value="${k.keywordId}"
+                                    th:text="${k.keywordName}">
+                                    キーワード</option>
                             </select>
                         </div>
 
-                        <!--商品名  -->
-                        <div class="probUpdate-grid2">
-                            <label class="prodDetail-label">商品名</label>
-                            <input type="text" placeholder="商品名" class="prodUpdate-input1"/>
-                        </div>
-                    </div>
+                        <div class="probDetail-grid2 probDetail-partion">
+                            <!-- 製造国 -->
+                            <div class="probDetail-grid2">
+                                <label class="prodDetail-label">製造国</label>
+                                <select th:field="*{countryId}" class="prodDetail-select">
+                                    <option value="">--製造国--</option>
+                                    <option th:each="country : ${countryList}" th:value="${country.countryId}"
+                                        th:text="${country.countryName}">製造国</option>
+                                </select>
+                            </div>
 
-                    <div class="prodUpdate-grid4 probDetail-partion">
-                        <!-- キーワード -->
-                        <label class="prodDetail-label">キーワード</label>
-                        <select class="prodDetail-select">
-                            <option selected>--キーワード--</option>
-                            <option value="s">キーワード</option>
-                        </select>
-                        <select class="prodDetail-select">
-                            <option selected>--キーワード--</option>
-                            <option value="s">キーワード</option>
-                        </select>
-                        <select class="prodDetail-select">
-                            <option selected>--キーワード--</option>
-                            <option value="s">キーワード</option>
-                        </select>
-                    </div>
-                    
-                    <div class="probDetail-grid2 probDetail-partion">
-                        <!-- 製造国 -->
-                        <div class="probDetail-grid2">
-                            <label class="prodDetail-label">製造国</label>
-                            <select class="prodDetail-select">
-                                <option selected>--製造国--</option>
-                                <option value="s">製造国</option>
-                            </select>
+                            <!-- 製造年月 -->
+                            <div class="probDetail-grid2">
+                                <label class="prodDetail-label">製造年月</label>
+                                <input type="date" th:field="*{manufactureDate}" class="probUpdate-date" />
+                            </div>
                         </div>
 
-                        <!-- 製造年月 -->
-                        <div class="probDetail-grid2">
-                            <label class="prodDetail-label">製造年月</label>
-                            <input type="hidden" />
-                            <input type="date" class="probUpdate-date">
+                        <div class="probDetail-partion">
+                            <!-- 商品説明 -->
+                            <input type="text" th:field="*{description}" class="probDetail-span2" placeholder="商品説明" />
                         </div>
-                    </div>
 
-                    <div class="probDetail-partion">
-                        <!-- 商品説明 -->
-                        <input type="text" class="probDetail-span2" placeholder="商品説明"/>
-                    </div>
+                        <div class="prodUpdate-grid5 probDetail-partion">
+                            <!-- 数量 -->
+                            <label class="prodDetail-label">数量</label>
+                            <input type="number" th:field="*{stockS}" min="0" placeholder="S"
+                                class="prodUpdate-numbers" />
+                            <input type="number" th:field="*{stockM}" min="0" placeholder="M"
+                                class="prodUpdate-numbers" />
+                            <input type="number" th:field="*{stockL}" min="0" placeholder="L"
+                                class="prodUpdate-numbers" />
+                            <input type="number" th:field="*{stockXL}" min="0" placeholder="XL"
+                                class="prodUpdate-numbers" />
+                        </div>
 
-                    <div class="prodUpdate-grid5 probDetail-partion">
-                        <!-- 数量 -->
-                        <label class="prodDetail-label">数量</label>
-                        <input type="number" min="0" placeholder="S" class="prodUpdate-numbers" />
-                        <input type="number" min="0" placeholder="M" class="prodUpdate-numbers" />
-                        <input type="number" min="0" placeholder="L" class="prodUpdate-numbers" />
-                        <input type="number" min="0" placeholder="XL" class="prodUpdate-numbers" />
-                    </div>
-
-                    <div class="prodUpdate-grid31 probDetail-partion">
-                        <!-- 定価 -->
-                        <div class="prodUpdate-grid22">
-                            <label class="prodDetail-label">定価</label>
-                            <input type="number" class="prodUpdate-price" placeholder="価格"/>
+                        <div class="prodUpdate-grid31 probDetail-partion">
+                            <!-- 定価 -->
+                            <div class="prodUpdate-grid22">
+                                <label class="prodDetail-label">定価</label>
+                                <input type="number" th:field="*{regularPrice}" class="prodUpdate-price"
+                                    placeholder="価格" />
+                            </div>
+                            <!-- 割引率 -->
+                            <div class="prodUpdate-percentdiv">
+                                <label class="prodDetail-label">割引</label>
+                                <input type="number" th:field="*{discountRate}" class="prodUpdate-percent"
+                                    placeholder="%" />
+                                <span>%</span>
+                            </div>
+                            <!-- 販売価格 -->
+                            <div class="prodUpdate-grid21">
+                                <label class="prodDetail-label">販売価格</label>
+                                <input type="number" th:field="*{salePrice}" class="prodUpdate-price"
+                                    placeholder="割引した価格" disabled />
+                            </div>
                         </div>
-                        <!-- 割引率 -->
-                        <div class="prodUpdate-percentdiv">
-                            <label class="prodDetail-label">割引</label>
-                            <input type="number" class="prodUpdate-percent" placeholder="%" />
-                            <span>%</span>
-                        </div>
-                        <!-- 販売価格 -->
-                        <div class="prodUpdate-grid21">
-                            <label class="prodDetail-label">販売価格</label>
-                            <input type="number" class="prodUpdate-price" placeholder="割引した価格" readonly/>
+                        <div class="probDetail-buttondiv" style="margin-top: 30px;">
+                            <!-- 提出ボタン -->
+                            <button type="submit" class="probDetail-button">更新</button>
+                            <button type="button" onclick="location.href='/productList'"
+                                class="probDetail-button">戻る</button>
                         </div>
                     </div>
-                    <div class="probDetail-buttondiv" style="margin-top: 30px;">
-                        <!-- 提出ボタン -->
-                        <button class="probDetail-button">登録</button>
-                        <button class="probDetail-button">戻る</button>
-                    </div>
-                    <input type="file" class="probDetail-file"/>
-                </form>
-            </div>
+                </div>
+            </form>
+        </div>
         </div>
     </main>
 
     <!-- フッター -->
     <div th:replace="fragments/footer :: footer"></div>
 </body>
+
 </html>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        function updateSalePrice() {
+            const regularPrice = parseFloat(document.querySelector('[name="regularPrice"]').value) || 0;
+            const discountRate = parseFloat(document.querySelector('[name="discountRate"]').value) || 0;
+            const salePrice = Math.floor(regularPrice * (1 - discountRate / 100));
+            document.querySelector('[name="salePrice"]').value = salePrice;
+        }
+
+        document.querySelector('[name="regularPrice"]').addEventListener('input', updateSalePrice);
+        document.querySelector('[name="discountRate"]').addEventListener('input', updateSalePrice);
+
+        const imageInput = document.getElementById("imageInput");
+        const previewImage = document.getElementById("previewImage");
+
+        imageInput.addEventListener("change", function () {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    previewImage.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    });
+</script>

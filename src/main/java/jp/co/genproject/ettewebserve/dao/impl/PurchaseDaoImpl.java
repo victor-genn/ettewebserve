@@ -13,39 +13,46 @@ import jp.co.genproject.ettewebserve.dao.PurchaseDao;
 import jp.co.genproject.ettewebserve.dto.CartViewDto;
 import jp.co.genproject.ettewebserve.entity.PurchaseHistory;
 
+/**
+ * 購入・カートに関するDAO実装クラス。
+ * カート追加、購入処理、履歴取得、在庫更新などを実装。
+ */
 @Repository
 public class PurchaseDaoImpl implements PurchaseDao {
 
     private final NamedParameterJdbcTemplate template;
-    private final BeanPropertyRowMapper<CartViewDto> cartRowMapper = new BeanPropertyRowMapper<CartViewDto>(CartViewDto.class);
-    private final BeanPropertyRowMapper<PurchaseHistory> PurchaseRowMapper = new BeanPropertyRowMapper<>(PurchaseHistory.class);
+    private final BeanPropertyRowMapper<CartViewDto> cartRowMapper = new BeanPropertyRowMapper<>(CartViewDto.class);
+    private final BeanPropertyRowMapper<PurchaseHistory> PurchaseRowMapper = new BeanPropertyRowMapper<>(
+            PurchaseHistory.class);
 
+    // ▼ カート関連 SQL
     private static final String SQL_INSERT_CART = "INSERT INTO cart (user_id, product_id, size_id, quantity, added_at) VALUES (:userId, :productId, :sizeId, :quantity, NOW())";
-    private static final String SQL_FIND_CART_VIEW_BY_USER = "SELECT c.cart_id, c.product_id, p.product_name, p.image_path, p.sale_price, s.size_name, c.quantity, c.added_at FROM cart c JOIN product p ON c.product_id = p.product_id JOIN size s ON c.size_id = s.size_id WHERE c.user_id = :userId ORDER BY c.added_at DESC;";
+    private static final String SQL_FIND_CART_VIEW_BY_USER = "SELECT c.cart_id, c.product_id, p.product_name, p.image_path, p.sale_price, s.size_name, c.quantity, c.added_at FROM cart c JOIN product p ON c.product_id = p.product_id JOIN size s ON c.size_id = s.size_id WHERE c.user_id = :userId ORDER BY c.added_at DESC";
     private static final String SQL_SELECT_CART_BY_CART_ID = "SELECT c.cart_id, p.product_name, p.image_path, p.sale_price, c.size_id, c.quantity, c.added_at, s.size_name FROM cart c JOIN product p ON c.product_id = p.product_id JOIN size s ON c.size_id = s.size_id WHERE c.user_id = :userId AND c.cart_id IN (:cartIds)";
-    
-    private static final String SQL_SELECT_CART_ITEM = "SELECT c.product_id, c.quantity, p.sale_price FROM cart c JOIN product p ON c.product_id = p.product_id WHERE c.cart_id = :cartId;";
-    private static final String SQL_INSERT_PURCHASE_HISTORY = "INSERT INTO purchase_history (user_id, product_id, quantity, total_price, purchased_at) VALUES (:userId, :productId, :quantity, :totalPrice, :purchasedAt)";
+    private static final String SQL_SELECT_CART_ITEM = "SELECT c.product_id, c.quantity, p.sale_price, c.size_id FROM cart c JOIN product p ON c.product_id = p.product_id WHERE c.cart_id = :cartId";
     private static final String SQL_DELETE_CART_ITEM = "DELETE FROM cart WHERE cart_id = :cartId";
 
+    // ▼ 購入履歴関連 SQL
+    private static final String SQL_INSERT_PURCHASE_HISTORY = "INSERT INTO purchase_history (user_id, product_id, quantity, total_price, purchased_at) VALUES (:userId, :productId, :quantity, :totalPrice, :purchasedAt)";
     private static final String SQL_DELETE_PURCHASE = "DELETE FROM purchase_history WHERE purchase_id IN (:purchaseIds)";
-
-    
     private static final String SQL_SELECT_PURCHASE_BY_USERID = "SELECT * FROM purchase_history WHERE user_id = :userId ORDER BY purchased_at DESC";
     private static final String SQL_SELECT_PURCHASE_BY_DATE = "SELECT * FROM purchase_history ORDER BY purchased_at DESC";
-    private static final String SQL_SELECT_PURCHASE_BY_PRODUCTNAME = "SELECT ph.* FROM purchase_history ph JOIN product p ON ph.product_id = p.product_id WHERE p.product_name LIKE CONCAT('%', :productName, '%') ORDER BY ph.purchased_at DESC";
+    private static final String SQL_SELECT_PURCHASE_BY_PRODUCTNAME = "SELECT ph.* FROM purchase_history ph JOIN product p ON ph.product_id = p.product_id WHERE p.product_name LIKE :productName ESCAPE '\\\\' ORDER BY ph.purchased_at DESC";
     private static final String SQL_SELECT_PURCHASE_BY_PRICE = "SELECT * FROM purchase_history WHERE total_price = :price";
-    
+
+    // ▼ 並び順ソート SQL
     private static final String SQL_SORT_BY_DATE = "SELECT * FROM purchase_history ORDER BY purchased_at DESC";
     private static final String SQL_SORT_BY_QUANTITY = "SELECT * FROM purchase_history ORDER BY quantity DESC";
     private static final String SQL_SORT_BY_PRICE = "SELECT * FROM purchase_history ORDER BY total_price DESC";
-    
+
+    // ▼ 在庫更新 SQL
+    private static final String SQL_UPDATE_STOCK = "UPDATE product SET stock_s = CASE WHEN :sizeId = 1 THEN stock_s - :quantity ELSE stock_s END, stock_m = CASE WHEN :sizeId = 2 THEN stock_m - :quantity ELSE stock_m END, stock_l = CASE WHEN :sizeId = 3 THEN stock_l - :quantity ELSE stock_l END, stock_xl = CASE WHEN :sizeId = 4 THEN stock_xl - :quantity ELSE stock_xl END WHERE product_id = :productId";
 
     public PurchaseDaoImpl(NamedParameterJdbcTemplate template) {
         this.template = template;
     }
 
-    // カート登録
+    // カートに商品を追加
     @Override
     public void addToCart(Integer userId, Integer productId, Integer sizeId, Integer quantity) {
         MapSqlParameterSource param = new MapSqlParameterSource();
@@ -53,11 +60,10 @@ public class PurchaseDaoImpl implements PurchaseDao {
         param.addValue("productId", productId);
         param.addValue("sizeId", sizeId);
         param.addValue("quantity", quantity);
-
         template.update(SQL_INSERT_CART, param);
     }
 
-    // ユーザーIDでカートリスト取得
+    // ユーザーIDからカート一覧を取得
     @Override
     public List<CartViewDto> findCartViewByUserId(Integer userId) {
         MapSqlParameterSource param = new MapSqlParameterSource();
@@ -65,38 +71,36 @@ public class PurchaseDaoImpl implements PurchaseDao {
         return template.query(SQL_FIND_CART_VIEW_BY_USER, param, cartRowMapper);
     }
 
-    // カートリストの中で、購入する商品を選ぶ
+    // 購入対象カートデータを取得
     @Override
-    public List<CartViewDto> purchaseFromCart(Integer userId, List<Integer> cartIds){
+    public List<CartViewDto> purchaseFromCart(Integer userId, List<Integer> cartIds) {
         MapSqlParameterSource param = new MapSqlParameterSource();
         param.addValue("userId", userId);
         param.addValue("cartIds", cartIds);
         return template.query(SQL_SELECT_CART_BY_CART_ID, param, cartRowMapper);
     }
 
+    // カート情報を元に購入履歴登録（在庫更新とカート削除含む）
     @Override
     public void registerPurchase(Integer userId, List<Integer> cartIdList, Integer totalQuantity, Integer totalPrice) {
         LocalDateTime now = LocalDateTime.now();
 
         for (Integer cartId : cartIdList) {
             MapSqlParameterSource selectParam = new MapSqlParameterSource().addValue("cartId", cartId);
-
             Map<String, Object> cartItem;
             try {
                 cartItem = template.queryForMap(SQL_SELECT_CART_ITEM, selectParam);
             } catch (Exception e) {
-                System.err.println("カートID " + cartId + " に該当する商品が見つかりません。スキップします。");
                 continue;
             }
 
             Integer productId = (Integer) cartItem.get("product_id");
             Integer quantity = (Integer) cartItem.get("quantity");
             Integer salePrice = (Integer) cartItem.get("sale_price");
+            Integer sizeId = (Integer) cartItem.get("size_id");
 
-            if (productId == null || quantity == null || salePrice == null) {
-                System.err.println("カートID " + cartId + " の商品データが不正です。スキップします。");
+            if (quantity == null || quantity <= 0)
                 continue;
-            }
 
             Integer itemTotal = salePrice * quantity;
 
@@ -107,38 +111,42 @@ public class PurchaseDaoImpl implements PurchaseDao {
                     .addValue("totalPrice", itemTotal)
                     .addValue("purchasedAt", now);
 
+            MapSqlParameterSource updateStockParam = new MapSqlParameterSource()
+                    .addValue("sizeId", sizeId)
+                    .addValue("quantity", quantity)
+                    .addValue("productId", productId);
+
+            template.update(SQL_UPDATE_STOCK, updateStockParam);
             template.update(SQL_INSERT_PURCHASE_HISTORY, insertParam);
             template.update(SQL_DELETE_CART_ITEM, selectParam);
         }
     }
 
+    // 購入履歴をIDリストで削除
     @Override
     public void deletePurchaseHistories(List<Integer> purchaseIds) {
-        if (purchaseIds == null || purchaseIds.isEmpty()) {
-            System.out.println("削除対象の購入IDがありません。処理をスキップします。");
+        if (purchaseIds == null || purchaseIds.isEmpty())
             return;
-        }
-
         MapSqlParameterSource param = new MapSqlParameterSource();
         param.addValue("purchaseIds", purchaseIds);
         template.update(SQL_DELETE_PURCHASE, param);
     }
 
-    // 全件取得
+    // 全購入履歴取得
     @Override
     public List<PurchaseHistory> findPurchaseByAll() {
         return template.query(SQL_SELECT_PURCHASE_BY_DATE, PurchaseRowMapper);
     }
 
-    // 商品IDで検索
+    // 商品名で購入履歴検索
     @Override
     public List<PurchaseHistory> findPurchaseByProducName(String productName) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("productName", productName);
+        params.addValue("productName", "%" + escapeLike(productName) + "%");
         return template.query(SQL_SELECT_PURCHASE_BY_PRODUCTNAME, params, PurchaseRowMapper);
     }
 
-    // 金額で検索
+    // 金額で購入履歴検索
     @Override
     public List<PurchaseHistory> findPurchaseByPrice(Integer price) {
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -164,11 +172,15 @@ public class PurchaseDaoImpl implements PurchaseDao {
         return template.query(SQL_SORT_BY_PRICE, PurchaseRowMapper);
     }
 
-    // ユーザーIDで購入履歴を取得（フィルター用）
+    // ユーザーIDによる購入履歴取得
     @Override
     public List<PurchaseHistory> findPurchaseByUserId(Integer userId) {
         MapSqlParameterSource param = new MapSqlParameterSource();
         param.addValue("userId", userId);
         return template.query(SQL_SELECT_PURCHASE_BY_USERID, param, PurchaseRowMapper);
+    }
+
+    private String escapeLike(String keyword) {
+        return keyword.replace("\\", "\\\\").replace("_", "\\_").replace("%", "\\%");
     }
 }

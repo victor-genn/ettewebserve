@@ -60,7 +60,10 @@ CREATE TABLE product (
     regular_price INT NOT NULL,
     discount_rate INT NOT NULL CHECK (discount_rate BETWEEN 0 AND 100),
     sale_price INT NOT NULL,
-    stock INT NOT NULL,
+    stock_S INT NOT NULL,
+    stock_m INT NOT NULL,
+    stock_l INT NOT NULL,
+    stock_xl INT NOT NULL,
     image_path VARCHAR(100) NOT NULL,
     description VARCHAR(1000),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -89,7 +92,7 @@ CREATE TABLE purchase_history (
     FOREIGN KEY (product_id) REFERENCES product(product_id)
 );
 
--- 10. サイズ
+-- 10. stock
 CREATE TABLE size (
     size_id INT AUTO_INCREMENT PRIMARY KEY,
     size_name VARCHAR(20) NOT NULL

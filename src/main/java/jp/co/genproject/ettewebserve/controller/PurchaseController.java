@@ -28,15 +28,15 @@ import jp.co.genproject.ettewebserve.service.PurchaseService;
  * 購入に関する画面制御を担当する。
  *
  * 主な機能：
- * ・商品詳細ページからのカート追加  
- * ・カート一覧表示および購入確認情報の表示  
- * ・選択商品の購入処理および購入履歴登録  
+ * ・商品詳細ページからのカート追加
+ * ・カート一覧表示および購入確認情報の表示
+ * ・選択商品の購入処理および購入履歴登録
  * ・購入履歴の表示、検索、並び替え、削除
  *
  * 使用技術：
- * ・Spring MVC  
- * ・Thymeleaf テンプレートエンジン  
- * ・フォームオブジェクトを用いたデータ受け渡し  
+ * ・Spring MVC
+ * ・Thymeleaf テンプレートエンジン
+ * ・フォームオブジェクトを用いたデータ受け渡し
  * ・セッション管理
  *
  * @author 張勝現
@@ -59,7 +59,7 @@ public class PurchaseController {
      * 商品詳細画面からカートに商品を追加する処理。
      *
      * @param cartForm カート登録用フォーム
-     * @param model ビューに渡すモデル
+     * @param model    ビューに渡すモデル
      * @return 商品詳細画面テンプレート
      */
     @PostMapping("/cartIn")
@@ -68,7 +68,8 @@ public class PurchaseController {
         model.addAttribute("product", product);
 
         Integer userId = (Integer) session.getAttribute("userId");
-        if (userId == null) userId = 4;
+        if (userId == null)
+            userId = 4;
 
         purchaseService.addToCart(userId, cartForm.getProductId(), cartForm.getSizeId(), cartForm.getQuantity());
 
@@ -83,20 +84,21 @@ public class PurchaseController {
     /**
      * カート一覧画面を表示する処理。
      *
-     * @param cartForm カートフォーム
-     * @param choiceForm 選択情報フォーム
+     * @param cartForm     カートフォーム
+     * @param choiceForm   選択情報フォーム
      * @param purchaseForm 購入フォーム
-     * @param model ビューに渡すモデル
+     * @param model        ビューに渡すモデル
      * @return カート画面テンプレート
      */
     @GetMapping("/cartList")
     public String cartList(@ModelAttribute("cartForm") CartForm cartForm,
-                           @ModelAttribute("choiceForm") ChoiceForm choiceForm,
-                           @ModelAttribute PurchaseForm purchaseForm,
-                           Model model) {
+            @ModelAttribute("choiceForm") ChoiceForm choiceForm,
+            @ModelAttribute PurchaseForm purchaseForm,
+            Model model) {
 
         Integer userId = (Integer) session.getAttribute("userId");
-        if (userId == null) userId = 4;
+        if (userId == null)
+            userId = 4;
 
         List<CartViewDto> cartList = purchaseService.findCartViewByUserId(userId);
         for (CartViewDto item : cartList) {
@@ -112,19 +114,20 @@ public class PurchaseController {
     /**
      * 選択したカート商品を購入確認画面に表示する処理。
      *
-     * @param choiceForm 選択されたカートIDのリスト
+     * @param choiceForm   選択されたカートIDのリスト
      * @param purchaseForm 購入フォーム
-     * @param model ビューに渡すモデル
-     * @param session ユーザーセッション
+     * @param model        ビューに渡すモデル
+     * @param session      ユーザーセッション
      * @return 確認画面テンプレート
      */
     @PostMapping("/choiceItem")
     public String choiceItem(@ModelAttribute("choiceForm") ChoiceForm choiceForm,
-                             @ModelAttribute PurchaseForm purchaseForm,
-                             Model model, HttpSession session) {
+            @ModelAttribute PurchaseForm purchaseForm,
+            Model model, HttpSession session) {
 
         Integer userId = (Integer) session.getAttribute("userId");
-        if (userId == null) userId = 4;
+        if (userId == null)
+            userId = 4;
 
         List<CartViewDto> cartList = purchaseService.findCartViewByUserId(userId);
         for (CartViewDto item : cartList) {
@@ -160,18 +163,19 @@ public class PurchaseController {
      * 購入履歴画面の初期表示処理。
      *
      * @param purchaseForm 購入フォーム
-     * @param searchForm 検索フォーム
-     * @param model ビューに渡すモデル
-     * @param session セッション情報
+     * @param searchForm   検索フォーム
+     * @param model        ビューに渡すモデル
+     * @param session      セッション情報
      * @return 履歴画面テンプレート
      */
     @GetMapping("/purchaseHistory")
     public String purchaseHistory(@ModelAttribute PurchaseForm purchaseForm,
-                                  @ModelAttribute("searchForm") PurchaseSearchForm searchForm,
-                                  Model model, HttpSession session) {
+            @ModelAttribute("searchForm") PurchaseSearchForm searchForm,
+            Model model, HttpSession session) {
 
         Integer userId = (Integer) session.getAttribute("userId");
-        if (userId == null) userId = 4;
+        if (userId == null)
+            userId = 4;
 
         List<PurchaseHistory> purchaseList = purchaseService.findPurchaseByUserId(userId);
 
@@ -185,16 +189,17 @@ public class PurchaseController {
      * 購入履歴の検索および並び替え処理。
      *
      * @param searchForm 検索条件フォーム
-     * @param session セッション情報
-     * @param model ビューに渡すモデル
+     * @param session    セッション情報
+     * @param model      ビューに渡すモデル
      * @return 履歴画面テンプレート
      */
     @PostMapping("/purchaseHistory")
     public String postPurchaseHistory(@ModelAttribute("searchForm") PurchaseSearchForm searchForm,
-                                      HttpSession session, Model model) {
+            HttpSession session, Model model) {
 
         Integer userId = (Integer) session.getAttribute("userId");
-        if (userId == null) userId = 4;
+        if (userId == null)
+            userId = 4;
 
         List<PurchaseHistory> purchaseList;
 
@@ -236,14 +241,15 @@ public class PurchaseController {
      * カート選択商品の購入処理。
      *
      * @param purchaseForm 購入情報を含むフォーム
-     * @param model ビューに渡すモデル
-     * @param session セッション情報
+     * @param model        ビューに渡すモデル
+     * @param session      セッション情報
      * @return 購入履歴画面へリダイレクト
      */
     @PostMapping("/purchase")
     public String registerPurchase(@ModelAttribute PurchaseForm purchaseForm, Model model, HttpSession session) {
         Integer userId = (Integer) session.getAttribute("userId");
-        if (userId == null) userId = 4;
+        if (userId == null)
+            userId = 4;
 
         List<Integer> cartIdList = purchaseForm.getCartIds();
         Integer totalQuantity = purchaseForm.getTotalQuantity();
@@ -262,12 +268,13 @@ public class PurchaseController {
      * 選択された購入履歴の削除処理。
      *
      * @param selectedIds 削除対象の購入履歴IDリスト
-     * @param session セッション情報
+     * @param session     セッション情報
      * @return 購入履歴画面へリダイレクト
      */
     @PostMapping("/purchaseHistory/delete")
-    public String deletePurchaseHistory(@RequestParam(value = "selectedIds", required = false) List<Integer> selectedIds,
-                                        HttpSession session) {
+    public String deletePurchaseHistory(
+            @RequestParam(value = "selectedIds", required = false) List<Integer> selectedIds,
+            HttpSession session) {
         if (selectedIds != null && !selectedIds.isEmpty()) {
             purchaseService.deletePurchaseHistories(selectedIds);
         }

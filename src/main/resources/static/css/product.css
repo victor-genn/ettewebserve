@@ -390,3 +390,19 @@ main{
     gap: 15px;
     margin-top: 25px;
 }
+
+.product-imgRegister{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.product-imgRegisterDiv{
+    display: flex;
+    margin: 20px;
+    width: 490px;
+    align-items: center;
+    justify-content: center;
+}

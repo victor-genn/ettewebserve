@@ -38,7 +38,7 @@
         <!-- 検索 -->
         <form th:action="@{/productSearch}" method="post" th:object="${productForm}" class="prodView-searchform">
             <select th:field="*{categoryId}" class="prodView-select">
-                <option value="">-- カテゴリーを選択 --</option>
+                <option value="" disabled selected>-- カテゴリーを選択 --</option>
                 <option value="1">レディースファッション</option>
                 <option value="2">メンズファッション</option>
                 <option value="3">キッズ・ベビー・マタニティ</option>
@@ -53,13 +53,13 @@
                 <option value="12">本・雑誌・ゲーム</option>
             </select>
             <select th:field="*{searchType}" class="prodView-select">
-                <option value="">--検索条件--</option>
+                <option value="" disabled selected>--検索条件--</option>
                 <option value="productName">商品名</option>
                 <option value="keyword">キーワード</option>
             </select>
             <input th:field="*{searchWord}" type="text" class="prodView-searchbar" placeholder="検索語を入力してください" />
             <select th:field="*{sortOrder}" class="prodView-select">
-                <option value="">--並び順--</option>
+                <option value="" disabled selected>--並び順--</option>
                 <option value="created_at">新着順</option>
                 <option value="sale_price">価格順</option>
                 <option value="discount_rate">割引順</option>

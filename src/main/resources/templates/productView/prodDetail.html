@@ -64,13 +64,12 @@
                         <!-- 製造年月 -->
                         <div class="probDetail-grid2">
                             <label class="prodDetail-label">製造年月</label>
-                            <input type="date" th:value="${product.manufactureDate}" class="probDetail-span1" readonly />
+                            <span class="probDetail-span1" th:text="${product.manufactureDate}">製造年月</span>
                         </div>
                     </div>
 
                     <div class="probDetail-partion">
                         <!-- 商品説明 -->
-                        <input type="hidden" />
                         <span class="probDetail-span2" th:text="${product.description}">商品説明</span>
                     </div>
 
@@ -79,7 +78,7 @@
                         <div class="probDetail-grid2">
                             <label class="prodDetail-label">サイズ</label>
                             <select class="prodDetail-select" th:field="*{sizeId}">
-                                <option value="" selected>--サイズ--</option>
+                                <option value="" disabled selected>--サイズ--</option>
                                 <option value="1">- S -</option>
                                 <option value="2">- M -</option>
                                 <option value="3">- L -</option>
@@ -89,7 +88,7 @@
                         <!-- 数量 -->
                         <div class="probDetail-grid2">
                             <label class="prodDetail-label">数量</label>
-                            <input type="number" th:field="*{quantity}" class="prodDetail-numbers" />
+                            <input type="number" th:field="*{quantity}" class="prodDetail-numbers" min="1" max="99" value="0" required />
                         </div>
                     </div>
 
@@ -112,10 +111,11 @@
                     </div>
                 </form>
                 <!-- 管理者用ボタン -->
-                <!-- <a th:href="@{/productUpdate}">
-                    <button type="button" class="probDetail-button">修正</button>
-                </a>
-                <button class="probDetail-button">削除</button> -->
+                <form method="get">
+                    <input type="hidden" name="productId" th:value="${product.productId}" />
+                    <button type="submit" class="probDetail-button" formaction="/productUpdate">修正</button>
+                    <button type="submit" class="probDetail-button" formaction="/productDelete">削除</button>
+                </form>
             </div>
         </div>
     </main>

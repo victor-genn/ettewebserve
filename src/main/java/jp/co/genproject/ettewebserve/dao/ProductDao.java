@@ -2,6 +2,10 @@ package jp.co.genproject.ettewebserve.dao;
 
 import java.util.List;
 
+import jp.co.genproject.ettewebserve.dto.ProductDto;
+import jp.co.genproject.ettewebserve.entity.Category;
+import jp.co.genproject.ettewebserve.entity.Country;
+import jp.co.genproject.ettewebserve.entity.Keyword;
 import jp.co.genproject.ettewebserve.entity.Product;
 
 /**
@@ -10,9 +14,9 @@ import jp.co.genproject.ettewebserve.entity.Product;
  * データアクセス処理を定義する。
  *
  * 主な機能：
- * ・商品一覧取得  
- * ・商品検索（名前・キーワード・カテゴリ）  
- * ・推薦商品取得  
+ * ・商品一覧取得
+ * ・商品検索（名前・キーワード・カテゴリ）
+ * ・推薦商品取得
  * ・商品詳細情報の取得
  *
  * 使用技術：
@@ -23,9 +27,17 @@ import jp.co.genproject.ettewebserve.entity.Product;
  */
 public interface ProductDao {
 
-    // 商品検索用    
-    //　「全体」検索
+    // 商品検索用
+    // 「全体」検索
     public List<Product> findByAll();
+
+    public Integer findProductIdByProductName(String productName);
+
+    public List<Category> findAllCategory();
+
+    public List<Keyword> findAllKeyword();
+
+    public List<Country> findAllCountry();
 
     // 「並び順」で検索
     public List<Product> findBySort(String sort);
@@ -60,4 +72,10 @@ public interface ProductDao {
 
     // 「製造国ID」で、製造国名探す
     public String findCountryNameByCountryId(Integer countryId);
+
+    // 新規商品登録
+    public void insertProduct(ProductDto productDto);
+
+    // 商品情報更新
+    public void updateProduct(ProductDto productDto);
 }
