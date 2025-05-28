@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import jakarta.servlet.http.HttpSession;
+import jp.co.genproject.ettewebserve.entity.User;
 import jp.co.genproject.ettewebserve.form.LoginForm;
 import jp.co.genproject.ettewebserve.service.UserService;
 
@@ -46,14 +47,38 @@ public class LoginController {
             return "login";
         }
 
-        boolean isAuthenticated = userService.signIn(loginForm.getLoginId(), loginForm.getPassword());
+        String loginId = loginForm.getLoginId();
+        String password = loginForm.getPassword();
+
+        boolean isAuthenticated = userService.signIn(loginId, password);
 
         if (!isAuthenticated) {
             model.addAttribute("loginError", "IDまたはパスワードが正しくありません。");
             return "login";
         }
 
-        session.setAttribute("loginId", loginForm.getLoginId());
+        User user = userService.findByloginId(loginId);
+        Integer userId = user.getUserId();
+        Integer roleId = user.getRoleId();
+        String userName = user.getFirstName();
+        String userImage = user.getImagePath();
+
+        session.setAttribute("userId", userId);
+        session.setAttribute("loginId", loginId);
+        session.setAttribute("roleId", roleId);
+        session.setAttribute("userName", userName);
+        session.setAttribute("userImage", userImage);
+
+        System.out.println("=== 로그인 성공 ===");
+        System.out.println("userId: " + userId);
+        System.out.println("loginId: " + loginId);
+
+        return "redirect:/index";
+    }
+
+    @GetMapping("/logOut")
+    public String logOut() {
+        session.invalidate();
         return "redirect:/index";
     }
 

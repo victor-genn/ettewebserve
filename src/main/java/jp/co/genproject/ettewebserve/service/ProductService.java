@@ -66,4 +66,6 @@ public interface ProductService {
 
     /** 商品IDによる削除処理 */
     void deleteProductById(Integer productId);
+
+    void deleteProductWithCart(int productId);
 }

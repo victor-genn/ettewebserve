@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import jakarta.servlet.http.HttpSession;
 import jp.co.genproject.ettewebserve.dto.ProductDto;
 import jp.co.genproject.ettewebserve.entity.Product;
 import jp.co.genproject.ettewebserve.form.CartForm;
@@ -48,9 +50,11 @@ import jp.co.genproject.ettewebserve.service.ProductService;
 public class ProductController {
 
     private final ProductService productService;
+    private final HttpSession session;
 
-    public ProductController(ProductService productService) {
+    public ProductController(ProductService productService, HttpSession session) {
         this.productService = productService;
+        this.session = session;
     }
 
     /**
@@ -62,15 +66,18 @@ public class ProductController {
      */
     @GetMapping("/productList")
     public String productList(@ModelAttribute("productForm") ProductForm productForm, Model model) {
-        productForm.setSearchType("productName");
-        productForm.setSortOrder("created_at");
+
+        Integer userId = getSessionInt(session,"userId");
+        
+        if(userId == null){
+            return "index";
+        } 
 
         List<Product> productList = productService.findByAll();
-        model.addAttribute("productList", productList);
-
         List<Product> recommendList = productService.findByRecommends();
-        model.addAttribute("recommendList", recommendList);
 
+        model.addAttribute("productList", productList);
+        model.addAttribute("recommendList", recommendList);
         model.addAttribute("productForm", productForm);
         return "productView/prodView";
     }
@@ -86,6 +93,12 @@ public class ProductController {
     @PostMapping("/productSearch")
     public String productSearch(@Validated @ModelAttribute("productForm") ProductForm productForm, BindingResult result,
             Model model) {
+
+        Integer userId = getSessionInt(session,"userId");
+        
+        if(userId == null){
+            return "index";
+        }
 
         if (result.hasErrors()) {
             return "productView/prodView";
@@ -145,6 +158,12 @@ public class ProductController {
     public String productDetail(@ModelAttribute("cartForm") CartForm cartForm,
             @RequestParam("productId") int productId, Model model) {
 
+        Integer userId = getSessionInt(session,"userId");
+        
+        if(userId == null){
+            return "index";
+        }
+
         Product product = productService.findByProductId(productId);
         model.addAttribute("product", product);
 
@@ -164,6 +183,14 @@ public class ProductController {
      */
     @GetMapping("/productRegist")
     public String productRegist(@ModelAttribute("productRegistForm") ProductRegistForm productRegist, Model model) {
+
+        Integer userId = getSessionInt(session,"userId");
+        Integer roleId = getSessionInt(session, "roleId");
+        
+        if(userId == null || roleId == 2){
+            return "index";
+        }
+
         model.addAttribute("categoryList", productService.findAllCategory());
         model.addAttribute("keywordList", productService.findAllKeyword());
         model.addAttribute("countryList", productService.findAllCountry());
@@ -185,6 +212,13 @@ public class ProductController {
     public String productIncert(@Validated @ModelAttribute("productRegistForm") ProductRegistForm productRegist,
                                  @ModelAttribute("productForm") ProductForm productForm,
                                  BindingResult result, Model model) {
+
+        Integer userId = getSessionInt(session,"userId");
+        Integer roleId = getSessionInt(session, "roleId");
+        
+        if(userId == null || roleId == 2){
+            return "index";
+        }
 
         if (result.hasErrors()) {
             model.addAttribute("categoryList", productService.findAllCategory());
@@ -235,6 +269,14 @@ public class ProductController {
      */
     @GetMapping("/productUpdate")
     public String productDirection(@RequestParam("productId") Integer productId, Model model) {
+        
+        Integer userId = getSessionInt(session,"userId");
+        Integer roleId = getSessionInt(session, "roleId");
+        
+        if(userId == null || roleId == 2){
+            return "index";
+        }
+        
         Product product = productService.findByProductId(productId);
 
         ProductUpdateForm updateForm = new ProductUpdateForm();
@@ -277,6 +319,13 @@ public class ProductController {
                                 @ModelAttribute("productForm") ProductForm productForm,
                                 BindingResult result, Model model) {
 
+        Integer userId = getSessionInt(session,"userId");
+        Integer roleId = getSessionInt(session, "roleId");
+        
+        if(userId == null || roleId == 2){
+            return "index";
+        }
+                                
         if (productUpdateForm.getStockS() == null) productUpdateForm.setStockS(0);
         if (productUpdateForm.getStockM() == null) productUpdateForm.setStockM(0);
         if (productUpdateForm.getStockL() == null) productUpdateForm.setStockL(0);
@@ -333,8 +382,21 @@ public class ProductController {
      */
     @GetMapping("/productDelete")
     public String productDelete(@RequestParam("productId") Integer productId, Model model) {
-        productService.deleteProductById(productId);
         
+        Integer userId = getSessionInt(session, "userId");
+        Integer roleId = getSessionInt(session, "roleId");
+
+        if (userId == null || roleId == 2) {
+            return "index";
+        }
+
+        try {
+            productService.deleteProductWithCart(productId);
+        } catch (DataIntegrityViolationException e) {
+            model.addAttribute("deleteError", "商品を削除できません。関連するデータが存在します。");
+            return "error/customError";
+        }
+
         ProductForm productForm = new ProductForm();
         productForm.setSearchType("productName");
         productForm.setSortOrder("created_at");
@@ -366,4 +428,14 @@ public class ProductController {
         }
         return null;
     }
-} 
+
+    private Integer getSessionInt(HttpSession session, String key) {
+        Object value = session.getAttribute(key);
+        if (value == null) return null;
+        try {
+            return Integer.valueOf(value.toString());
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    } 
+}

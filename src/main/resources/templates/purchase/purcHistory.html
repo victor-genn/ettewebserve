@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,14 +8,11 @@
     <link rel="stylesheet" th:href="@{/css/default.css}" />
     <link rel="stylesheet" th:href="@{/css/purchase.css}" />
 </head>
-<body>
-    <!-- ヘッダー -->
-    <div th:replace="fragments/headerLogined :: header"></div>
-        
-    <!-- メイン -->
-    <main>
 
-        <!-- 現在ページ経路 -->
+<body>
+    <div th:replace="~{fragments/headerLogined :: header}"></div>
+
+    <main>
         <div class="page-path" style="width: 1100px; margin-bottom: 20px;">
             <a th:href="@{/index}">メイン＞</a>
             <a th:href="@{/mypage}">マイページ＞</a>
@@ -22,29 +20,25 @@
         </div>
 
         <div class="main-user-content">
-            <!-- バーナー（左側） -->
-            <img th:src="@{/images/photo/mypagebanner.png}" alt="バーナー" class="img-default-banner"  />
+            <img th:src="@{/images/photo/mypagebanner.png}" alt="バーナー" class="img-default-banner" />
 
-            <!-- ログインフォーム（右側） -->
             <div class="div-default-form">
-                
-                <!-- サブタイトル -->
-                <img th:src="@{/images/icon/history.png}" alt="サブタイトル" class="img-default-subtitle userPage-partion" style="margin-bottom: 20px;" />
+
+                <img th:src="@{/images/icon/history.png}" alt="サブタイトル" class="img-default-subtitle userPage-partion"
+                    style="margin-bottom: 20px;" />
 
                 <form th:action="@{/purchaseHistory}" method="post" th:object="${searchForm}">
                     <div class="purchase-searchbox">
 
-                        <!-- 検索条件 -->
                         <select th:field="*{searchCondition}" class="purchase-button">
                             <option value="">--条件--</option>
                             <option value="productName">商品名</option>
                             <option value="price">価格</option>
                         </select>
 
-                        <!-- 検索語 -->
-                        <input type="text" th:field="*{searchKeyword}" placeholder="検索語を入力してください" class="purchase-button" />
+                        <input type="text" th:field="*{searchKeyword}" placeholder="検索語を入力してください"
+                            class="purchase-button" />
 
-                        <!-- 並び順 -->
                         <select th:field="*{sortBy}" class="purchase-button">
                             <option value="">--並び順--</option>
                             <option value="date">日付順</option>
@@ -52,8 +46,7 @@
                             <option value="price">金額順</option>
                         </select>
 
-                        <!-- 検索ボタン -->
-                        <input type="submit" value="検索" class="purchase-button purchase-researchbutton"/>
+                        <input type="submit" value="検索" class="purchase-button purchase-researchbutton" />
                     </div>
                 </form>
                 <form th:action="@{/purchaseHistory/delete}" method="post" class="purchase-form">
@@ -83,7 +76,8 @@
                         </div>
                         <div style="display: flex; gap: 15px;">
                             <input type="submit" value="選択削除" class="purchase-actionbutton" />
-                            <a th:href="@{/mypage}" class="purchase-actionbutton" style="text-decoration: none; display: inline-block; text-align: center;">戻る</a>
+                            <a th:href="@{session.userId != null} ? '/mypage' : '/login'" class="purchase-actionbutton"
+                                style="text-decoration: none; display: inline-block; text-align: center;">戻る</a>
                         </div>
                     </div>
                 </form>
@@ -91,7 +85,7 @@
         </div>
     </main>
 
-    <!-- フッター -->
     <div th:replace="fragments/footer :: footer"></div>
 </body>
+
 </html>

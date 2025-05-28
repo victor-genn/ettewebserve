@@ -74,6 +74,7 @@ public class ProductDaoImpl implements ProductDao {
     private static final String SQL_UPDATE_PRODUCT = "UPDATE product SET category_id = :categoryId, keyword_id = :keywordId, country_id = :countryId, manufacture_date = :manufactureDate, regular_price = :regularPrice, discount_rate = :discountRate, sale_price = :salePrice, stock_s = :stockS, stock_m = :stockM, stock_l = :stockL, stock_xl = :stockXL, image_path = :imagePath, description = :description WHERE product_id = :productId";
     private static final String SQL_DELETE_PURCHASE_HISTORY_BY_PRODUCT_ID = "DELETE FROM purchase_history WHERE product_id = :productId";
     private static final String SQL_DELETE_PRODUCT_BY_ID = "DELETE FROM product WHERE product_id = :productId";
+    private static final String SQL_DELETE_CART_BY_PRODUCT_ID = "DELETE FROM cart WHERE product_id = :productId";
 
     // コンストラクター
     public ProductDaoImpl(NamedParameterJdbcTemplate template) {
@@ -281,12 +282,11 @@ public class ProductDaoImpl implements ProductDao {
         MapSqlParameterSource param = new MapSqlParameterSource();
         param.addValue("productId", productId);
 
-        // 1. 購入履歴を先に削除
+        template.update(SQL_DELETE_CART_BY_PRODUCT_ID, param);
         template.update(SQL_DELETE_PURCHASE_HISTORY_BY_PRODUCT_ID, param);
-
-        // 2. 商品削除
         template.update(SQL_DELETE_PRODUCT_BY_ID, param);
     }
+
     // SQL文設定
     private String escapeLike(String keyword) {
         return keyword.replace("\\", "\\\\").replace("_", "\\_").replace("%", "\\%");
@@ -297,12 +297,13 @@ public class ProductDaoImpl implements ProductDao {
         if (sort == null || sort.isBlank()) {
             return "created_at";
         }
-
         List<String> allowedSorts = List.of("created_at", "sale_price", "discount_rate");
-        if (!allowedSorts.contains(sort.toLowerCase())) {
+        String lowerSort = sort.toLowerCase();
+
+        if (!allowedSorts.contains(lowerSort)) {
             throw new IllegalArgumentException("並び順のエラー: " + sort);
         }
-
-        return sort;
+        return lowerSort;
     }
+    
 }

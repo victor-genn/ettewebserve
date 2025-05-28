@@ -64,11 +64,15 @@ public class PurchaseController {
      */
     @PostMapping("/cartIn")
     public String purchase(@ModelAttribute("cartForm") CartForm cartForm, Model model) {
+        
+        Integer userId = getSessionInt(session,"userId");
+
+        if(userId == null){
+            return "index";
+        }
+        
         Product product = productService.findByProductId(cartForm.getProductId());
         model.addAttribute("product", product);
-
-        Integer userId = (Integer) session.getAttribute("userId");
-        if (userId == null) userId = 4;
 
         purchaseService.addToCart(userId, cartForm.getProductId(), cartForm.getSizeId(), cartForm.getQuantity());
 
@@ -95,8 +99,11 @@ public class PurchaseController {
                            @ModelAttribute PurchaseForm purchaseForm,
                            Model model) {
 
-        Integer userId = (Integer) session.getAttribute("userId");
-        if (userId == null) userId = 4;
+        Integer userId = getSessionInt(session,"userId");
+
+        if(userId == null){
+            return "index";
+        }
 
         List<CartViewDto> cartList = purchaseService.findCartViewByUserId(userId);
         for (CartViewDto item : cartList) {
@@ -120,11 +127,13 @@ public class PurchaseController {
      */
     @PostMapping("/choiceItem")
     public String choiceItem(@ModelAttribute("choiceForm") ChoiceForm choiceForm,
-                             @ModelAttribute PurchaseForm purchaseForm,
-                             Model model, HttpSession session) {
+                             @ModelAttribute PurchaseForm purchaseForm, Model model) {
 
-        Integer userId = (Integer) session.getAttribute("userId");
-        if (userId == null) userId = 4;
+        Integer userId = getSessionInt(session,"userId");
+
+        if(userId == null){
+            return "index";
+        }
 
         List<CartViewDto> cartList = purchaseService.findCartViewByUserId(userId);
         for (CartViewDto item : cartList) {
@@ -168,10 +177,13 @@ public class PurchaseController {
     @GetMapping("/purchaseHistory")
     public String purchaseHistory(@ModelAttribute PurchaseForm purchaseForm,
                                   @ModelAttribute("searchForm") PurchaseSearchForm searchForm,
-                                  Model model, HttpSession session) {
+                                  Model model) {
 
-        Integer userId = (Integer) session.getAttribute("userId");
-        if (userId == null) userId = 4;
+        Integer userId = getSessionInt(session,"userId");
+
+        if(userId == null){
+            return "index";
+        }
 
         List<PurchaseHistory> purchaseList = purchaseService.findPurchaseByUserId(userId);
 
@@ -190,11 +202,13 @@ public class PurchaseController {
      * @return 履歴画面テンプレート
      */
     @PostMapping("/purchaseHistory")
-    public String postPurchaseHistory(@ModelAttribute("searchForm") PurchaseSearchForm searchForm,
-                                      HttpSession session, Model model) {
+    public String postPurchaseHistory(@ModelAttribute("searchForm") PurchaseSearchForm searchForm, Model model) {
 
-        Integer userId = (Integer) session.getAttribute("userId");
-        if (userId == null) userId = 4;
+        Integer userId = getSessionInt(session,"userId");
+
+        if(userId == null){
+            return "index";
+        }
 
         List<PurchaseHistory> purchaseList;
 
@@ -242,8 +256,12 @@ public class PurchaseController {
      */
     @PostMapping("/purchase")
     public String registerPurchase(@ModelAttribute PurchaseForm purchaseForm, Model model, HttpSession session) {
-        Integer userId = (Integer) session.getAttribute("userId");
-        if (userId == null) userId = 4;
+        
+        Integer userId = getSessionInt(session,"userId");
+
+        if(userId == null){
+            return "index";
+        }
 
         List<Integer> cartIdList = purchaseForm.getCartIds();
         Integer totalQuantity = purchaseForm.getTotalQuantity();
@@ -266,11 +284,37 @@ public class PurchaseController {
      * @return 購入履歴画面へリダイレクト
      */
     @PostMapping("/purchaseHistory/delete")
-    public String deletePurchaseHistory(@RequestParam(value = "selectedIds", required = false) List<Integer> selectedIds,
-                                        HttpSession session) {
+    public String deletePurchaseHistory(@RequestParam(value = "selectedIds", required = false) List<Integer> selectedIds) {
+        
+        Integer userId = getSessionInt(session,"userId");
+
+        if(userId == null){
+            return "index";
+        }
+
         if (selectedIds != null && !selectedIds.isEmpty()) {
             purchaseService.deletePurchaseHistories(selectedIds);
         }
         return "redirect:/purchaseHistory";
     }
+
+    /**
+     * セッションから指定されたキーで値を取得し、Integerとして返却します。
+     *
+     * <p>セッションに該当のキーが存在しない場合や、
+     * 数値に変換できない場合は null を返します。</p>
+     *
+     * @param session HttpSession オブジェクト
+     * @param key 取得したいセッション属性のキー
+     * @return Integer 型の値（変換できない場合は null）
+     */
+    private Integer getSessionInt(HttpSession session, String key) {
+        Object value = session.getAttribute(key);
+        if (value == null) return null;
+        try {
+            return Integer.valueOf(value.toString());
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    } 
 }

@@ -8,35 +8,27 @@
     <link rel="stylesheet" th:href="@{/css/user.css}" />
 </head>
 <body>
-    <!-- ヘッダー -->
-    <div th:replace="fragments/header :: header"></div>
+    <div th:replace="~{fragments/header :: header}"></div>
 
-    <!-- メイン -->
     <main>
         <div class="main-user-content">
-            <!-- バーナー（左側） -->
             <img th:src="@{/images/photo/default-banner.png}" alt="バーナー" class="img-default-banner" />
-            <!-- ログインフォーム（右側） -->
+
             <div class="div-default-form">
-                <!-- サブタイトル -->
                 <img th:src="@{/images/icon/signin.png}" alt="サブタイトル" class="img-default-subtitle" />
-                <form action="" class="form-login">
-                    <!-- ID入力 -->
+                <form th:action="@{/login}" method="post" class="form-login" th:object="${loginForm}">
                     <div class="form-login-partion">
                         <label for="loginId" class="form-login-label">ID</label>
-                        <input type="text" id="loginId" class="form-login-input" /> 
+                        <input type="text" th:field="*{loginId}" id="loginId" class="form-login-input" /> 
                     </div>
-                    <!-- パスワード入力 -->
                     <div class="form-login-partion">
                         <label for="password" class="form-login-label">PW</label>
-                        <input type="password" id="password" class="form-login-input" /> 
+                        <input type="password" th:field="*{password}" id="password" class="form-login-input" /> 
                     </div>
-                    <!-- ボタン -->
                     <div class="form-login-partion" style="margin-top: 20px;">
-                        <button class="button-header-default">ログイン</button>
-                        <button class="button-header-default">新規登録</button>
+                        <button type="submit" class="button-header-default">ログイン</button>
+                        <a th:href="@{/regist}" class="button-header-default">新規登録</a>
                     </div>
-                    <!-- パスワード探す -->
                     <div>
                         <a th:href="@{/findPassword}" class="link-login-findPw">パスワードをお忘れの方はこちら</a>
                     </div>
@@ -45,7 +37,6 @@
         </div>
     </main>
 
-    <!-- フッター -->
-    <div th:replace="fragments/footer :: footer"></div>
+    <div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>

@@ -121,11 +121,11 @@ public class RegistController {
     private String saveImage(MultipartFile image) {
         if (image != null && !image.isEmpty()) {
             try {
-                String uploadDir = "src/main/resources/static/images/products/";
+                String uploadDir = "src/main/resources/static/images/userImages/";
                 String fileName = image.getOriginalFilename();
                 Path path = Paths.get(uploadDir + fileName);
                 Files.copy(image.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-                return "/images/products/" + fileName;
+                return "/images/userImages/" + fileName;
             } catch (IOException e) {
                 e.printStackTrace();
             }

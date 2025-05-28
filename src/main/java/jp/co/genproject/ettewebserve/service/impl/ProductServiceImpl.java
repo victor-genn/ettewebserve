@@ -3,6 +3,7 @@ package jp.co.genproject.ettewebserve.service.impl;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import jp.co.genproject.ettewebserve.dao.ProductDao;
 import jp.co.genproject.ettewebserve.dto.ProductDto;
@@ -120,6 +121,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void deleteProductById(Integer productId){
+        productDao.deleteProductById(productId);
+    }
+
+    @Transactional
+    @Override
+    public void deleteProductWithCart(int productId) {
         productDao.deleteProductById(productId);
     }
 }

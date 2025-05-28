@@ -51,6 +51,82 @@ body{
     color: white;
 }
 
+.modal-menu-box{
+    width: 210px;
+    height: 390px;
+    background: #353535;
+    left: 2%;
+    top: 50%;
+    border-radius: 10px;
+    border: 1px soid white;
+    position: absolute;
+    flex-direction: column;
+    z-index: 1000;
+}
+
+.modal-menu-contents{
+    width: 100%;
+    height: 100%;
+    color: #b7c9bd;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    font-size: 16px;
+}
+
+.modal-menu-contents a {
+    text-decoration: none;
+    color: #b7c9bd;
+}
+
+.modal-menu-contents span:hover,
+.modal-menu-contents a:hover{
+    color: white;
+}
+
+.modal-user-box{
+    width: 170px;
+    height: 200px;
+    background: #353535;
+    right: 8%;
+    top: 70%;
+    border-radius: 10px;
+    border: 1px soid white;
+    position: absolute;
+    flex-direction: column;
+    z-index: 1000;
+}
+
+.modal-user-contents{
+    width: 100%;
+    height: 100%;
+    color: #b7c9bd;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    font-size: 18px;
+}
+
+.modal-user-contents a {
+    text-decoration: none;
+    color: #b7c9bd;
+}
+
+.modal-user-contents span:hover,
+.modal-user-contents a:hover{
+    color: white;
+}
+
+.img-header-nowuser{
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+}
+
 /* メイン */
 main{
     display: flex;
@@ -112,7 +188,8 @@ footer{
     margin: 8px 0;
     background: #3a3a3a;
     height: 79px;
-    padding-top: 13px;
+    padding-top: 8px;
+    font-size: 12px;
 }
 
 .select-footer-companys{

@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import jp.co.genproject.ettewebserve.dao.UserDao;
 import jp.co.genproject.ettewebserve.dto.UserDto;
+import jp.co.genproject.ettewebserve.dto.UserUpdateDto;
 import jp.co.genproject.ettewebserve.entity.User;
 import jp.co.genproject.ettewebserve.service.UserService;
 
@@ -25,5 +26,9 @@ public class UserServiceImpl implements UserService{
 
     public boolean signIn(String loginId, String password){
         return userDao.signIn(loginId, password);
+    }
+
+    public void updateUser(UserUpdateDto userUpdateDto){
+        userDao.updateUser(userUpdateDto);
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import jp.co.genproject.ettewebserve.dao.UserDao;
 import jp.co.genproject.ettewebserve.dto.UserDto;
+import jp.co.genproject.ettewebserve.dto.UserUpdateDto;
 import jp.co.genproject.ettewebserve.entity.User;
 
 @Repository
@@ -21,8 +22,9 @@ public class UserDaoImpl implements UserDao {
 
     // SQL文
     private static final String SQL_INSERT_USER = "INSERT INTO user_account (login_id, password, last_name, first_name, gender, email, image_path, keyword_1, keyword_2, keyword_3, role_id) VALUES (:loginId, :password, :lastName, :firstName, :gender, :email, :imagePath, :keyword1, :keyword2, :keyword3, :roleId)";
-    private static final String SQL_SELECT_USER_BY_USERID = "SELECT * FROM user_account WHERE login_id = :loginId ORDER BY user_id";
+    private static final String SQL_SELECT_USER_BY_LOGINID = "SELECT * FROM user_account WHERE login_id = :loginId ORDER BY user_id";
     private static final String SQL_SELECT_USER_BY_USERID_AND_PASSWORD = "SELECT * FROM user_account WHERE login_id = :loginId and password = :password";;
+    private static final String SQL_UPDATE_USER_BY_USERID = "UPDATE user_account SET password = :password, email = :email, keyword_1 = :keyword1, keyword_2 = :keyword2, keyword_3 = :keyword3, image_path = :imagePath WHERE user_id = :userId";
 
     // コンストラクター
     public UserDaoImpl (NamedParameterJdbcTemplate template) {
@@ -50,7 +52,7 @@ public class UserDaoImpl implements UserDao {
     public User findByloginId(String loginId){
         MapSqlParameterSource param = new MapSqlParameterSource();
         param.addValue("loginId", loginId);
-        List<User> userList = template.query(SQL_SELECT_USER_BY_USERID, param, userRowMapper);
+        List<User> userList = template.query(SQL_SELECT_USER_BY_LOGINID, param, userRowMapper);
         return userList.isEmpty() ? null : userList.get(0);
     }
 
@@ -61,5 +63,23 @@ public class UserDaoImpl implements UserDao {
         param.addValue("password", password);
         List<User> userList = template.query(SQL_SELECT_USER_BY_USERID_AND_PASSWORD, param, userRowMapper);
         return !userList.isEmpty();
+    }
+
+    /** ユーザー情報更新 */
+    public void updateUser(UserUpdateDto userUpdateDto) {
+        MapSqlParameterSource param = new MapSqlParameterSource()
+            .addValue("userId", userUpdateDto.getUserId())
+            .addValue("password", userUpdateDto.getPassword())
+            .addValue("email", userUpdateDto.getEmail())
+            .addValue("keyword1", userUpdateDto.getKeyword1())
+            .addValue("keyword2", userUpdateDto.getKeyword2())
+            .addValue("keyword3", userUpdateDto.getKeyword3())
+            .addValue("imagePath", userUpdateDto.getImagePath());
+
+        template.update(SQL_UPDATE_USER_BY_USERID, param);
+
+        System.out.println("=== updateUser 실행됨 ===");
+        System.out.println("userId: " + userUpdateDto.getUserId());
+        System.out.println("email: " + userUpdateDto.getEmail());
     }
 }

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,38 +8,33 @@
     <link rel="stylesheet" th:href="@{/css/default.css}" />
     <link rel="stylesheet" th:href="@{/css/product.css}" />
 </head>
+
 <body>
-    <!-- ヘッダー -->
     <div th:replace="fragments/headerLogined :: header"></div>
 
-    <!-- メイン -->
     <main>
-        <!-- バーナー -->
-        <img th:src="@{/images/photo/productbanner.png}" alt="バーナー" class="prodView-banner" />    
-        
-        <!-- 現在ページ経路 -->
+
+        <img th:src="@{/images/photo/productbanner.png}" alt="バーナー" class="prodView-banner" />
+
         <div class="page-path">
             <a th:href="@{/index}">メイン＞</a>
             <a th:href="@{/productList}">商品一覧</a>
         </div>
-        
-        <!-- サブタイトル -->
+
         <img th:src="@{/images/icon/productview.png}" alt="サブタイトル" />
 
-        <!-- エラーメッセージ -->
-        <!-- searchType -->
         <div>
-            <span th:if="${#fields.hasErrors('productForm.searchType')}" th:errors="${productForm.searchType}" class="errorMessage"></span>
+            <span th:if="${#fields.hasErrors('productForm.searchType')}" th:errors="${productForm.searchType}"
+                class="errorMessage"></span>
         </div>
-        <!-- sortOrder -->
         <div>
-            <span th:if="${#fields.hasErrors('productForm.sortOrder')}" th:errors="${productForm.sortOrder}" class="errorMessage"></span>
+            <span th:if="${#fields.hasErrors('productForm.sortOrder')}" th:errors="${productForm.sortOrder}"
+                class="errorMessage"></span>
         </div>
 
-        <!-- 検索 -->
         <form th:action="@{/productSearch}" method="post" th:object="${productForm}" class="prodView-searchform">
             <select th:field="*{categoryId}" class="prodView-select">
-                <option value="" disabled selected>-- カテゴリーを選択 --</option>
+                <option value="" selected>-- カテゴリーを選択 --</option>
                 <option value="1">レディースファッション</option>
                 <option value="2">メンズファッション</option>
                 <option value="3">キッズ・ベビー・マタニティ</option>
@@ -53,13 +49,13 @@
                 <option value="12">本・雑誌・ゲーム</option>
             </select>
             <select th:field="*{searchType}" class="prodView-select">
-                <option value="" disabled selected>--検索条件--</option>
+                <option value="" selected>--検索条件--</option>
                 <option value="productName">商品名</option>
                 <option value="keyword">キーワード</option>
             </select>
             <input th:field="*{searchWord}" type="text" class="prodView-searchbar" placeholder="検索語を入力してください" />
             <select th:field="*{sortOrder}" class="prodView-select">
-                <option value="" disabled selected>--並び順--</option>
+                <option value="" selected>--並び順--</option>
                 <option value="created_at">新着順</option>
                 <option value="sale_price">価格順</option>
                 <option value="discount_rate">割引順</option>
@@ -67,7 +63,6 @@
             <button class="prodView-searchbutton">検索</button>
         </form>
 
-        <!-- 推薦商品 -->
         <div class="prodView-recommenditem">
             <img th:src="@{/images/icon/recommends.png}" alt="パートタイトル" class="prodView-parttitle" />
             <div class="prodView-productList" th:if="${recommendList}" style="gap: 0;">
@@ -75,14 +70,18 @@
                     <form th:action="@{/productDetail}" method="post">
                         <input type="hidden" name="productId" th:value="${recommend.productId}" />
                         <div class="prodView-itemDiv" onclick="this.closest('form').submit()" style="cursor: pointer;">
-                            <img th:src="@{${recommend.imagePath}}" th:alt="${recommend.productName}" class="prodView-itemImg" />
-                            <div class="prodView-nameDiv"><span th:text="${recommend.productName}" class="prodView-itemName"></span></div>
-                            <div class="prodView-priceDiv"><span th:text="|定価:${recommend.regularPrice}円|" class="prodView-itemPrice"></span></div>
+                            <img th:src="@{${recommend.imagePath}}" th:alt="${recommend.productName}"
+                                class="prodView-itemImg" />
+                            <div class="prodView-nameDiv"><span th:text="${recommend.productName}"
+                                    class="prodView-itemName"></span></div>
+                            <div class="prodView-priceDiv"><span th:text="|定価:${recommend.regularPrice}円|"
+                                    class="prodView-itemPrice"></span></div>
                             <div class="prodView-priceDiv">
                                 <a th:href="@{/cartIn}" style="margin-right: 65px;" onclick="event.stopPropagation();">
                                     <img th:src="@{/images/icon/cart-icon.png}" alt="カート" style="width: 15px;" />
                                 </a>
-                                <span th:text="|販売価格:${recommend.salePrice}円|" class="prodView-itemDiscountPrice"></span>
+                                <span th:text="|販売価格:${recommend.salePrice}円|"
+                                    class="prodView-itemDiscountPrice"></span>
                             </div>
                         </div>
                     </form>
@@ -93,7 +92,6 @@
             </div>
         </div>
 
-        <!-- 検索結果 -->
         <div class="prodView-searchitem">
             <img th:src="@{/images/icon/searchresult.png}" alt="パートタイトル" class="prodView-parttitle" />
             <div class="prodView-productList" th:if="${productList}">
@@ -101,9 +99,12 @@
                     <form th:action="@{/productDetail}" method="post">
                         <input type="hidden" name="productId" th:value="${product.productId}" />
                         <div class="prodView-itemDiv" onclick="this.closest('form').submit()" style="cursor: pointer;">
-                            <img th:src="@{${product.imagePath}}" th:alt="${product.productName}" class="prodView-itemImg" />
-                            <div class="prodView-nameDiv"><span th:text="${product.productName}" class="prodView-itemName"></span></div>
-                            <div class="prodView-priceDiv"><span th:text="|定価:${product.regularPrice}円|" class="prodView-itemPrice"></span></div>
+                            <img th:src="@{${product.imagePath}}" th:alt="${product.productName}"
+                                class="prodView-itemImg" />
+                            <div class="prodView-nameDiv"><span th:text="${product.productName}"
+                                    class="prodView-itemName"></span></div>
+                            <div class="prodView-priceDiv"><span th:text="|定価:${product.regularPrice}円|"
+                                    class="prodView-itemPrice"></span></div>
                             <div class="prodView-priceDiv">
                                 <a th:href="@{/cartIn}" style="margin-right: 65px;" onclick="event.stopPropagation();">
                                     <img th:src="@{/images/icon/cart-icon.png}" alt="カート" style="width: 15px;" />
@@ -120,7 +121,7 @@
         </div>
     </main>
 
-    <!-- フッター -->
     <div th:replace="fragments/footer :: footer"></div>
 </body>
+
 </html>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,26 +8,23 @@
     <link rel="stylesheet" th:href="@{/css/default.css}" />
     <link rel="stylesheet" th:href="@{/css/product.css}" />
 </head>
+
 <body>
-    <!-- ヘッダー -->
     <div th:replace="fragments/headerLogined :: header"></div>
 
-    <!-- メイン -->
     <main>
-        <!-- バーナー -->
-        <img th:src="@{/images/photo/shoppingcart.png}" alt="バーナー" class="prodView-banner" />    
-        
-        <!-- 現在ページ経路 -->
+
+        <img th:src="@{/images/photo/shoppingcart.png}" alt="バーナー" class="prodView-banner" />
+
+
         <div class="page-path">
             <a th:href="@{/index}">メイン＞</a>
             <a th:href="@{/productList}">商品一覧＞</a>
             <a th:href="@{/cartList}">商品カート</a>
         </div>
-        
-        <!-- サブタイトル -->
+
         <img th:src="@{/images/icon/shoppingcartlist.png}" alt="サブタイトル" />
 
-        <!-- チェックボックス操作 -->
         <div class="purcCargo-checkbox">
             <div>
                 <input type="button" value="全体選択" class="purcCargo-button1" />
@@ -34,9 +32,9 @@
             </div>
             <input type="button" value="選択削除" class="purcCargo-button1" />
         </div>
-        <!-- カートリスト -->
+
         <div class="purcCargo-div" style="margin-bottom: 30px;">
-            <form th:action="@{/choiceItem}" method="post" th:object="${choiceForm}" >
+            <form th:action="@{/choiceItem}" method="post" th:object="${choiceForm}">
                 <table>
                     <tr class="purcCargo-tabletr1">
                         <th style="width: 60px;">順番</th>
@@ -52,7 +50,7 @@
                         <td th:text="${stat.count}">1</td>
                         <td><img th:src="@{${item.imagePath}}" style="width: 165px;" /></td>
                         <td th:text="${item.productName}">商品名</td>
-                        <td th:text="${item.sizeName}">サイズ</td>  
+                        <td th:text="${item.sizeName}">サイズ</td>
                         <td th:text="${item.quantity}">数量</td>
                         <td th:text="'￥'+${item.salePrice}*${item.quantity}">購入価格</td>
                         <td th:text="${item.addedAtFormatted}">追加日時</td>
@@ -64,7 +62,7 @@
                 </div>
             </form>
         </div>
-        <!-- 検索結果 -->
+
         <div class="purcCargo-div">
             <img th:src="@{/images/icon/total.png}" alt="パートタイトル" class="prodView-parttitle" />
             <form th:action="@{/purchase}" method="post" th:object="${purchaseForm}">
@@ -82,7 +80,8 @@
                     <tr class="purcCargo-tabletr2">
                         <td th:if="${totalQuantity}" th:text="${totalQuantity}">総数量</td>
                         <td th:if="${totalPrice}" th:text="|￥${totalPrice}|">総価格</td>
-                        <td th:if="${taxIncludedPrice}" th:text="|￥${#numbers.formatDecimal(taxIncludedPrice, 0, 0)}|">税込み</td>
+                        <td th:if="${taxIncludedPrice}" th:text="|￥${#numbers.formatDecimal(taxIncludedPrice, 0, 0)}|">
+                            税込み</td>
                         <td th:if="${point}" th:text="|${#numbers.formatDecimal(point, 0, 0)}pt|">ポイント</td>
                         <td th:if="${point}"><input type="button" value="クーポン" class="purcCargo-button1" /></td>
                     </tr>
@@ -96,13 +95,13 @@
 
                 <div class="purcCargo-buttonbox">
                     <button class="purcCargo-button2">決済</button>
-                    <button type="button" class="purcCargo-button2" onclick="history.back()">戻る</button>
+                    <a th:href="@{session.userId != null} ? '/productList' : '/index'" class="purcCargo-button2">戻る</a>
                 </div>
             </form>
         </div>
     </main>
 
-    <!-- フッター -->
     <div th:replace="fragments/footer :: footer"></div>
 </body>
+
 </html>

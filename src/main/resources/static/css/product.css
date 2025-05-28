@@ -212,6 +212,8 @@ main{
 }
 
 .probDetail-button{
+    display: flex;
+    text-decoration: none;
     font-size: 18px;
     padding: 4px 12px 5px;
     color: white;
@@ -219,6 +221,9 @@ main{
     border: 2px solid white;
     border-radius: 5px;
     cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
 }
 
 .probDetail-buttondiv{
@@ -285,6 +290,7 @@ main{
     height: 27px;
     border-radius: 5px;
     text-align: center;
+    color:white;
 }
 
 .prodUpdate-grid31{
@@ -341,9 +347,12 @@ main{
     background: black;
     color: white;
     cursor: pointer;
+    box-sizing: border-box;
 }
 
 .purcCargo-button2{
+    display: flex;
+    text-decoration: none;
     width: 95px;
     height: 38px;
     font-size: 18px;
@@ -352,6 +361,9 @@ main{
     background: black;
     color: white;
     cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
 }
 
 .purcCargo-tabletr1,
@@ -405,4 +417,20 @@ main{
     width: 490px;
     align-items: center;
     justify-content: center;
+}
+
+.product-image-div{
+    width: 520px;
+    height: 580px;
+    margin: 20px;
+}
+
+.admin-button{
+    width: 500px;
+    margin-top: 15px;
+    margin-left: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
 }

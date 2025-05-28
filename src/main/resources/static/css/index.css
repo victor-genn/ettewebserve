@@ -35,3 +35,58 @@
     padding: 2px 5px;
     margin: 0 30px 15px 0;
 }
+
+.banner-link {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+}
+
+.banner-overlay {
+    position: relative;
+    overflow: hidden;
+}
+
+.img-index-banner {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: 0.4s ease;
+}
+
+.see-more-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2rem;
+    color: white;
+    opacity: 0;
+    transition: 0.4s ease;
+    pointer-events: none;
+}
+
+.banner-overlay::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    opacity: 0;
+    transition: 0.4s ease;
+    z-index: 1;
+}
+
+/* Hover 효과 */
+.banner-link:hover .banner-overlay::after {
+    opacity: 0.4;
+}
+
+.banner-link:hover .see-more-text {
+    opacity: 1;
+    z-index: 2;
+}

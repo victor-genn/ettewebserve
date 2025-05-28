@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,21 +8,28 @@
     <link rel="stylesheet" th:href="@{/css/default.css}" />
     <link rel="stylesheet" th:href="@{/css/index.css}" />
 </head>
-<body>
-    <!-- ヘッダー -->
-    <div th:if="${session.loginId}" th:replace="fragments/header :: header"></div>
 
-    <!-- メイン -->
+<body>
+    <th:block th:if="${session.loginId == null}">
+        <div th:replace="~{fragments/header :: header}"></div>
+    </th:block>
+    <th:block th:if="${session.loginId != null}">
+        <div th:replace="~{fragments/headerLogined :: header}"></div>
+    </th:block>
+
     <main>
-        <!-- バーナー -->
         <div class="main-index-banner">
-            <a th:href="${session.loginId} ? @{/productList} : @{/login}">
-                <img th:src="@{/images/photo/main-banner.png}" alt="バーナー" class="img-index-banner" />
+            <a th:href="${session.loginId != null} ? '/productList' : '/login'" class="banner-link">
+                <div class="banner-overlay">
+                    <img th:src="@{/images/photo/main-banner.png}" alt="バーナー" class="img-index-banner" />
+                    <span class="see-more-text">SEE MORE</span>
+                </div>
             </a>
         </div>
     </main>
 
-    <!-- フッター -->
-    <div th:replace="fragments/footer :: footer"></div>
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
 </body>
+
 </html>

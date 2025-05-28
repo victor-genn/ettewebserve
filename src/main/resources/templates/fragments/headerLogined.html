@@ -8,25 +8,66 @@
 </head>
 <body>
     <div th:fragment="header">
-        <header class="header-base">
+        <header class="header-base" style="position: relative;">
             <div class="header-div1">
-                <img th:src="@{/images/icon/menuIcon.png}" class="img-header-menuicon" />
+                <img th:src="@{/images/icon/menuIcon.png}" class="img-header-menuicon" style="cursor: pointer;" onclick="toggleMenu()" />
             </div>
             <div class="header-div2">
                 <a th:href="@{/index}">
                     <img th:src="@{/images/icon/webTitle.png}" class="img-header-webtitle" />
                 </a>
             </div>
-            <div class="header-div3" style="gap: 45px;">
-                <span class="span-header-nowuser">ようこそ、user様</span>
-                <img th:src="@{/images/icon/nowuser.png}" class="img-header-nowuser" />
-                <a th:href="@{/mypage}">
-                    <img th:src="@{/images/icon/chat-icon.png}" class="img-header-chaticon" />
-                </a>
+            <div class="header-div3" style="gap: 25px;">
+                <span th:text="|ようこそ、${session.userName}様|" class="span-header-nowuser">ようこそ、user様</span>
+                <img th:src="@{${session.userImage}}" class="img-header-nowuser" />
+                <img th:src="@{/images/icon/chat-icon.png}" class="img-header-chaticon" onclick="toggleUser()" />
                 <a th:href="@{/cartList}">
                     <img th:src="@{/images/icon/cart-icon.png}" class="img-header-carticon" />
                 </a>
             </div>
+
+            <div class="modal-menu-box" id="modalMenu" style="display: none;">
+                <div class="modal-menu-contents">
+                    <img th:src="@{/images/icon/webTitle.png}" style="margin-bottom: 5px;" />
+                    <a th:href="@{/index}">HOME</a>
+                    <a th:href="@{/productList}">Products</a>
+                    <span>Female</span>
+                    <span>Male</span>
+                    <span>Underwears</span>
+                    <span>Accessory</span>
+                    <span>Bag</span>
+                    <span>ETC</span>
+                </div>
+            </div>
+
+            <div class="modal-user-box" id="modalUser" style="display: none;">
+                <div class="modal-user-contents">
+                    <a th:href="@{/mypage}">マイページ</a>
+                    <a th:href="@{/cartList}">商品カート</a>
+                    <a th:if="${session.roleId == 1}" th:href="@{/productRegist}">商品登録</a>
+                    <a th:href="@{/logOut}">ログアウト</a>
+                </div>
+            </div>
+
+            <script>
+                function toggleMenu() {
+                    const modal = document.getElementById('modalMenu');
+                    if (modal.style.display === 'none' || modal.style.display === '') {
+                        modal.style.display = 'block';
+                    } else {
+                        modal.style.display = 'none';
+                    }
+                }
+
+                function toggleUser() {
+                    const modal = document.getElementById('modalUser');
+                    if (modal.style.display === 'none' || modal.style.display === '') {
+                        modal.style.display = 'block';
+                    } else {
+                        modal.style.display = 'none';
+                    }
+                }
+            </script>
         </header>
     </div>
 </body>

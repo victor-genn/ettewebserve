@@ -10,7 +10,7 @@
 </head>
 
 <body>
-    <div th:replace="fragments/header :: header"></div>
+    <div th:replace="~{fragments/header :: header}"></div>
 
     <main>
         <div class="main-user-content">
@@ -125,7 +125,7 @@
 
                     <div class="form-regist-partion2">
                         <button type="submit" class="button-header-default">登録</button>
-                        <button type="button" onclick="location.href='/index'" class="button-header-default">戻る</button>
+                        <a th:href="@{/index}" class="button-header-default">戻る</a>
                     </div>
                 </form>
             </div>

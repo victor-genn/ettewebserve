@@ -1,19 +1,12 @@
 package jp.co.genproject.ettewebserve.form;
 
-import org.springframework.validation.annotation.Validated;
-
-import jakarta.validation.constraints.NotEmpty;
-
-@Validated
 public class ProductForm {
     private Integer categoryId;
 
-    @NotEmpty(message = "検索タイプを選択してください。")
     private String searchType;
 
     private String searchWord;
 
-    @NotEmpty(message = "並び順を選択してください。")
     private String sortOrder;
 
     public Integer getCategoryId() {

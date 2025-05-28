@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,35 +8,29 @@
     <link rel="stylesheet" th:href="@{/css/default.css}" />
     <link rel="stylesheet" th:href="@{/css/user.css}" />
 </head>
-<body>
-    <!-- ヘッダー -->
-    <div th:replace="fragments/headerLogined :: header"></div>
 
-    <!-- メイン -->
+<body>
+    <div th:replace="~{fragments/headerLogined :: header}"></div>
+
     <main>
-        <!-- 現在ページ経路 -->
         <div class="page-path" style="width: 1100px; margin-bottom: 20px;">
             <a th:href="@{/index}">メイン＞</a>
             <a th:href="@{/mypage}">マイページ</a>
         </div>
 
         <div class="main-user-content">
-            <!-- バーナー（左側） -->
             <img th:src="@{/images/photo/mypagebanner.png}" alt="バーナー" class="img-default-banner" />
 
-            <!-- ログインフォーム（右側） -->
             <div class="div-default-form">
-                
-                <!-- サブタイトル -->
                 <img th:src="@{/images/icon/mypage.png}" alt="サブタイトル" class="img-default-subtitle userPage-partion" />
                 <a th:href="@{/userUpdate}" class="button-userPage-menu">登録情報修正</a>
                 <a th:href="@{/purchaseHistory}" class="button-userPage-menu">購入履歴検索</a>
-                <a th:href="@{/index}" class="button-userPage-menu">戻る</a>
+                <a th:href="@{session.loginId != null} ? '/index' : '/login'" class="button-userPage-menu">戻る</a>
             </div>
         </div>
     </main>
 
-    <!-- フッター -->
-    <div th:replace="fragments/footer :: footer"></div>
+    <div th:replace="~{fragments/footer :: footer}"></div>
 </body>
+
 </html>

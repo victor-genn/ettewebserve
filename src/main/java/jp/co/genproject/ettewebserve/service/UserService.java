@@ -1,6 +1,7 @@
 package jp.co.genproject.ettewebserve.service;
 
 import jp.co.genproject.ettewebserve.dto.UserDto;
+import jp.co.genproject.ettewebserve.dto.UserUpdateDto;
 import jp.co.genproject.ettewebserve.entity.User;
 
 public interface UserService {
@@ -13,4 +14,7 @@ public interface UserService {
 
     /** ログインIDおよびパスワードとしてユーザーデータと比較 */
     boolean signIn(String loginId, String password);
+
+    /** ユーザー情報更新 */
+    void updateUser(UserUpdateDto userUpdateDto);
 }
