@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jp.co.genproject.ettewebserve.dto.UserDto;
 import jp.co.genproject.ettewebserve.form.UserRegistForm;
@@ -69,7 +70,7 @@ public class RegistController {
      */
     @PostMapping("/registUser")
     public String postMethodName(@Validated @ModelAttribute("userRegistForm") UserRegistForm userRegist,
-            BindingResult result, Model model) {
+            BindingResult result, Model model, RedirectAttributes redirectAttributes) {
 
         model.addAttribute("categoryList", productService.findAllCategory());
         model.addAttribute("keywordList", productService.findAllKeyword());
@@ -109,7 +110,9 @@ public class RegistController {
                 keyword2, keyword3, roleId);
         userService.insertUser(userDto);
 
-        return "index";
+        redirectAttributes.addFlashAttribute("successRegistUser", "ユーザー登録を完了しました。");
+
+        return "redirect:/index";
     }
 
     /**

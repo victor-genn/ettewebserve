@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.servlet.http.HttpSession;
 import jp.co.genproject.ettewebserve.dto.ProductDto;
@@ -67,11 +68,11 @@ public class ProductController {
     @GetMapping("/productList")
     public String productList(@ModelAttribute("productForm") ProductForm productForm, Model model) {
 
-        Integer userId = getSessionInt(session,"userId");
-        
-        if(userId == null){
+        Integer userId = getSessionInt(session, "userId");
+
+        if (userId == null) {
             return "index";
-        } 
+        }
 
         List<Product> productList = productService.findByAll();
         List<Product> recommendList = productService.findByRecommends();
@@ -79,6 +80,7 @@ public class ProductController {
         model.addAttribute("productList", productList);
         model.addAttribute("recommendList", recommendList);
         model.addAttribute("productForm", productForm);
+
         return "productView/prodView";
     }
 
@@ -94,9 +96,9 @@ public class ProductController {
     public String productSearch(@Validated @ModelAttribute("productForm") ProductForm productForm, BindingResult result,
             Model model) {
 
-        Integer userId = getSessionInt(session,"userId");
-        
-        if(userId == null){
+        Integer userId = getSessionInt(session, "userId");
+
+        if (userId == null) {
             return "index";
         }
 
@@ -143,6 +145,7 @@ public class ProductController {
         model.addAttribute("recommendList", recommendList);
         model.addAttribute("productList", productList);
         model.addAttribute("productForm", productForm);
+
         return "productView/prodView";
     }
 
@@ -158,9 +161,9 @@ public class ProductController {
     public String productDetail(@ModelAttribute("cartForm") CartForm cartForm,
             @RequestParam("productId") int productId, Model model) {
 
-        Integer userId = getSessionInt(session,"userId");
-        
-        if(userId == null){
+        Integer userId = getSessionInt(session, "userId");
+
+        if (userId == null) {
             return "index";
         }
 
@@ -184,16 +187,17 @@ public class ProductController {
     @GetMapping("/productRegist")
     public String productRegist(@ModelAttribute("productRegistForm") ProductRegistForm productRegist, Model model) {
 
-        Integer userId = getSessionInt(session,"userId");
+        Integer userId = getSessionInt(session, "userId");
         Integer roleId = getSessionInt(session, "roleId");
-        
-        if(userId == null || roleId == 2){
+
+        if (userId == null || roleId == 2) {
             return "index";
         }
 
         model.addAttribute("categoryList", productService.findAllCategory());
         model.addAttribute("keywordList", productService.findAllKeyword());
         model.addAttribute("countryList", productService.findAllCountry());
+
         return "productView/prodRegist";
     }
 
@@ -203,20 +207,20 @@ public class ProductController {
      * DTOに変換してデータベースへ登録する。
      *
      * @param productRegist 商品登録フォーム（バリデーション対象）
-     * @param productForm 商品検索フォーム（画面に再表示するための補助用）
-     * @param result バリデーション結果
-     * @param model モデルオブジェクト（画面表示用）
+     * @param productForm   商品検索フォーム（画面に再表示するための補助用）
+     * @param result        バリデーション結果
+     * @param model         モデルオブジェクト（画面表示用）
      * @return 商品一覧画面テンプレート、またはエラー時は登録画面
      */
     @PostMapping("/productRegist")
     public String productIncert(@Validated @ModelAttribute("productRegistForm") ProductRegistForm productRegist,
-                                 @ModelAttribute("productForm") ProductForm productForm,
-                                 BindingResult result, Model model) {
+            @ModelAttribute("productForm") ProductForm productForm,
+            BindingResult result, Model model, RedirectAttributes redirectAttributes) {
 
-        Integer userId = getSessionInt(session,"userId");
+        Integer userId = getSessionInt(session, "userId");
         Integer roleId = getSessionInt(session, "roleId");
-        
-        if(userId == null || roleId == 2){
+
+        if (userId == null || roleId == 2) {
             return "index";
         }
 
@@ -257,26 +261,28 @@ public class ProductController {
         model.addAttribute("productList", productService.findByAll());
         model.addAttribute("recommendList", productService.findByRecommends());
 
-        return "productView/prodView";
+        redirectAttributes.addFlashAttribute("successRegistProduct", "「" + productName + "」商品の登録を完了しました。");
+
+        return "redirect:/productList";
     }
 
     /**
      * 商品更新画面の初期表示。
      *
      * @param productId 対象商品のID
-     * @param model モデルオブジェクト（画面表示用）
+     * @param model     モデルオブジェクト（画面表示用）
      * @return 商品更新画面テンプレート
      */
     @GetMapping("/productUpdate")
     public String productDirection(@RequestParam("productId") Integer productId, Model model) {
-        
-        Integer userId = getSessionInt(session,"userId");
+
+        Integer userId = getSessionInt(session, "userId");
         Integer roleId = getSessionInt(session, "roleId");
-        
-        if(userId == null || roleId == 2){
+
+        if (userId == null || roleId == 2) {
             return "index";
         }
-        
+
         Product product = productService.findByProductId(productId);
 
         ProductUpdateForm updateForm = new ProductUpdateForm();
@@ -309,27 +315,31 @@ public class ProductController {
      * 入力チェック後、データベースを更新。
      *
      * @param productUpdateForm 更新対象のフォームオブジェクト
-     * @param productForm 商品検索フォーム（画面に再表示するための補助用）
-     * @param result バリデーション結果
-     * @param model モデルオブジェクト
+     * @param productForm       商品検索フォーム（画面に再表示するための補助用）
+     * @param result            バリデーション結果
+     * @param model             モデルオブジェクト
      * @return 商品一覧画面テンプレート、またはエラー時は更新画面
      */
     @PostMapping("/productUpdate")
     public String productUpdate(@Validated @ModelAttribute("productUpdateForm") ProductUpdateForm productUpdateForm,
-                                @ModelAttribute("productForm") ProductForm productForm,
-                                BindingResult result, Model model) {
+            @ModelAttribute("productForm") ProductForm productForm,
+            BindingResult result, Model model, RedirectAttributes redirectAttributes) {
 
-        Integer userId = getSessionInt(session,"userId");
+        Integer userId = getSessionInt(session, "userId");
         Integer roleId = getSessionInt(session, "roleId");
-        
-        if(userId == null || roleId == 2){
+
+        if (userId == null || roleId == 2) {
             return "index";
         }
-                                
-        if (productUpdateForm.getStockS() == null) productUpdateForm.setStockS(0);
-        if (productUpdateForm.getStockM() == null) productUpdateForm.setStockM(0);
-        if (productUpdateForm.getStockL() == null) productUpdateForm.setStockL(0);
-        if (productUpdateForm.getStockXL() == null) productUpdateForm.setStockXL(0);
+
+        if (productUpdateForm.getStockS() == null)
+            productUpdateForm.setStockS(0);
+        if (productUpdateForm.getStockM() == null)
+            productUpdateForm.setStockM(0);
+        if (productUpdateForm.getStockL() == null)
+            productUpdateForm.setStockL(0);
+        if (productUpdateForm.getStockXL() == null)
+            productUpdateForm.setStockXL(0);
 
         if (result.hasErrors()) {
             model.addAttribute("categoryList", productService.findAllCategory());
@@ -370,7 +380,9 @@ public class ProductController {
         model.addAttribute("productList", productService.findByAll());
         model.addAttribute("recommendList", productService.findByRecommends());
 
-        return "productView/prodView";
+        redirectAttributes.addFlashAttribute("successUpdateProduct", "「" + productName + "」商品の情報を更新しました。");
+
+        return "redirect:/productList";
     }
 
     /**
@@ -381,8 +393,8 @@ public class ProductController {
      * @return 商品一覧画面テンプレート
      */
     @GetMapping("/productDelete")
-    public String productDelete(@RequestParam("productId") Integer productId, Model model) {
-        
+    public String productDelete(@RequestParam("productId") Integer productId, Model model, RedirectAttributes redirectAttributes) {
+
         Integer userId = getSessionInt(session, "userId");
         Integer roleId = getSessionInt(session, "roleId");
 
@@ -405,9 +417,11 @@ public class ProductController {
         model.addAttribute("productList", productService.findByAll());
         model.addAttribute("recommendList", productService.findByRecommends());
 
-        return "productView/prodView";
+        redirectAttributes.addFlashAttribute("successDeleteProduct", "商品の情報を削除しました。");
+
+        return "redirect:/productList";
     }
-    
+
     /**
      * アップロードされた画像ファイルを保存し、保存先パスを返却する。
      *
@@ -431,11 +445,12 @@ public class ProductController {
 
     private Integer getSessionInt(HttpSession session, String key) {
         Object value = session.getAttribute(key);
-        if (value == null) return null;
+        if (value == null)
+            return null;
         try {
             return Integer.valueOf(value.toString());
         } catch (NumberFormatException e) {
             return null;
         }
-    } 
+    }
 }

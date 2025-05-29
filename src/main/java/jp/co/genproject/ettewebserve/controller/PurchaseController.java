@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.servlet.http.HttpSession;
 import jp.co.genproject.ettewebserve.dto.CartViewDto;
@@ -63,14 +64,15 @@ public class PurchaseController {
      * @return 商品詳細画面テンプレート
      */
     @PostMapping("/cartIn")
-    public String purchase(@ModelAttribute("cartForm") CartForm cartForm, Model model) {
-        
-        Integer userId = getSessionInt(session,"userId");
+    public String purchase(@ModelAttribute("cartForm") CartForm cartForm, Model model,
+            RedirectAttributes redirectAttributes) {
 
-        if(userId == null){
+        Integer userId = getSessionInt(session, "userId");
+
+        if (userId == null) {
             return "index";
         }
-        
+
         Product product = productService.findByProductId(cartForm.getProductId());
         model.addAttribute("product", product);
 
@@ -81,7 +83,9 @@ public class PurchaseController {
         model.addAttribute("countryName", productService.findCountryNameByCountryId(product.getCountryId()));
         model.addAttribute("cartForm", cartForm);
 
-        return "productView/prodDetail";
+        redirectAttributes.addFlashAttribute("successCartIn", "商品をカートに追加しました。");
+
+        return "redirect:/cartList";
     }
 
     /**
@@ -95,13 +99,13 @@ public class PurchaseController {
      */
     @GetMapping("/cartList")
     public String cartList(@ModelAttribute("cartForm") CartForm cartForm,
-                           @ModelAttribute("choiceForm") ChoiceForm choiceForm,
-                           @ModelAttribute PurchaseForm purchaseForm,
-                           Model model) {
+            @ModelAttribute("choiceForm") ChoiceForm choiceForm,
+            @ModelAttribute PurchaseForm purchaseForm,
+            Model model) {
 
-        Integer userId = getSessionInt(session,"userId");
+        Integer userId = getSessionInt(session, "userId");
 
-        if(userId == null){
+        if (userId == null) {
             return "index";
         }
 
@@ -127,11 +131,11 @@ public class PurchaseController {
      */
     @PostMapping("/choiceItem")
     public String choiceItem(@ModelAttribute("choiceForm") ChoiceForm choiceForm,
-                             @ModelAttribute PurchaseForm purchaseForm, Model model) {
+            @ModelAttribute PurchaseForm purchaseForm, Model model) {
 
-        Integer userId = getSessionInt(session,"userId");
+        Integer userId = getSessionInt(session, "userId");
 
-        if(userId == null){
+        if (userId == null) {
             return "index";
         }
 
@@ -176,12 +180,12 @@ public class PurchaseController {
      */
     @GetMapping("/purchaseHistory")
     public String purchaseHistory(@ModelAttribute PurchaseForm purchaseForm,
-                                  @ModelAttribute("searchForm") PurchaseSearchForm searchForm,
-                                  Model model) {
+            @ModelAttribute("searchForm") PurchaseSearchForm searchForm,
+            Model model) {
 
-        Integer userId = getSessionInt(session,"userId");
+        Integer userId = getSessionInt(session, "userId");
 
-        if(userId == null){
+        if (userId == null) {
             return "index";
         }
 
@@ -204,9 +208,9 @@ public class PurchaseController {
     @PostMapping("/purchaseHistory")
     public String postPurchaseHistory(@ModelAttribute("searchForm") PurchaseSearchForm searchForm, Model model) {
 
-        Integer userId = getSessionInt(session,"userId");
+        Integer userId = getSessionInt(session, "userId");
 
-        if(userId == null){
+        if (userId == null) {
             return "index";
         }
 
@@ -255,11 +259,12 @@ public class PurchaseController {
      * @return 購入履歴画面へリダイレクト
      */
     @PostMapping("/purchase")
-    public String registerPurchase(@ModelAttribute PurchaseForm purchaseForm, Model model, HttpSession session) {
-        
-        Integer userId = getSessionInt(session,"userId");
+    public String registerPurchase(@ModelAttribute PurchaseForm purchaseForm, Model model, HttpSession session,
+            RedirectAttributes redirectAttributes) {
 
-        if(userId == null){
+        Integer userId = getSessionInt(session, "userId");
+
+        if (userId == null) {
             return "index";
         }
 
@@ -273,6 +278,9 @@ public class PurchaseController {
         }
 
         purchaseService.registerPurchase(userId, cartIdList, totalQuantity, totalPrice);
+
+        redirectAttributes.addFlashAttribute("successPurchase", "商品購入を完了しました。");
+
         return "redirect:/purchaseHistory";
     }
 
@@ -284,37 +292,44 @@ public class PurchaseController {
      * @return 購入履歴画面へリダイレクト
      */
     @PostMapping("/purchaseHistory/delete")
-    public String deletePurchaseHistory(@RequestParam(value = "selectedIds", required = false) List<Integer> selectedIds) {
-        
-        Integer userId = getSessionInt(session,"userId");
+    public String deletePurchaseHistory(
+            @RequestParam(value = "selectedIds", required = false) List<Integer> selectedIds, RedirectAttributes redirectAttributes) {
 
-        if(userId == null){
+        Integer userId = getSessionInt(session, "userId");
+
+        if (userId == null) {
             return "index";
         }
 
         if (selectedIds != null && !selectedIds.isEmpty()) {
             purchaseService.deletePurchaseHistories(selectedIds);
         }
+
+        redirectAttributes.addFlashAttribute("successDeletePurchase", "購入履歴を削除しました。");
+
         return "redirect:/purchaseHistory";
     }
 
     /**
      * セッションから指定されたキーで値を取得し、Integerとして返却します。
      *
-     * <p>セッションに該当のキーが存在しない場合や、
-     * 数値に変換できない場合は null を返します。</p>
+     * <p>
+     * セッションに該当のキーが存在しない場合や、
+     * 数値に変換できない場合は null を返します。
+     * </p>
      *
      * @param session HttpSession オブジェクト
-     * @param key 取得したいセッション属性のキー
+     * @param key     取得したいセッション属性のキー
      * @return Integer 型の値（変換できない場合は null）
      */
     private Integer getSessionInt(HttpSession session, String key) {
         Object value = session.getAttribute(key);
-        if (value == null) return null;
+        if (value == null)
+            return null;
         try {
             return Integer.valueOf(value.toString());
         } catch (NumberFormatException e) {
             return null;
         }
-    } 
+    }
 }

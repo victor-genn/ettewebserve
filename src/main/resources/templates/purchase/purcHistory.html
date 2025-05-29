@@ -10,6 +10,20 @@
 </head>
 
 <body>
+    <!-- 購入完了メッセージ -->
+    <div th:if="${successPurchase}">
+        <script th:inline="javascript">
+            alert('[[${successPurchase}]]');
+        </script>
+    </div>
+
+    <!-- 購入履歴削除メッセージ -->
+    <div th:if="${successDeletePurchase}">
+        <script th:inline="javascript">
+            alert('[[${successDeletePurchase}]]');
+        </script>
+    </div>
+
     <div th:replace="~{fragments/headerLogined :: header}"></div>
 
     <main>

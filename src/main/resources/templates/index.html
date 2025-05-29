@@ -10,6 +10,21 @@
 </head>
 
 <body>
+    <!-- ユーザー登録完了メッセージ -->
+    <div th:if="${successRegistUser}">
+        <script th:inline="javascript">
+            alert('[[${successRegistUser}]]');
+        </script>
+    </div>
+
+    <!-- ユーザー登録完了メッセージ -->
+    <div th:if="${successLoginUser}">
+        <script th:inline="javascript">
+            alert('[[${successLoginUser}]]');
+        </script>
+    </div>
+    
+    <!-- ヘッダー（セッションによる出力）：実装完了 -->
     <th:block th:if="${session.loginId == null}">
         <div th:replace="~{fragments/header :: header}"></div>
     </th:block>
@@ -17,8 +32,10 @@
         <div th:replace="~{fragments/headerLogined :: header}"></div>
     </th:block>
 
+    <!-- メイン：実装完了 -->
     <main>
         <div class="main-index-banner">
+            <!-- バーナー画像およびリンク（セッションによる出力）：実装完了 -->
             <a th:href="${session.loginId != null} ? '/productList' : '/login'" class="banner-link">
                 <div class="banner-overlay">
                     <img th:src="@{/images/photo/main-banner.png}" alt="バーナー" class="img-index-banner" />
@@ -28,8 +45,8 @@
         </div>
     </main>
 
+    <!-- フッター：実装完了 -->
     <div th:replace="~{fragments/footer :: footer}"></div>
-
 </body>
 
 </html>

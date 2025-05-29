@@ -10,6 +10,7 @@
 </head>
 
 <body>
+
     <div th:replace="fragments/headerLogined :: header"></div>
 
     <main>
@@ -92,7 +93,7 @@
                     </div>
 
                     <div class="probDetail-buttondiv">
-                        <button class="probDetail-button">購入</button>
+                        <button class="probDetail-button">追加</button>
                         <a th:href="@{session.userId != null} ? '/productList' : '/index'"
                             class="probDetail-button">戻る</a>
                     </div>

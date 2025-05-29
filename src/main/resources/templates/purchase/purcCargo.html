@@ -10,6 +10,13 @@
 </head>
 
 <body>
+    <!-- カート追加完了メッセージ -->
+    <div th:if="${successCartIn}">
+        <script th:inline="javascript">
+            alert('[[${successCartIn}]]');
+        </script>
+    </div>
+
     <div th:replace="fragments/headerLogined :: header"></div>
 
     <main>

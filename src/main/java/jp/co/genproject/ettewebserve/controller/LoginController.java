@@ -7,6 +7,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.servlet.http.HttpSession;
 import jp.co.genproject.ettewebserve.entity.User;
@@ -42,7 +43,8 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public String login(@Validated @ModelAttribute("loginForm") LoginForm loginForm, BindingResult result, Model model) {
+    public String login(@Validated @ModelAttribute("loginForm") LoginForm loginForm, BindingResult result, Model model,
+            RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             return "login";
         }
@@ -69,9 +71,7 @@ public class LoginController {
         session.setAttribute("userName", userName);
         session.setAttribute("userImage", userImage);
 
-        System.out.println("=== 로그인 성공 ===");
-        System.out.println("userId: " + userId);
-        System.out.println("loginId: " + loginId);
+        redirectAttributes.addFlashAttribute("successLoginUser", "ようこそ、" + userName + "様");
 
         return "redirect:/index";
     }

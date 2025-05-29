@@ -10,6 +10,27 @@
 </head>
 
 <body>
+    <!-- 商品登録完了メッセージ -->
+    <div th:if="${successRegistProduct}">
+        <script th:inline="javascript">
+            alert('[[${successRegistProduct}]]');
+        </script>
+    </div>
+
+    <!-- 商品情報更新完了メッセージ -->
+    <div th:if="${successUpdateProduct}">
+        <script th:inline="javascript">
+            alert('[[${successUpdateProduct}]]');
+        </script>
+    </div>
+
+    <!-- 商品削除完了メッセージ -->
+    <div th:if="${successDeleteProduct}">
+        <script th:inline="javascript">
+            alert('[[${successDeleteProduct}]]');
+        </script>
+    </div>
+
     <div th:replace="fragments/headerLogined :: header"></div>
 
     <main>
@@ -22,6 +43,9 @@
         </div>
 
         <img th:src="@{/images/icon/productview.png}" alt="サブタイトル" />
+        <div style="height: 20px;">
+            <span th:if="${searchItemQ}" th:text="${searchItemQ}"></span>
+        </div>
 
         <div>
             <span th:if="${#fields.hasErrors('productForm.searchType')}" th:errors="${productForm.searchType}"
@@ -77,10 +101,7 @@
                             <div class="prodView-priceDiv"><span th:text="|定価:${recommend.regularPrice}円|"
                                     class="prodView-itemPrice"></span></div>
                             <div class="prodView-priceDiv">
-                                <a th:href="@{/cartIn}" style="margin-right: 65px;" onclick="event.stopPropagation();">
-                                    <img th:src="@{/images/icon/cart-icon.png}" alt="カート" style="width: 15px;" />
-                                </a>
-                                <span th:text="|販売価格:${recommend.salePrice}円|"
+                                <span th:text="|販売価格 : ${recommend.salePrice}円|"
                                     class="prodView-itemDiscountPrice"></span>
                             </div>
                         </div>
@@ -106,10 +127,7 @@
                             <div class="prodView-priceDiv"><span th:text="|定価:${product.regularPrice}円|"
                                     class="prodView-itemPrice"></span></div>
                             <div class="prodView-priceDiv">
-                                <a th:href="@{/cartIn}" style="margin-right: 65px;" onclick="event.stopPropagation();">
-                                    <img th:src="@{/images/icon/cart-icon.png}" alt="カート" style="width: 15px;" />
-                                </a>
-                                <span th:text="|販売価格:${product.salePrice}円|" class="prodView-itemDiscountPrice"></span>
+                                <span th:text="|販売価格 : ${product.salePrice}円|" class="prodView-itemDiscountPrice"></span>
                             </div>
                         </div>
                     </form>

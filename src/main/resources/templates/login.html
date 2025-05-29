@@ -7,28 +7,56 @@
     <link rel="stylesheet" th:href="@{/css/default.css}" />
     <link rel="stylesheet" th:href="@{/css/user.css}" />
 </head>
-<body>
+    <!-- ヘッダー（ログイン未済）：実装完了 -->
     <div th:replace="~{fragments/header :: header}"></div>
 
+    <!-- メイン：実装完了 -->
     <main>
         <div class="main-user-content">
+            <!-- バーナー画像 -->
             <img th:src="@{/images/photo/default-banner.png}" alt="バーナー" class="img-default-banner" />
 
+            <!-- コンテンツ -->
             <div class="div-default-form">
                 <img th:src="@{/images/icon/signin.png}" alt="サブタイトル" class="img-default-subtitle" />
+                <!-- ログイン処理ヴァリデーション -->
+                <div style="height: 15px;">
+                    <div th:if="${loginError}" th:text="${loginError}" class="validate-error">エラーメッセージ</div>
+                </div>
+
+                <!-- ログインフォーム -->
                 <form th:action="@{/login}" method="post" class="form-login" th:object="${loginForm}">
+                    
+                    <!-- ログインID入力 -->
                     <div class="form-login-partion">
                         <label for="loginId" class="form-login-label">ID</label>
                         <input type="text" th:field="*{loginId}" id="loginId" class="form-login-input" /> 
                     </div>
+                    <!-- ログインIDヴァリデーション -->
+                    <div class="login-validate-div">
+                        <div th:if="${#fields.hasErrors('loginId')}" th:errors="*{loginId}" class="validate-error">
+                        </div>
+                    </div>
+
+                    <!-- パスワード入力 -->
                     <div class="form-login-partion">
                         <label for="password" class="form-login-label">PW</label>
                         <input type="password" th:field="*{password}" id="password" class="form-login-input" /> 
                     </div>
+                    <!-- パスワードヴァリデーション -->
+                    <div class="login-validate-div">
+                        <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="validate-error">
+                        </div>
+                    </div>
+
+                    <!-- ログインおよび新規登録ボタン -->
                     <div class="form-login-partion" style="margin-top: 20px;">
                         <button type="submit" class="button-header-default">ログイン</button>
                         <a th:href="@{/regist}" class="button-header-default">新規登録</a>
                     </div>
+
+
+                    <!-- 未実装 -->
                     <div>
                         <a th:href="@{/findPassword}" class="link-login-findPw">パスワードをお忘れの方はこちら</a>
                     </div>
@@ -37,6 +65,7 @@
         </div>
     </main>
 
+    <!-- フッター：実装完了 -->
     <div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>
